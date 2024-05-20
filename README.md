@@ -1,2 +1,2 @@
 # NetArgumentParser
-Parser for command-line arguments.
+Parser for command-line options and arguments.
