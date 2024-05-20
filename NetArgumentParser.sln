@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{649A384F-36AE-432F-8AF5-D28674D77B7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser", "Core\NetArgumentParser\NetArgumentParser.csproj", "{2C140CC4-00C6-4017-8CB3-68B32CC7C058}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DCD4DEB9-0ACD-4CA0-AAF6-A7298C908266}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Tests", "Tests\NetArgumentParser.Tests\NetArgumentParser.Tests.csproj", "{3AB4D374-88E7-4681-B9C7-2C3D57DF8DC8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.Simple", "Examples\NetArgumentParser.Examples.Simple\NetArgumentParser.Examples.Simple.csproj", "{540F9CC0-410A-48D4-B44E-8B3845C66F0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.AllUseCases", "Examples\NetArgumentParser.Examples.AllUseCases\NetArgumentParser.Examples.AllUseCases.csproj", "{F56E27F2-A034-4268-BF1A-9D211648D999}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C140CC4-00C6-4017-8CB3-68B32CC7C058}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C140CC4-00C6-4017-8CB3-68B32CC7C058}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C140CC4-00C6-4017-8CB3-68B32CC7C058}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C140CC4-00C6-4017-8CB3-68B32CC7C058}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AB4D374-88E7-4681-B9C7-2C3D57DF8DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AB4D374-88E7-4681-B9C7-2C3D57DF8DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AB4D374-88E7-4681-B9C7-2C3D57DF8DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AB4D374-88E7-4681-B9C7-2C3D57DF8DC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{540F9CC0-410A-48D4-B44E-8B3845C66F0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{540F9CC0-410A-48D4-B44E-8B3845C66F0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{540F9CC0-410A-48D4-B44E-8B3845C66F0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{540F9CC0-410A-48D4-B44E-8B3845C66F0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F56E27F2-A034-4268-BF1A-9D211648D999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F56E27F2-A034-4268-BF1A-9D211648D999}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F56E27F2-A034-4268-BF1A-9D211648D999}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F56E27F2-A034-4268-BF1A-9D211648D999}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2C140CC4-00C6-4017-8CB3-68B32CC7C058} = {649A384F-36AE-432F-8AF5-D28674D77B7D}
+		{3AB4D374-88E7-4681-B9C7-2C3D57DF8DC8} = {DCD4DEB9-0ACD-4CA0-AAF6-A7298C908266}
+		{540F9CC0-410A-48D4-B44E-8B3845C66F0B} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
+		{F56E27F2-A034-4268-BF1A-9D211648D999} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
+	EndGlobalSection
+EndGlobal
