@@ -17,10 +17,9 @@ public sealed class HelpOption : FlagOption, IEquatable<HelpOption>
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
             description ?? throw new ArgumentNullException(nameof(description)),
-            false)
+            false,
+            afterHandlingAction)
     {
-        if (afterHandlingAction is not null)
-            OptionHandled += (sender, e) => afterHandlingAction.Invoke();
     }
 
     public bool Equals(HelpOption? other)
