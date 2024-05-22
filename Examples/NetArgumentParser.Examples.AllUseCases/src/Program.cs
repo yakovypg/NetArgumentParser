@@ -23,6 +23,7 @@ var parser = new ArgumentParser()
     RecognizeCompoundOptions = true,
     RecognizeSlashOptions = true,
     ProgramName = "ProgramName",
+    ProgramVersion = "ProgramName v1.0.0",
     ProgramDescription = "What the program does",
     ProgramEpilog = "Text at the bottom"
 };

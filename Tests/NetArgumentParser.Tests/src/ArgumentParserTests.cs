@@ -1033,6 +1033,64 @@ public class ArgumentParserTest
     }
 
     [Fact]
+    public void Parse_VersionOption_OtherArgumentsSkipped()
+    {
+        bool version = default;
+        bool verbose = default;
+        double angle = default;
+        StringSplitOptions splitOption = default;
+        List<string>? files = default;
+
+        var arguments = new string[]
+        {
+            "-v",
+            "--angle", "100.5",
+            "--version",
+            "-s", StringSplitOptions.TrimEntries.ToString(),
+            "-f", "file1", "file2", "file3"
+        };
+        
+        var options = new ICommonOption[]
+        {
+            new FlagOption("verbose", "v",
+                isRequired: true,
+                afterHandlingAction: () => verbose = true),
+
+            new VersionOption("version", afterHandlingAction: () => version = true),
+
+            new ValueOption<double>("angle", "a",
+                isRequired: true,
+                afterValueParsingAction: t => angle = t),
+            
+            new EnumValueOption<StringSplitOptions>("split-option", "s",
+                afterValueParsingAction: t => splitOption = t),
+
+            new MultipleValueOption<string>("files", "f",
+                isRequired: true,
+                contextCapture: new ZeroOrMoreContextCapture(),
+                afterValueParsingAction: t => files = [..t])
+        };
+        
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false,
+            RecognizeSlashOptions = true
+        };
+
+        parser.AddOptions(options);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
+
+        Assert.True(version);
+
+        Assert.Equal(default, verbose);
+        Assert.Equal(default, angle);
+        Assert.Equal(default, splitOption);
+        Assert.Equal(default, files);
+
+        Assert.Empty(extraArguments);
+    }
+
+    [Fact]
     public void Parse_DuplicateArguments_ThrowsException()
     {
         var arguments = new string[]

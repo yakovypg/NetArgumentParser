@@ -71,6 +71,11 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
         return _options.Any(t => t is HelpOption);
     }
 
+    public bool HasVersionOption()
+    {
+        return _options.Any(t => t is VersionOption);
+    }
+
     public bool HasOption(string name)
     {
         ArgumentNullException.ThrowIfNull(name, nameof(name));

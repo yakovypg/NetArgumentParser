@@ -31,8 +31,10 @@ public class ArgumentParser
         _optionGroups = [new OptionGroup<ICommonOption>(OptionsHeader, OptionSet)];
 
         UseDefaultHelpOption = true;
+        UseDefaultVersionOption = true;
 
         ProgramName = string.Empty;
+        ProgramVersion = string.Empty;
         ProgramDescription = string.Empty;
         ProgramEpilog = string.Empty;
     }
@@ -41,12 +43,15 @@ public class ArgumentParser
     public string OptionsHeader { get; init; }
 
     public string ProgramName { get; init; }
+    public string ProgramVersion { get; init; }
     public string ProgramDescription { get; init; }
     public string ProgramEpilog { get; init; }
 
     public bool RecognizeCompoundOptions { get; init; }
     public bool RecognizeSlashOptions { get; init; }
+
     public bool UseDefaultHelpOption { get; init; }
+    public bool UseDefaultVersionOption { get; init; }
 
     public int NumberOfArgumentsToSkip
     {
@@ -110,12 +115,12 @@ public class ArgumentParser
 
         AddDefaultOptions();
 
-        extraArguments = [];
-
         IEnumerable<string> adaptedArguments = AdaptArguments(arguments);
         var context = new Queue<string>(adaptedArguments);
 
-        if (HandleHelpOption(adaptedArguments))
+        extraArguments = [];
+
+        if (HandleFinalOptions(adaptedArguments))
             return;
 
         while (context.Count > 0)
@@ -190,6 +195,9 @@ public class ArgumentParser
     {
         if (UseDefaultHelpOption && !OptionSet.HasHelpOption())
             AddDefaultHelpOption();
+        
+        if (UseDefaultVersionOption && !OptionSet.HasVersionOption())
+            AddDefaultVersionOption();
     }
 
     protected virtual IEnumerable<string> AdaptArguments(IEnumerable<string> arguments)
@@ -204,19 +212,26 @@ public class ArgumentParser
             : consideredArguments;
     }
 
-    protected virtual bool HandleHelpOption(IEnumerable<string> arguments)
+    protected virtual bool HandleFinalOptions(IEnumerable<string> arguments)
     {
-        if (AllOptions.FirstOrDefault(t => t is HelpOption) is not HelpOption helpOption)
+        return HandleFinalOption<HelpOption>(arguments)
+            || HandleFinalOption<VersionOption>(arguments);
+    }
+
+    protected virtual bool HandleFinalOption<T>(IEnumerable<string> arguments)
+        where T : ICommonOption
+    {
+        if (AllOptions.FirstOrDefault(t => t is T) is not T finalOption)
             return false;
 
-        string? helpOptionArgument = arguments
+        string? finalOptionArgument = arguments
             .Where(t => new Argument(t, RecognizeSlashOptions).IsOption)
             .Select(t => new Argument(t, RecognizeSlashOptions).ExtractOptionName())
-            .FirstOrDefault(t => t == helpOption.LongName || t == helpOption.ShortName);
+            .FirstOrDefault(t => t == finalOption.LongName || t == finalOption.ShortName);
         
-        if (helpOptionArgument is not null)
+        if (finalOptionArgument is not null)
         {
-            helpOption.Handle();
+            finalOption.Handle();
             return true;
         }
 
@@ -232,5 +247,16 @@ public class ArgumentParser
         });
 
         AddOptions(helpOption);
+    }
+
+    private void AddDefaultVersionOption()
+    {
+        var versionOption = new VersionOption(() =>
+        {
+            OutputWriter.WriteLine(ProgramVersion);
+            Environment.Exit(0);
+        });
+
+        AddOptions(versionOption);
     }
 }
