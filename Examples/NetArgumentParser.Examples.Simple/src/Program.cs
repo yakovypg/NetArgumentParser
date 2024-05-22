@@ -5,15 +5,12 @@ using NetArgumentParser;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
 
-bool showHelp = false;
 int? angle = default;
 FileMode? fileMode = default;
 List<string> inputFiles = [];
 
 var options = new ICommonOption[]
 {   
-    new HelpOption(afterHandlingAction: () => showHelp = true),
-
     new MultipleValueOption<string>("input", "i",
         description: "images that need to be processed",
         isRequired: true,
@@ -44,13 +41,6 @@ catch (Exception ex)
     return;
 }
 
-if (showHelp)
-{
-    Console.WriteLine(parser.GenerateProgramDescription());
-    return;
-}
-
-Console.WriteLine($"Help: {showHelp}");
 Console.WriteLine($"Angle: {angle}");
 Console.WriteLine($"File mode: {fileMode}");
 Console.WriteLine($"Input files: {string.Join(' ', inputFiles)}");

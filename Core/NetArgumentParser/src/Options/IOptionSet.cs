@@ -11,6 +11,7 @@ public interface IOptionSet<T>
     IReadOnlyList<IValueConverter> Converters { get; }
 
     T GetOption(string name);
+    bool HasHelpOption();
     bool HasOption(string name);
     bool HasConverter(Type conversionType);
 

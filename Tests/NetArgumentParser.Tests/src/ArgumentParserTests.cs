@@ -46,6 +46,7 @@ public class ArgumentParserTest
         
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             RecognizeCompoundOptions = true
         };
 
@@ -86,7 +87,10 @@ public class ArgumentParserTest
                 afterValueParsingAction: t => bindMode = t)
         };
 
-        var parser = new ArgumentParser();
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
 
         parser.AddOptions(options);
         parser.ParseKnownArgs(arguments, out List<string> extraArguments);
@@ -170,7 +174,10 @@ public class ArgumentParserTest
             new ValueOption<ulong>(string.Empty, "L", afterValueParsingAction: t => recievedULong = t),
         };
 
-        var parser = new ArgumentParser();
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
 
         parser.AddOptions(options);
         parser.ParseKnownArgs(arguments, out List<string> extraArguments);
@@ -238,7 +245,10 @@ public class ArgumentParserTest
                 afterValueParsingAction: t => point = new Point(t[0], t[1]))
         };
 
-        var parser = new ArgumentParser();
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
 
         parser.AddOptions(options);
         parser.ParseKnownArgs(arguments, out List<string> extraArguments);
@@ -314,7 +324,10 @@ public class ArgumentParserTest
             new ValueConverter<int>(t => Math.Abs(int.Parse(t)))
         };
 
-        var parser = new ArgumentParser();
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
 
         parser.AddOptions(options);
         parser.AddConverters(converters);
@@ -383,7 +396,10 @@ public class ArgumentParserTest
                 afterValueParsingAction: t => name = t)
         };
 
-        var parser = new ArgumentParser();
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
 
         parser.AddOptions(options);
         parser.ParseKnownArgs(arguments, out List<string> extraArguments);
@@ -452,7 +468,11 @@ public class ArgumentParserTest
             .Concat(notSpecifiedRequiredOptionWithoutDefaultValue)
             .Concat(notRequiredOptions);
 
-        var parser = new ArgumentParser();
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
+
         parser.AddOptions(allOptions.ToArray());
 
         foreach (ICommonOption option in notSpecifiedRequiredOptionWithoutDefaultValue)
@@ -519,6 +539,7 @@ public class ArgumentParserTest
 
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             NumberOfArgumentsToSkip = 1,
             RecognizeCompoundOptions = true
         };
@@ -578,6 +599,7 @@ public class ArgumentParserTest
 
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             NumberOfArgumentsToSkip = 1,
             RecognizeCompoundOptions = true,
             RecognizeSlashOptions = true
@@ -641,6 +663,7 @@ public class ArgumentParserTest
 
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             RecognizeSlashOptions = false
         };
 
@@ -705,6 +728,7 @@ public class ArgumentParserTest
         
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             RecognizeSlashOptions = true
         };
 
@@ -749,6 +773,7 @@ public class ArgumentParserTest
 
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             RecognizeCompoundOptions = false
         };
 
@@ -787,6 +812,7 @@ public class ArgumentParserTest
 
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             RecognizeCompoundOptions = true
         };
 
@@ -827,6 +853,7 @@ public class ArgumentParserTest
 
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             NumberOfArgumentsToSkip = 0
         };
 
@@ -867,6 +894,7 @@ public class ArgumentParserTest
 
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             NumberOfArgumentsToSkip = 3
         };
 
@@ -931,6 +959,7 @@ public class ArgumentParserTest
         
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             RecognizeSlashOptions = true
         };
 
@@ -986,6 +1015,7 @@ public class ArgumentParserTest
         
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             RecognizeSlashOptions = true
         };
 
@@ -1018,7 +1048,11 @@ public class ArgumentParserTest
             new ValueOption<double>(string.Empty, "w")
         };
 
-        var parser = new ArgumentParser();
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
+
         parser.AddOptions(options);
 
         Assert.Throws<OptionAlreadyHandledException>(() =>
@@ -1172,6 +1206,7 @@ public class ArgumentParserTest
 
         var parser = new ArgumentParser()
         {
+            UseDefaultHelpOption = false,
             NumberOfArgumentsToSkip = 2,
             RecognizeCompoundOptions = true,
             RecognizeSlashOptions = true

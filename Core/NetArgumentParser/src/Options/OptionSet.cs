@@ -66,6 +66,11 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
             : throw new OptionNotFoundException(null, name);
     }
 
+    public bool HasHelpOption()
+    {
+        return _options.Any(t => t is HelpOption);
+    }
+
     public bool HasOption(string name)
     {
         ArgumentNullException.ThrowIfNull(name, nameof(name));

@@ -12,22 +12,29 @@ namespace NetArgumentParser;
 public class ArgumentParser
 {
     private int _numberOfArgumentsToSkip;
+    private ITextWriter _outputWriter;
     private IDescriptionGenerator _descriptionGenerator;
-    private List<OptionGroup<ICommonOption>> _optionGroups;
 
-    public ArgumentParser(IDescriptionGenerator? descriptionGenerator = null)
-    {        
+    private readonly List<OptionGroup<ICommonOption>> _optionGroups;
+
+    public ArgumentParser(
+        IDescriptionGenerator? descriptionGenerator = null,
+        ITextWriter? outputWriter = null)
+    {
+        _descriptionGenerator = descriptionGenerator ?? new DescriptionGenerator(this);
+        _outputWriter = outputWriter ?? new ConsoleTextWriter();
+
         UsageHeader = "Usage: ";
         OptionsHeader = $"Options:";
+        OptionSet = new OptionSet();
+
+        _optionGroups = [new OptionGroup<ICommonOption>(OptionsHeader, OptionSet)];
+
+        UseDefaultHelpOption = true;
 
         ProgramName = string.Empty;
         ProgramDescription = string.Empty;
         ProgramEpilog = string.Empty;
-
-        OptionSet = new OptionSet();
-
-        _optionGroups = [new OptionGroup<ICommonOption>(OptionsHeader, OptionSet)];
-        _descriptionGenerator = descriptionGenerator ?? new DescriptionGenerator(this);
     }
 
     public string UsageHeader { get; init; }
@@ -39,6 +46,7 @@ public class ArgumentParser
 
     public bool RecognizeCompoundOptions { get; init; }
     public bool RecognizeSlashOptions { get; init; }
+    public bool UseDefaultHelpOption { get; init; }
 
     public int NumberOfArgumentsToSkip
     {
@@ -47,6 +55,16 @@ public class ArgumentParser
         {
             ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
             _numberOfArgumentsToSkip = value;
+        }
+    }
+
+    public ITextWriter OutputWriter
+    {
+        get => _outputWriter;
+        set
+        {
+            ArgumentNullException.ThrowIfNull(value, nameof(value));
+            _outputWriter = value;
         }
     }
 
@@ -89,6 +107,8 @@ public class ArgumentParser
     public virtual void ParseKnownArgs(IEnumerable<string> arguments, out List<string> extraArguments)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+
+        AddDefaultOptions();
 
         extraArguments = [];
 
@@ -166,6 +186,12 @@ public class ArgumentParser
 
     #endregion
 
+    protected virtual void AddDefaultOptions()
+    {
+        if (UseDefaultHelpOption && !OptionSet.HasHelpOption())
+            AddDefaultHelpOption();
+    }
+
     protected virtual IEnumerable<string> AdaptArguments(IEnumerable<string> arguments)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
@@ -195,5 +221,16 @@ public class ArgumentParser
         }
 
         return false;
+    }
+
+    private void AddDefaultHelpOption()
+    {
+        var helpOption = new HelpOption(() =>
+        {
+            OutputWriter.WriteLine(GenerateProgramDescription());
+            Environment.Exit(0);
+        });
+
+        AddOptions(helpOption);
     }
 }
