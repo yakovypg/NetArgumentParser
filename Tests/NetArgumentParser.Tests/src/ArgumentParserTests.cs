@@ -46,7 +46,7 @@ public class ArgumentParserTest
         
         var parser = new ArgumentParser()
         {
-            RecognizeSeveralCharsInShortNameAsSeveralOptions = true
+            RecognizeCompoundOptions = true
         };
 
         parser.AddOptions(options);
@@ -520,7 +520,7 @@ public class ArgumentParserTest
         var parser = new ArgumentParser()
         {
             NumberOfArgumentsToSkip = 1,
-            RecognizeSeveralCharsInShortNameAsSeveralOptions = true
+            RecognizeCompoundOptions = true
         };
 
         parser.AddOptions(options);
@@ -579,8 +579,8 @@ public class ArgumentParserTest
         var parser = new ArgumentParser()
         {
             NumberOfArgumentsToSkip = 1,
-            RecognizeSeveralCharsInShortNameAsSeveralOptions = true,
-            RecognizeSlashAsOption = true
+            RecognizeCompoundOptions = true,
+            RecognizeSlashOptions = true
         };
 
         parser.AddOptions(options);
@@ -641,7 +641,7 @@ public class ArgumentParserTest
 
         var parser = new ArgumentParser()
         {
-            RecognizeSlashAsOption = false
+            RecognizeSlashOptions = false
         };
 
         parser.AddOptions(options);
@@ -705,7 +705,7 @@ public class ArgumentParserTest
         
         var parser = new ArgumentParser()
         {
-            RecognizeSlashAsOption = true
+            RecognizeSlashOptions = true
         };
 
         parser.AddOptions(options);
@@ -720,7 +720,7 @@ public class ArgumentParserTest
     }
 
     [Fact]
-    public void Parse_SeveralCharsInOptionShortNameDisabled_OptionsNotExpanded()
+    public void Parse_CompoundOptionsDisabled_OptionsNotExpanded()
     {
         var arguments = new string[]
         {
@@ -749,7 +749,7 @@ public class ArgumentParserTest
 
         var parser = new ArgumentParser()
         {
-            RecognizeSeveralCharsInShortNameAsSeveralOptions = false
+            RecognizeCompoundOptions = false
         };
 
         parser.AddOptions(options);
@@ -764,7 +764,7 @@ public class ArgumentParserTest
     }
 
     [Fact]
-    public void Parse_SeveralCharsInOptionShortNameEnabled_OptionsExpanded()
+    public void Parse_CompoundOptionsEnabled_OptionsExpanded()
     {
         var arguments = new string[]
         {
@@ -787,7 +787,7 @@ public class ArgumentParserTest
 
         var parser = new ArgumentParser()
         {
-            RecognizeSeveralCharsInShortNameAsSeveralOptions = true
+            RecognizeCompoundOptions = true
         };
 
         parser.AddOptions(options);
@@ -931,7 +931,7 @@ public class ArgumentParserTest
         
         var parser = new ArgumentParser()
         {
-            RecognizeSlashAsOption = true
+            RecognizeSlashOptions = true
         };
 
         parser.AddOptions(options);
@@ -986,7 +986,7 @@ public class ArgumentParserTest
         
         var parser = new ArgumentParser()
         {
-            RecognizeSlashAsOption = true
+            RecognizeSlashOptions = true
         };
 
         parser.AddOptions(options);
@@ -1173,8 +1173,8 @@ public class ArgumentParserTest
         var parser = new ArgumentParser()
         {
             NumberOfArgumentsToSkip = 2,
-            RecognizeSeveralCharsInShortNameAsSeveralOptions = true,
-            RecognizeSlashAsOption = true
+            RecognizeCompoundOptions = true,
+            RecognizeSlashOptions = true
         };
 
         parser.AddOptions(options);

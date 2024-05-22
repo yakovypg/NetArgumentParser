@@ -37,8 +37,8 @@ public class ArgumentParser
     public string ProgramDescription { get; init; }
     public string ProgramEpilog { get; init; }
 
-    public bool RecognizeSeveralCharsInShortNameAsSeveralOptions { get; init; }
-    public bool RecognizeSlashAsOption { get; init; }
+    public bool RecognizeCompoundOptions { get; init; }
+    public bool RecognizeSlashOptions { get; init; }
 
     public int NumberOfArgumentsToSkip
     {
@@ -101,7 +101,7 @@ public class ArgumentParser
         while (context.Count > 0)
         {
             string contextItem = context.Dequeue();
-            var argument = new Argument(contextItem, RecognizeSlashAsOption);
+            var argument = new Argument(contextItem, RecognizeSlashOptions);
 
             bool isContextItemHandled = false;
             
@@ -169,7 +169,7 @@ public class ArgumentParser
         IEnumerable<string> consideredArguments = arguments
             .Skip(NumberOfArgumentsToSkip);
 
-        return RecognizeSeveralCharsInShortNameAsSeveralOptions
+        return RecognizeCompoundOptions
             ? Argument.ExpandShortMinusOptions(consideredArguments)
             : consideredArguments;
     }
@@ -180,8 +180,8 @@ public class ArgumentParser
             return false;
 
         string? helpOptionArgument = arguments
-            .Where(t => new Argument(t, RecognizeSlashAsOption).IsOption)
-            .Select(t => new Argument(t, RecognizeSlashAsOption).ExtractOptionName())
+            .Where(t => new Argument(t, RecognizeSlashOptions).IsOption)
+            .Select(t => new Argument(t, RecognizeSlashOptions).ExtractOptionName())
             .FirstOrDefault(t => t == helpOption.LongName || t == helpOption.ShortName);
         
         if (helpOptionArgument is not null)

@@ -20,8 +20,8 @@ string? name = default;
 var parser = new ArgumentParser()
 {
     NumberOfArgumentsToSkip = 0,
-    RecognizeSeveralCharsInShortNameAsSeveralOptions = true,
-    RecognizeSlashAsOption = true,
+    RecognizeCompoundOptions = true,
+    RecognizeSlashOptions = true,
     ProgramName = "ProgramName",
     ProgramDescription = "What the program does",
     ProgramEpilog = "Text at the bottom"
