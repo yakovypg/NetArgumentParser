@@ -50,7 +50,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.True(savaLog);
         Assert.True(autoRotate);
@@ -89,7 +89,7 @@ public class ArgumentParserTest
         var parser = new ArgumentParser();
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.Equal(StringSplitOptions.RemoveEmptyEntries, splitOption);
         Assert.Equal(BindMode.OneWayToSource, bindMode);
@@ -173,7 +173,7 @@ public class ArgumentParserTest
         var parser = new ArgumentParser();
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.Equal(bool.Parse(boolValue), recievedBool);
         Assert.Equal(byte.Parse(byteValue), recievedByte);
@@ -241,7 +241,7 @@ public class ArgumentParserTest
         var parser = new ArgumentParser();
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         var expectedMargin = new Margin(
             int.Parse(leftMargin),
@@ -319,7 +319,7 @@ public class ArgumentParserTest
         parser.AddOptions(options);
         parser.AddConverters(converters);
         
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         var expectedMargin = new Margin(
             leftMargin,
@@ -386,7 +386,7 @@ public class ArgumentParserTest
         var parser = new ArgumentParser();
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.Equal(expectedAngle, angle);
         Assert.Equal(expectedWidth, width);
@@ -524,7 +524,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         VerifyExtraArguments(expectedExtraArguments, extraArguments);
     }
@@ -584,7 +584,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         VerifyExtraArguments(expectedExtraArguments, extraArguments);
     }
@@ -645,7 +645,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.Equal(default, saveLog);
         Assert.Equal(default, width);
@@ -709,7 +709,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.True(saveLog);
         Assert.Equal(expectedWidth, width);
@@ -753,7 +753,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.True(a);
         Assert.True(abc);
@@ -791,7 +791,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.True(a);
         Assert.True(b);
@@ -831,7 +831,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.True(a);
         Assert.True(b);
@@ -871,7 +871,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.False(a);
         Assert.False(b);
@@ -935,7 +935,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.Equal(expectedAngle, angle);
         Assert.Equal(expectedWidth, width);
@@ -990,7 +990,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.True(help);
 
@@ -1180,7 +1180,7 @@ public class ArgumentParserTest
         parser.AddOptions(options);
         parser.AddConverters(converters);
 
-        parser.Parse(arguments, out List<string> extraArguments);
+        parser.ParseKnownArgs(arguments, out List<string> extraArguments);
 
         Assert.True(saveLog);
         Assert.True(autoRotate);
