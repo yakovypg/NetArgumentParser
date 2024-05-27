@@ -123,7 +123,7 @@ List<string> extraArguments = [];
 
 try
 {
-    parser.ParseKnownArgs(args, out extraArguments);
+    parser.ParseKnownArguments(args, out extraArguments);
 }
 catch (Exception ex)
 {

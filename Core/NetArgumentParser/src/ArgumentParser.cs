@@ -104,7 +104,7 @@ public class ArgumentParser
 
     #region Parsing Methods
 
-    public virtual void ParseKnownArgs(IEnumerable<string> arguments, out List<string> extraArguments)
+    public virtual void ParseKnownArguments(IEnumerable<string> arguments, out List<string> extraArguments)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
@@ -151,7 +151,7 @@ public class ArgumentParser
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
-        ParseKnownArgs(arguments, out List<string> extraArguments);
+        ParseKnownArguments(arguments, out List<string> extraArguments);
 
         if (extraArguments?.Count > 0)
             throw new ArgumentsAreUnknownException(null, [..extraArguments]);
