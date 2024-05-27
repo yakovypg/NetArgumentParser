@@ -7,6 +7,7 @@ public sealed class OptionGroup<T>
     where T : IOption
 {
     private readonly List<T> _options;
+    private string _header = string.Empty;
     
     internal OptionGroup(string header, IOptionSet<T> optionSet)
     {
@@ -19,10 +20,15 @@ public sealed class OptionGroup<T>
         OptionSet = optionSet;
     }
 
-    public string Header { get; }
-    internal IOptionSet<T> OptionSet { get; }
-
     public IReadOnlyList<T> Options => _options;
+
+    public string Header
+    {
+        get => _header;
+        set => _header = value ?? string.Empty;
+    }
+
+    internal IOptionSet<T> OptionSet { get; }
 
     public void AddOptions(params T[] options)
     {

@@ -24,11 +24,9 @@ public class ArgumentParser
         _descriptionGenerator = descriptionGenerator ?? new DescriptionGenerator(this);
         _outputWriter = outputWriter ?? new ConsoleTextWriter();
 
-        UsageHeader = "Usage: ";
-        OptionsHeader = $"Options:";
         OptionSet = new OptionSet();
 
-        _optionGroups = [new OptionGroup<ICommonOption>(OptionsHeader, OptionSet)];
+        _optionGroups = [new OptionGroup<ICommonOption>("Options:", OptionSet)];
 
         UseDefaultHelpOption = true;
         UseDefaultVersionOption = true;
@@ -38,9 +36,6 @@ public class ArgumentParser
         ProgramDescription = string.Empty;
         ProgramEpilog = string.Empty;
     }
-
-    public string UsageHeader { get; init; }
-    public string OptionsHeader { get; init; }
 
     public string ProgramName { get; init; }
     public string ProgramVersion { get; init; }

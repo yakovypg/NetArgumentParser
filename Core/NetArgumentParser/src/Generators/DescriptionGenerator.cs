@@ -21,10 +21,13 @@ public class DescriptionGenerator : IDescriptionGenerator
         Parser = parser;
         WindowWidth = int.MaxValue;
         OptionExampleCharsLimit = 30;
+
+        UsageHeader = "Usage: ";
         OptionExamplePrefix = new string(' ', 2);
         DelimiterAfterOptionExample = new string(' ', 2);
     }
 
+    public string? UsageHeader { get; init; }
     public string? OptionExamplePrefix { get; init; }
     public string? DelimiterAfterOptionExample { get; init; }
 
@@ -109,8 +112,8 @@ public class DescriptionGenerator : IDescriptionGenerator
 
     protected virtual string GenerateUsage()
     {
-        var usageBuilder = new StringBuilder(Parser.UsageHeader);
-        int emptySpaceLength = Parser.UsageHeader.Length;
+        var usageBuilder = new StringBuilder(UsageHeader);
+        int emptySpaceLength = UsageHeader?.Length ?? 0;
 
         if (!string.IsNullOrEmpty(Parser.ProgramName))
         {
