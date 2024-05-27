@@ -104,7 +104,9 @@ var converters = new IValueConverter[]
 
 var descriptionGenerator = new DescriptionGenerator(parser)
 {
+    UsageHeader = "Usage: ",
     OptionExamplePrefix = new string(' ', 2),
+    DelimiterAfterOptionExample = new string(' ', 2),
     OptionExampleCharsLimit = 30,
     WindowWidth = Console.WindowWidth
 };
