@@ -58,7 +58,7 @@ parser.ParseKnownArguments(
 ```
 
 ## Parse Known Arguments
-Sometimes a program may need to parse only part of the command-line arguments and pass the remaining arguments to another program. In this case, the `ParseKnownArguments` function may be useful. It works in much the same way as the `Parse` function, except that it doesn't throw an exception if there are additional arguments. Instead, it allows you to get a list of the extra argument.
+Sometimes a program may need to parse only part of the command-line arguments and pass the remaining arguments to another program. In this case, the `ParseKnownArguments` function may be useful. It works in much the same way as the `Parse` function, except that it doesn't throw an exception if there are additional arguments. Instead, it allows you to get a list of the extra arguments.
 
 ```cs
 bool verbose = false;
@@ -83,10 +83,8 @@ var parser = new ArgumentParser()
     NumberOfArgumentsToSkip = 1
 };
 
-/*
-...
-parser.AddOptions(...);
-*/
+// ...
+// parser.AddOptions(...);
 
 parser.Parse(new string[] { "merge", "./first.txt", "./second.txt" });
 // Only ["./first.txt", "./second.txt"] will be parsed
