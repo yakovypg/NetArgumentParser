@@ -1,5 +1,21 @@
-# NetArgumentParser
+<h1 align="center">NetArgumentParser</h1>
+<p align="center">
+  <img alt="netargumentparser" height="200" src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXFmc21tZjN4OGY2cXRyaTNqdzQwdHY3ZmRyOXdib240cmY5M2hsZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/z5zWcuq8qDfrl9B3Tp/giphy.gif" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/yakovypg/NetArgumentParser/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/License-GPLv3-darkyellow.svg" alt="license" />
+  </a>
+  <img src="https://img.shields.io/badge/Version-0.0.1-red.svg" alt="version" />
+  <img src="https://img.shields.io/badge/C%23-.NET 8-blue" />
+</p>
+
+## About
 **NetArgumentParser** is a cross-platform, free and open source library for parsing command-line options and arguments.
+
+[![Contributors](https://img.shields.io/github/contributors/yakovypg/NetArgumentParser)](https://github.com/yakovypg/NetArgumentParser/graphs/contributors)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/yakovypg/NetArgumentParser/dotnet.yml?branch=main)](https://github.com/yakovypg/NetArgumentParser/actions/workflows/dotnet.yml?query=branch%3Amain)
 
 ## Table of contents
 *    [Main Features](#main-features)
@@ -7,8 +23,8 @@
      *    [Build Project](#build-project)
      *    [Test Project](#test-project)
      *    [Connect Project](#connect-project)
-     *    [Step-By-Step Connection](#step-by-step-connection)
 *    [Project Status And TODO List](#project-status-and-todo-list)
+*    [Documentation](#documentation)
 *    [Development](#development)
 *    [Contributing](#contributing)
 *    [License](#license)
@@ -40,96 +56,7 @@ dotnet test
 ```
 
 ### Connect Project
-At fitst, you need to [add reference](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-add-reference) to the library:
-```
-dotnet add reference /Path/To/Lib/Core/NetArgumentParser
-```
-
-Next, you need to add the usings you need:
-```cs
-using NetArgumentParser;
-using NetArgumentParser.Converters;
-using NetArgumentParser.Generators;
-using NetArgumentParser.Options;
-using NetArgumentParser.Options.Context;
-```
-
-Finally, you can work with the parser.
-
-### Step-By-Step Connection
-Let's consider this step-by-step instructions for creating a sample project and connecting this library to it.
-- Step 1: Go to the directory with your projects.
-```
-cd ~/Repos
-```
-- Step 2: Create folder for your project and go to it.
-```
-mkdir MyProject && cd MyProject
-```
-- Step 3: Create solution.
-```
-dotnet new sln
-```
-- Step 4: Create your project.
-```
-dotnet new console -o MyProject
-```
-- Step 5: Add your project to the solution.
-```
-dotnet sln add ./MyProject
-```
-- Step 6: Add folder for external projects and go to it.
-```
-mkdir Vendor && cd Vendor
-```
-- Step 7: Clone **NetArgumentParser** repository.
-```
-git clone https://github.com/yakovypg/NetArgumentParser.git
-```
-- Step 8: Go back to the root folder.
-```
-cd ..
-```
-- Step 9: Add **NetArgumentParser** to the solution. 
-```
-dotnet sln add Vendor/NetArgumentParser/Core/NetArgumentParser
-```
-- Step 10: Go to your project folder.
-```
-cd MyProject
-```
-- Step 11: Add reference to the **NetArgumentParser**.
-```
-dotnet add reference ../Vendor/NetArgumentParser/Core/NetArgumentParser
-```
-- Step 12: Open Program.cs file and try using the **NetArgumentParser**.
-```cs
-using System;
-using System.Collections.Generic;
-using NetArgumentParser;
-using NetArgumentParser.Options;
-
-int? angle = default;
-
-var option = new ValueOption<int>("angle", "a",
-    description: "angle by which you want to rotate the image",
-    afterValueParsingAction: t => angle = t);
-
-var parser = new ArgumentParser();
-parser.AddOptions(option);
-parser.ParseKnownArguments(args, out List<string> extraArguments);
-
-Console.WriteLine($"Angle: {angle}");
-Console.WriteLine($"Extra arguments: {string.Join(' ', extraArguments)}");
-```
-- Step 13: Build the project.
-```
-dotnet build -c Release
-```
-- Step 14: Run the created application.
-```
-dotnet run --angle 45 A
-```
+You can find instructions for connecting **NetArgumentParser** to your project [here](Docs/ConnectProject.md).
 
 ## Project Status And TODO List
 **NetArgumentParser** is currently under development. There are some features that need to be added to the project:
@@ -145,7 +72,14 @@ dotnet run --angle 45 A
 - Add NuGet package.
 
 ## Documentation
-You can find documentation in the [Docs](Docs) folder. 
+You can find documentation in the [Docs](Docs) folder.
+
+The main topics are:
+- [Optional arguments](Docs/OptionalArguments.md)
+- [Optional arguments config](Docs/OptionalArgumentsConfig.md)
+- [Custom converters](Docs/CustomConverters.md)
+- [Printing help](Docs/PrintingHelp.md)
+- [Additional features](Docs/AdditionalFeatures.md)
 
 ## Development
 The project is developed on the .NET 8.0 platform. To continue development you will need the .NET SDK and .NET Runtime of the appropriate version.
