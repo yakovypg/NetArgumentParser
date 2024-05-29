@@ -9,6 +9,7 @@
      *    [Connect Project](#connect-project)
      *    [Step-By-Step Connection](#step-by-step-connection)
 *    [Project Status And TODO List](#project-status-and-todo-list)
+*    [Documentation](#documentation)
 *    [Development](#development)
 *    [Contributing](#contributing)
 *    [License](#license)
