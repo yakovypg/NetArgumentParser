@@ -11,6 +11,7 @@ using NetArgumentParser.Options.Context;
 bool verbose = false;
 bool quick = false;
 int? angle = default;
+int verbosityLevel = default;
 TimeSpan? time = default;
 FileMode? fileMode = default;
 List<string> inputFiles = [];
@@ -62,7 +63,11 @@ var options = new ICommonOption[]
     new ValueOption<int>("angle", "a",
         description: "angle by which you want to rotate the image",
         isRequired: true,
-        afterValueParsingAction: t => angle = t)
+        afterValueParsingAction: t => angle = t),
+    
+    new CounterOption(string.Empty, "V",
+        description: "increase verbosity level",
+        increaseCounter: () => verbosityLevel++)
 };
 
 var additionalOptions = new ICommonOption[]
@@ -134,6 +139,7 @@ catch (Exception ex)
 Console.WriteLine($"Extra arguments: {string.Join(' ', extraArguments)}");
 Console.WriteLine($"Verbose: {verbose}");
 Console.WriteLine($"Quick: {quick}");
+Console.WriteLine($"Verbosity level: {verbosityLevel}");
 Console.WriteLine($"Angle: {angle}");
 Console.WriteLine($"Time: {time}");
 Console.WriteLine($"File mode: {fileMode}");
