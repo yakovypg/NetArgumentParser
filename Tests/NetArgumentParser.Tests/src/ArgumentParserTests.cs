@@ -975,6 +975,44 @@ public class ArgumentParserTest
     }
 
     [Fact]
+    public void Parse_CounterOption_DuplicatesHandled()
+    {
+        int verbosityLevel = default;
+        const int expectedVerbosityLevel = 5;
+
+        var expectedExtraArguments = new string[]
+        {
+            "--angle",
+            "45"
+        };
+
+        var arguments = new string[]
+        {
+            "-V",
+            expectedExtraArguments[0],
+            expectedExtraArguments[1],
+            "-VVVV"
+        };
+
+        var options = new ICommonOption[]
+        {
+            new CounterOption(string.Empty, "V", increaseCounter: () => verbosityLevel++),
+        };
+
+        var parser = new ArgumentParser()
+        {
+            RecognizeCompoundOptions = true
+        };
+
+        parser.AddOptions(options);
+        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+
+        Assert.Equal(expectedVerbosityLevel, verbosityLevel);
+
+        VerifyExtraArguments(expectedExtraArguments, extraArguments);
+    }
+
+    [Fact]
     public void Parse_HelpOption_OtherArgumentsSkipped()
     {
         bool help = default;
@@ -1136,6 +1174,7 @@ public class ArgumentParserTest
         const string file4 = "file4";
 
         const int expectedWidth = 500;
+        const int expectedVerbosityLevel = 5;
         const double expectedOpacity = 0.5;
         const double expectedAbsAngle = 180;
         const double expectedAngle = -153.123;
@@ -1158,6 +1197,7 @@ public class ArgumentParserTest
         BindMode bindMode = default;
         StringSplitOptions splitOption = default;
         int width = default;
+        int verbosityLevel = default;
         double angle = default;
         double absAngle = default;
         double opacity = default;
@@ -1183,6 +1223,7 @@ public class ArgumentParserTest
             "rebase",
             expectedExtraArguments[0],
             expectedExtraArguments[1],
+            "-V",
             "/m", $"{marginLeft}", $"{marginTop}", $"{marginRight}", $"{marginBottom}",
             expectedExtraArguments[2],
             "--P", $"({pointX};{pointY})",
@@ -1192,6 +1233,7 @@ public class ArgumentParserTest
             "-lr",
             "--width", $"{expectedWidth}",
             "-q",
+            "-VVVV",
             expectedExtraArguments[4],
             "/split-option", $"{expectedSplitOption}",
             expectedExtraArguments[5],
@@ -1221,6 +1263,9 @@ public class ArgumentParserTest
 
             new FlagOption("quick-mode", "q",
                 afterHandlingAction: () => quickMode = true),
+
+            new CounterOption(string.Empty, "V",
+                increaseCounter: () => verbosityLevel++),
 
             new EnumValueOption<BindMode>("bind", "b",
                 afterValueParsingAction: t => bindMode = t),
@@ -1278,9 +1323,10 @@ public class ArgumentParserTest
         Assert.True(saveLog);
         Assert.True(autoRotate);
         Assert.True(quickMode);
-
+  
         Assert.Equal(expectedSplitOption, splitOption);
         Assert.Equal(expectedWidth, width);
+        Assert.Equal(expectedVerbosityLevel, verbosityLevel);
         Assert.Equal(expectedAngle, angle);
         Assert.Equal(expectedAbsAngle, absAngle);
         Assert.Equal(expectedOpacity, opacity);
