@@ -57,12 +57,14 @@ var options = new ICommonOption[]
     new MultipleValueOption<string>("input", "i",
         description: "images that need to be processed",
         isRequired: true,
+        valueRestriction: new OptionValueRestriction<IList<string>>(t => t.All(p => File.Exists(p))),
         contextCapture: new OneOrMoreContextCapture(),
         afterValueParsingAction: t => inputFiles = new List<string>(t)),
 
     new ValueOption<int>("angle", "a",
         description: "angle by which you want to rotate the image",
         isRequired: true,
+        choices: [0, 45, 90, 180],
         afterValueParsingAction: t => angle = t),
     
     new CounterOption(string.Empty, "V",
