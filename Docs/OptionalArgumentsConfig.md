@@ -15,6 +15,7 @@ Optional arguments can be configured differently. Now you will find out exactly 
      *    [Default Value](#default-value)
      *    [Value Restrictions](#value-restrictions)
      *    [Required Options](#required-options)
+     *    [Hidden Options And Aliases](#hidden-options-and-aliases)
      *    [Context Capture](#context-capture)
      *    [After Handling Action](#after-handling-action)
 
@@ -149,6 +150,25 @@ var option = new ValueOption<int>("angle", "a",
     description: "angle by which you want to rotate the image",
     isRequired: true);
 ```
+
+### Hidden Options And Aliases
+Sometimes you need to hide an option from being used when printing command-line help. For example, to gradually refuse a deprecated argument name without breaking backwards compatibility. You can make the option hidden as follows:
+
+```cs
+var option = new ValueOption<int>("angle", "a",
+    description: "angle by which you want to rotate the image",
+    isHidden: true);
+```
+
+Another way to maintain backward compatibility is to use aliases. They will not be displayed when printing text, but can be used as an option identifier, just like the short and long names. You can specify option aliases as follows:
+
+```cs
+var option = new ValueOption<int>("angle", "a",
+    description: "angle by which you want to rotate the image",
+    aliases: ["rotation-angle", "rotation", "A"]);
+```
+
+Please note that aliases must be unique like short and long names.
 
 ### Context Capture
 For multiple value options you can specify the number of arguments to be captured as their value.
