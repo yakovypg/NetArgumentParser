@@ -5,12 +5,13 @@ namespace NetArgumentParser.Options;
 public sealed class HelpOption : FlagOption, IEquatable<HelpOption>
 {
     public HelpOption(Action? afterHandlingAction = null)
-        : this("help", "h", "show command-line help", afterHandlingAction) {}
+        : this("help", "h", "show command-line help", false, afterHandlingAction) {}
 
     public HelpOption(
         string longName,
         string shortName = "",
         string description = "",
+        bool isHidden = false,
         Action? afterHandlingAction = null)
         
         : base(
@@ -18,6 +19,7 @@ public sealed class HelpOption : FlagOption, IEquatable<HelpOption>
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
             description ?? throw new ArgumentNullException(nameof(description)),
             false,
+            isHidden,
             afterHandlingAction)
     {
     }

@@ -6,4 +6,5 @@ public interface IOption
     string ShortName { get; }
     string Description { get; }
     bool IsRequired { get; }
+    bool IsHidden { get; }
 }

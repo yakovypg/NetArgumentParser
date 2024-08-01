@@ -12,6 +12,7 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
         string shortName = "",
         string description = "",
         bool isRequired = false,
+        bool isHidden = false,
         IContextCapture? contextCapture = null)
     {
         ArgumentNullException.ThrowIfNull(longName, nameof(longName));
@@ -26,6 +27,7 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
         ShortName = shortName;
         Description = description;
         IsRequired = isRequired;
+        IsHidden = isHidden;
         ContextCapture = contextCapture ?? new EmptyContextCapture();
     }
 
@@ -35,6 +37,7 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
     public string ShortName { get; }
     public string Description { get; }
     public bool IsRequired { get; }
+    public bool IsHidden { get; }
     public IContextCapture ContextCapture { get; }
 
     public bool IsHandled { get; protected set; }

@@ -9,6 +9,7 @@ public class CounterOption : FlagOption, IEquatable<FlagOption>
         string shortName = "",
         string description = "",
         bool isRequired = false,
+        bool isHidden = false,
         Action? increaseCounter = null)
         
         : base(
@@ -16,6 +17,7 @@ public class CounterOption : FlagOption, IEquatable<FlagOption>
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
             description ?? throw new ArgumentNullException(nameof(description)),
             isRequired,
+            isHidden,
             increaseCounter)
     {
     }
