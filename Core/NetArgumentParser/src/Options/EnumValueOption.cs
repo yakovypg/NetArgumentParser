@@ -25,7 +25,7 @@ public class EnumValueOption<T> : ValueOption<T>
             description ?? throw new ArgumentNullException(nameof(description)),
             metaVariable ?? throw new ArgumentNullException(nameof(metaVariable)),
             isRequired,
-            choices ?? Enum.GetValues<T>(),
+            choices,
             defaultValue,
             valueRestriction,
             afterValueParsingAction,

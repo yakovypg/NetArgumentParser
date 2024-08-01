@@ -70,7 +70,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
         {
             if (defaultValue is not null && !valueRestriction.IsValueAllowed(defaultValue.Value))
                 throw new OptionValueNotSatisfyRestrictionException(null, [$"{defaultValue.Value}"]);
-            
+
             if (_choices.Count > 0 && _choices.Any(t => !valueRestriction.IsValueAllowed(t)))
             {
                 throw new OptionValueNotSatisfyRestrictionException(

@@ -1537,6 +1537,7 @@ public class ArgumentParserTest
                 increaseCounter: () => verbosityLevel++),
 
             new EnumValueOption<BindMode>("bind", "b",
+                valueRestriction: new OptionValueRestriction<BindMode>(t => t == BindMode.TwoWay),
                 afterValueParsingAction: t => bindMode = t),
 
             new EnumValueOption<StringSplitOptions>("split-option", "s",
