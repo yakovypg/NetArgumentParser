@@ -11,7 +11,9 @@ Optional arguments can be configured differently. Now you will find out exactly 
 *    [Options Configuration](#options-configuration)
      *    [Names and Description](#names-and-description)
      *    [Meta Variable](#meta-variable)
+     *    [Value Choices](#value-choices)
      *    [Default Value](#default-value)
+     *    [Value Restrictions](#value-restrictions)
      *    [Required Options](#required-options)
      *    [Context Capture](#context-capture)
      *    [After Handling Action](#after-handling-action)
@@ -100,6 +102,21 @@ Options:
   --angle A, -a A  angle by which you want to rotate the image
 ```
 
+### Value Choices
+You can specify a set of allowed values for the option. Value choices is only available for value options.
+
+```cs
+var valueOption = new ValueOption<int>("angle", "a",
+    description: "angle by which you want to rotate the image",
+    choices: [0, 45, 90]);
+
+var multipleValueOption = new MultipleValueOption<byte>("margin", "m",
+    choices: [[0, 0, 0, 0], [10, 10, 10, 10]]);
+
+var enumValueOption = new EnumValueOption<StringSplitOptions>("options", "o",
+    choices: [StringSplitOptions.TrimEntries, StringSplitOptions.RemoveEmptyEntries])
+```
+
 ### Default Value
 You can specify a default value for the option. In this case, if the input argument list doesn't contain a matching argument, the option will be assigned its default value. Default value is only available for value options.
 
@@ -107,6 +124,21 @@ You can specify a default value for the option. In this case, if the input argum
 var option = new ValueOption<int>("angle", "a",
     description: "angle by which you want to rotate the image",
     defaultValue: 60);
+```
+
+### Value Restrictions
+You can specify a restriction for option values. For example, you can limit the value only positive numbers. Value restrictions is only available for value options.
+
+```cs
+var valueOption = new ValueOption<int>("angle", "a",
+    description: "angle by which you want to rotate the image",
+    valueRestriction: new OptionValueRestriction<int>(t => t > 0));
+
+var multipleValueOption = new MultipleValueOption<byte>("margin", "m",
+    valueRestriction: new OptionValueRestriction<IList<byte>>(t => t.Contains(5)));
+
+var enumValueOption = new EnumValueOption<StringSplitOptions>("options", "o",
+    valueRestriction: new OptionValueRestriction<StringSplitOptions>(t => t != StringSplitOptions.None))
 ```
 
 ### Required Options
