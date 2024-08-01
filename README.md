@@ -62,7 +62,6 @@ You can find instructions for connecting **NetArgumentParser** to your project [
 **NetArgumentParser** is currently under development. There are some features that need to be added to the project:
 - Add support of subcommands.
 - Add support of reflection-based configuring option set using special attributes.
-- Add support of restricting the set of values for an argument.
 - Add support of hidden arguments and aliases.
 - Add support of import and export JSON configuration.
 - Add support of parent parsers.
