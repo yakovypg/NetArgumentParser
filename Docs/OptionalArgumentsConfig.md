@@ -7,6 +7,7 @@ Optional arguments can be configured differently. Now you will find out exactly 
      *    [Compound Options](#compound-options)
      *    [Double Minus Options](#double-minus-options)
      *    [Slash Options](#slash-options)
+     *    [Custom Option View](#custom-option-view)
 *    [Options Configuration](#options-configuration)
      *    [Names and Description](#names-and-description)
      *    [Meta Variable](#meta-variable)
@@ -47,6 +48,19 @@ var parser = new ArgumentParser()
 ```
 
 Please note that you won't be able to pass Linux-style absolute paths (e.g. `/home/user/Downloads/file.txt`) as arguments after doing this, as they will be handled as options. The same applies to other arguments starting with a slash.
+
+### Custom Option View
+You can change assignmnet character, slash option prefix and short named (short minus) option prefix. To do this, you need to specify a specific value in the corresponding property of class `SpecialCharacters`. You can do it the same way as in the following example:
+
+```cs
+using NetArgumentParser.Configuration;
+
+SpecialCharacters.AssignmentCharacter = '>';
+SpecialCharacters.SlashOptionPrefix = '|';
+SpecialCharacters.ShortNamedOptionPrefix = '+';
+```
+
+This configuration will be applied to all existing parsers.
 
 ## Options Configuration
 **NetArgumentParser** supports many configurations for options.
