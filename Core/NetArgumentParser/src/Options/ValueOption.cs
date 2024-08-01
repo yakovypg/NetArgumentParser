@@ -17,6 +17,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
         string description = "",
         string metaVariable = "",
         bool isRequired = false,
+        bool isHidden = false,
         IEnumerable<T>? choices = null,
         DefaultOptionValue<T>? defaultValue = null,
         OptionValueRestriction<T>? valueRestriction = null,
@@ -28,6 +29,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
             description,
             metaVariable,
             isRequired,
+            isHidden,
             choices,
             defaultValue,
             valueRestriction,
@@ -42,6 +44,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
         string description = "",
         string metaVariable = "",
         bool isRequired = false,
+        bool isHidden = false,
         IEnumerable<T>? choices = null,
         DefaultOptionValue<T>? defaultValue = null,
         OptionValueRestriction<T>? valueRestriction = null,
@@ -53,6 +56,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
             description ?? throw new ArgumentNullException(nameof(description)),
             isRequired,
+            isHidden,
             contextCapture ?? new FixedContextCapture(1))
     {
         ArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));

@@ -140,7 +140,7 @@ public class DescriptionGenerator : IDescriptionGenerator
 
     protected virtual IEnumerable<string> GenerateOptionDescriptionsForUsage()
     {
-        return Parser.AllOptions.Select(t =>
+        return Parser.VisibleOptions.Select(t =>
         {
             string example = t.GetShortExample();
             return t.IsRequired ? example : $"[{example}]";
@@ -153,7 +153,7 @@ public class DescriptionGenerator : IDescriptionGenerator
 
         var descriptionBuilder = new StringBuilder();
 
-        foreach (ICommonOption option in optionGroup.Options)
+        foreach (ICommonOption option in optionGroup.VisibleOptions)
         {
             AppendOptionExample(descriptionBuilder, option);
             AppendOptionDescription(descriptionBuilder, option);
@@ -232,7 +232,7 @@ public class DescriptionGenerator : IDescriptionGenerator
 
     private int GetMaxOptionExampleLength()
     {
-        int maxOptionExampleLength = Parser.AllOptions
+        int maxOptionExampleLength = Parser.VisibleOptions
             .Where(t => t.GetLongExample().Length <= OptionExampleCharsLimit)
             .Max(t => t.GetLongExample().Length);
         

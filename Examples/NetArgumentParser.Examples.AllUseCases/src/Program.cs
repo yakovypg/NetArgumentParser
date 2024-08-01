@@ -49,6 +49,11 @@ var options = new ICommonOption[]
     new FlagOption("verbose", "v",
         description: "be verbose",
         afterHandlingAction: () => verbose = true),
+    
+    new FlagOption("legacy-verbose", string.Empty,
+        description: "be verbose",
+        isHidden: true,
+        afterHandlingAction: () => verbose = true),
 
     new FlagOption(string.Empty, "q",
         description: "use fast algorithm",

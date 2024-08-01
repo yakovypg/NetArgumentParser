@@ -78,9 +78,12 @@ public class ArgumentParser
         }
     }
 
-    public OptionGroup<ICommonOption> DefaultGroup => _optionGroups.First();
     public IReadOnlyList<ICommonOption> AllOptions => OptionSet.Options;
+    public IEnumerable<ICommonOption> HiddenOptions => AllOptions.Where(t => t.IsHidden);
+    public IEnumerable<ICommonOption> VisibleOptions => AllOptions.Where(t => !t.IsHidden);
+
     public IReadOnlyList<OptionGroup<ICommonOption>> OptionGroups => _optionGroups;
+    public OptionGroup<ICommonOption> DefaultGroup => _optionGroups.First();
 
     protected IOptionSet<ICommonOption> OptionSet { get; }
 

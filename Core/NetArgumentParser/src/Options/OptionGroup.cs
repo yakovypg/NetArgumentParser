@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetArgumentParser.Options;
 
@@ -21,6 +22,8 @@ public sealed class OptionGroup<T>
     }
 
     public IReadOnlyList<T> Options => _options;
+    public IEnumerable<T> HiddenOptions => Options.Where(t => t.IsHidden);
+    public IEnumerable<T> VisibleOptions => Options.Where(t => !t.IsHidden);
 
     public string Header
     {
