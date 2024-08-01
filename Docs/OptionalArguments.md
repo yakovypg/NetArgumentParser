@@ -5,6 +5,7 @@ Let's consider **optional arguments**. Optional arguments start with `-`, `--` o
 *    [Flag Options](#flag-options)
      *    [Help Option](#help-option)
      *    [Version Option](#version-option)
+     *    [Counter Option](#counter-option)
 *    [Value Options](#value-options)
      *    [Multiple Value Options](#multiple-value-options)
      *    [Enum Value Options](#enum-value-options)
@@ -106,6 +107,25 @@ var option = new VersionOption("version", "v",
 
 parser.AddOptions(option);
 parser.Parse(new string[] { "--version" });
+```
+
+### Counter Option
+**Counter option** is a special flag option that can be handled multiple times. It can help you to work with counter variable.
+
+Here is an example of creating counter option and using it in the parser:
+
+```cs
+int level = default;
+var option = new CounterOption(string.Empty, "V", increaseCounter: () => level++);
+
+var parser = new ArgumentParser()
+{
+    RecognizeCompoundOptions = true
+};
+
+parser.AddOptions(option);
+parser.Parse(new string[] { "-VVVV", "-V" });
+// level: 5
 ```
 
 ## Value Options
