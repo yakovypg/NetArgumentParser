@@ -910,7 +910,7 @@ public class ArgumentParserTest
     }
 
     [Fact]
-    public void Parse_OptionsWithEqualSign_HandledCorrectly()
+    public void Parse_OptionsWithAssignmentCharacter_HandledCorrectly()
     {
         const double expectedAngle = -5.5;
         const int expectedWidth = 1920;
