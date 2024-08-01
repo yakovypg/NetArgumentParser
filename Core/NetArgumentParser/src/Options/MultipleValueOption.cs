@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NetArgumentParser.Configuration;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Options.Context;
@@ -14,7 +15,9 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>, IEquatable<Multiple
         string description = "",
         string metaVariable = "",
         bool isRequired = false,
+        IEnumerable<IList<T>>? choices = null,
         DefaultOptionValue<IList<T>>? defaultValue = null,
+        OptionValueRestriction<IList<T>>? valueRestriction = null,
         Action<IList<T>>? afterValueParsingAction = null,
         IContextCapture? contextCapture = null)
         
@@ -24,7 +27,9 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>, IEquatable<Multiple
             description ?? throw new ArgumentNullException(nameof(description)),
             metaVariable ?? throw new ArgumentNullException(nameof(metaVariable)),
             isRequired,
+            choices,
             defaultValue,
+            valueRestriction,
             afterValueParsingAction,
             contextCapture ?? new ZeroOrMoreContextCapture())
     {
@@ -67,15 +72,16 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>, IEquatable<Multiple
         if (ContextCapture.MinNumberOfItemsToCapture > value.Length)
             throw new OptionValueNotRecognizedException(null, value);
 
-        var collection = new List<T>();
+        var parsedCollection = new List<T>();
 
         foreach (string item in value)
         {
             IList<T> parsedValue = converter.Convert(item);
-            collection.AddRange(parsedValue);
+            parsedCollection.AddRange(parsedValue);
         }
 
-        OnValueParsed(new OptionValueEventArgs<IList<T>>(collection));
+        VerifyValueIsAllowed(parsedCollection, value);
+        OnValueParsed(new OptionValueEventArgs<IList<T>>(parsedCollection));
     }
 
     protected override IValueConverter<IList<T>> GetDefaultConverter()
@@ -85,5 +91,18 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>, IEquatable<Multiple
         return converter is MultipleValueConverter<T> defaultConverter
             ? defaultConverter
             : throw new DefaultConverterNotFoundException(null, typeof(T));
+    }
+
+    protected override string[] GetAllowedValues()
+    {
+        return Choices
+            .Select(t => $"[{string.Join(", ", t)}]")
+            .ToArray();
+    }
+
+    protected override bool IsValueSatisfyChoices(IList<T> value)
+    {
+        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        return Choices.Count == 0 || Choices.Any(t => t.SequenceEqual(value));
     }
 }
