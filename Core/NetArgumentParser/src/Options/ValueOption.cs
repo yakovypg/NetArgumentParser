@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using NetArgumentParser.Configuration;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Options.Context;
 
@@ -123,8 +124,12 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
     {
         string value = MetaVariable;
 
+        string longExample =
+            $"{SpecialCharacters.LongNamedOptionPrefix}{LongName} {value}, " +
+            $"{SpecialCharacters.ShortNamedOptionPrefix}{ShortName} {value}";
+
         return !string.IsNullOrEmpty(LongName) && ! string.IsNullOrEmpty(ShortName)
-            ? $"{_longNamePrefix}{LongName} {value}, {_shortNamePrefix}{ShortName} {value}"
+            ? longExample
             : GetShortExample();
     }
 

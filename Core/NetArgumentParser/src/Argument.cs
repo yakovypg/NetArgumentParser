@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetArgumentParser.Configuration;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
 
@@ -19,24 +20,26 @@ public class Argument
     public string Data { get; }
     public bool RecognizeSlashAsOption { get; init; }
 
-    public bool IsLongMinusOption => Data.Length >= 3 && Data.StartsWith("--");
+    public bool IsLongNamedOption =>
+        Data.Length >= SpecialCharacters.LongNamedOptionPrefix.Length + 1
+        && Data.StartsWith(SpecialCharacters.LongNamedOptionPrefix);
 
     public bool IsSlashOption => RecognizeSlashAsOption
         && Data.Length >= 2
-        && Data.StartsWith('/');
+        && Data.StartsWith(SpecialCharacters.SlashOptionPrefix);
 
-    public bool IsShortMinusOption => !IsLongMinusOption
+    public bool IsShortNamedOption => !IsLongNamedOption
         && Data.Length >= 2
-        && Data.StartsWith('-')
+        && Data.StartsWith(SpecialCharacters.ShortNamedOptionPrefix)
         && !char.IsDigit(Data[1]);
     
-    public bool IsOption => IsShortMinusOption
-        || IsLongMinusOption
+    public bool IsOption => IsShortNamedOption
+        || IsLongNamedOption
         || (RecognizeSlashAsOption && IsSlashOption);
 
-    public bool HasValueAfterEqualSign()
+    public bool HasValueAfterAssignmentCharacter()
     {
-        int equationIndex = Data.IndexOf('=');   
+        int equationIndex = Data.IndexOf(SpecialCharacters.AssignmentCharacter);   
         return equationIndex >= 0 && equationIndex < Data.Length - 1;
     }
 
@@ -45,27 +48,28 @@ public class Argument
         if (!IsOption)
             throw new InvalidOperationException("Argument is not option.");
         
-        string argumentWithoutPrefix = Data.StartsWith("--")
-            ? Data.Remove(0, 2)
-            : Data.StartsWith('-') || Data.StartsWith('/')
+        string argumentWithoutPrefix = Data.StartsWith(SpecialCharacters.LongNamedOptionPrefix)
+            ? Data.Remove(0, SpecialCharacters.LongNamedOptionPrefix.Length)
+            : Data.StartsWith(SpecialCharacters.ShortNamedOptionPrefix)
+                || Data.StartsWith(SpecialCharacters.SlashOptionPrefix)
             ? Data.Remove(0, 1)
             : Data;
         
-        if (argumentWithoutPrefix.Contains('='))
+        if (argumentWithoutPrefix.Contains(SpecialCharacters.AssignmentCharacter))
         {
-            int equationIndex = argumentWithoutPrefix.IndexOf('=');
+            int equationIndex = argumentWithoutPrefix.IndexOf(SpecialCharacters.AssignmentCharacter);
             return argumentWithoutPrefix.Remove(equationIndex);
         }
 
         return argumentWithoutPrefix;
     }
 
-    public string ExtractValueAfterEqualSign()
+    public string ExtractValueAfterAssignmentCharacter()
     {
-        if (!HasValueAfterEqualSign())
+        if (!HasValueAfterAssignmentCharacter())
             throw new ArgumentValueNotSpecifiedException(null, Data);
 
-        int equationIndex = Data.IndexOf('=');
+        int equationIndex = Data.IndexOf(SpecialCharacters.AssignmentCharacter);
         return Data[(equationIndex + 1)..];
     }
 
@@ -77,12 +81,12 @@ public class Argument
         if (!IsOption)
             throw new InvalidOperationException("Argument is not option.");
 
-        if (HasValueAfterEqualSign())
+        if (HasValueAfterAssignmentCharacter())
         {
             if (option.ContextCapture.MinNumberOfItemsToCapture > 1)
                 throw new ArgumentValueNotRecognizedException(null, Data);
             
-            return [ExtractValueAfterEqualSign()];
+            return [ExtractValueAfterAssignmentCharacter()];
         }
         else
         {
@@ -120,16 +124,16 @@ public class Argument
         return new OptionValue(option, optionValue);
     }
 
-    public IEnumerable<string> ExpandShortMinusOptionName()
+    public IEnumerable<string> ExpandShortNamedOptionName()
     {
-        if (!IsShortMinusOption)
+        if (!IsShortNamedOption)
             throw new InvalidOperationException("Argument is not short minus option.");
 
         string name = ExtractOptionName();
         return name.ToCharArray().Select(t => $"-{t}");
     }
 
-    public static List<string> ExpandShortMinusOptions(IEnumerable<string> arguments)
+    public static List<string> ExpandShortNamedOptions(IEnumerable<string> arguments)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
@@ -139,9 +143,9 @@ public class Argument
         {
             var argumentInfo = new Argument(argument, false);
 
-            if (argumentInfo.IsShortMinusOption && !argumentInfo.HasValueAfterEqualSign())
+            if (argumentInfo.IsShortNamedOption && !argumentInfo.HasValueAfterAssignmentCharacter())
             {
-                IEnumerable<string> expandedOptions = argumentInfo.ExpandShortMinusOptionName();          
+                IEnumerable<string> expandedOptions = argumentInfo.ExpandShortNamedOptionName();          
                 newOptions.AddRange(expandedOptions);
             }
             else

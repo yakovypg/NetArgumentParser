@@ -1,14 +1,12 @@
 using System;
+using NetArgumentParser.Configuration;
 using NetArgumentParser.Options.Context;
 using NetArgumentParser.Options.Utils.Verifiers;
 
 namespace NetArgumentParser.Options;
 
 public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
-{   
-    protected const string _shortNamePrefix = "-";
-    protected const string _longNamePrefix = "--";
-    
+{
     protected CommonOption(
         string longName,
         string shortName = "",
@@ -75,8 +73,8 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
     public string GetPrefferedNameWithPrefix()
     {
         return string.IsNullOrEmpty(LongName)
-            ? $"{_shortNamePrefix}{ShortName}"
-            : $"{_longNamePrefix}{LongName}";
+            ? $"{SpecialCharacters.ShortNamedOptionPrefix}{ShortName}"
+            : $"{SpecialCharacters.LongNamedOptionPrefix}{LongName}";
     }
     
     public virtual string GetShortExample()
@@ -86,8 +84,12 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
 
     public virtual string GetLongExample()
     {
+        string longExample =
+            $"{SpecialCharacters.LongNamedOptionPrefix}{LongName}, " +
+            $"{SpecialCharacters.ShortNamedOptionPrefix}{ShortName}";
+
         return !string.IsNullOrEmpty(LongName) && !string.IsNullOrEmpty(ShortName)
-            ? $"{_longNamePrefix}{LongName}, {_shortNamePrefix}{ShortName}"
+            ? longExample
             : GetShortExample();
     }
 
