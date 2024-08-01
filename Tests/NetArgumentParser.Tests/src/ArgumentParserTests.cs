@@ -996,7 +996,7 @@ public class ArgumentParserTest
 
         var options = new ICommonOption[]
         {
-            new CounterOption(string.Empty, "V", increaseCounter: () => verbosityLevel++),
+            new CounterOption(string.Empty, "V", increaseCounter: () => verbosityLevel++)
         };
 
         var parser = new ArgumentParser()
