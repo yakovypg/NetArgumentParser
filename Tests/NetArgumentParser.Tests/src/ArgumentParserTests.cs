@@ -491,6 +491,275 @@ public class ArgumentParserTest
     }
 
     [Fact]
+    public void Parse_ValueOptions_ThrowsExceptionIfValueNotSatisfyRestriction()
+    {
+        var arguments = new string[]
+        {
+            "-H", "1",
+            "-w", "-1",
+            "-a", "45",
+            "--name", "John15",
+            "--fruit", "apple",
+            "-o", "0.5"
+        };
+
+        var optionsWithIncorrectChoice = new ICommonOption[]
+        {
+            new ValueOption<int>(string.Empty, "w",
+                valueRestriction: new OptionValueRestriction<int>(t => t > 0)),
+
+            new ValueOption<double>(string.Empty, "H",
+                valueRestriction: new OptionValueRestriction<double>(t => t > -1 && t < 1)),
+
+            new ValueOption<string>("name", string.Empty,
+                valueRestriction: new OptionValueRestriction<string>(t => !t.Any(c => char.IsDigit(c)))),
+        };
+
+        var optionsWithCorrectChoice = new ICommonOption[]
+        {
+            new ValueOption<int>(string.Empty, "a",
+                valueRestriction: new OptionValueRestriction<int>(t => t > 0)),
+
+            new ValueOption<double>(string.Empty, "o",
+                valueRestriction: new OptionValueRestriction<double>(t => t > -1 && t < 1)),
+
+            new ValueOption<string>("fruit", string.Empty,
+                valueRestriction: new OptionValueRestriction<string>(t => !t.Any(c => char.IsDigit(c)))),
+        };
+
+        var allOptions = optionsWithIncorrectChoice.Concat(optionsWithCorrectChoice);
+
+        var parser = new ArgumentParser();
+        parser.AddOptions(allOptions.ToArray());
+
+        foreach (ICommonOption option in optionsWithIncorrectChoice)
+        {
+            Assert.Throws<OptionValueNotSatisfyRestrictionException>(() =>
+            {
+                parser.ParseKnownArguments(arguments, out _);
+            });
+
+            parser.RemoveOption(option);
+            parser.ResetOptionsHandledState();
+        }
+
+        Exception? ex = Record.Exception(
+            () => parser.ParseKnownArguments(arguments, out _));
+
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_MultipleValueOptions_ThrowsExceptionIfValueNotSatisfyRestriction()
+    {
+        var arguments = new string[]
+        {
+            "-m", "4", "3", "2", "1",
+            "-n", "0",
+            "-k", "3", "2", "1",
+            "--files", "img.jpg", "img.png"
+        };
+
+        var optionsWithIncorrectChoice = new ICommonOption[]
+        {
+            new MultipleValueOption<byte>("margin", "m",
+                contextCapture: new FixedContextCapture(4),
+                valueRestriction: new OptionValueRestriction<IList<byte>>(t => t.Contains(5))),
+
+            new MultipleValueOption<string>(string.Empty, "n",
+                contextCapture: new ZeroOrMoreContextCapture(),
+                valueRestriction: new OptionValueRestriction<IList<string>>(t => !t.Contains("0")))
+        };
+
+        var optionsWithCorrectChoice = new ICommonOption[]
+        {
+            new MultipleValueOption<byte>(string.Empty, "k",
+                contextCapture: new OneOrMoreContextCapture(),
+                valueRestriction: new OptionValueRestriction<IList<byte>>(t => !t.Contains(4))),
+
+            new MultipleValueOption<string>("files", "f",
+                contextCapture: new ZeroOrMoreContextCapture(),
+                valueRestriction: new OptionValueRestriction<IList<string>>(t => t.Count > 1))
+        };
+
+        var allOptions = optionsWithIncorrectChoice.Concat(optionsWithCorrectChoice);
+
+        var parser = new ArgumentParser();
+        parser.AddOptions(allOptions.ToArray());
+
+        foreach (ICommonOption option in optionsWithIncorrectChoice)
+        {
+            Assert.Throws<OptionValueNotSatisfyRestrictionException>(() =>
+            {
+                parser.ParseKnownArguments(arguments, out _);
+            });
+
+            parser.RemoveOption(option);
+            parser.ResetOptionsHandledState();
+        }
+
+        Exception? ex = Record.Exception(
+            () => parser.ParseKnownArguments(arguments, out _));
+            
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_ValueOptions_ThrowsExceptionIfValueNotSatisfyChoices()
+    {
+        var arguments = new string[]
+        {
+            "-H", "1080",
+            "-w", "1000",
+            "-a", "45",
+            "--name", "John",
+            "--fruit", "banana",
+            "-o", "0.5"
+        };
+
+        var optionsWithIncorrectChoice = new ICommonOption[]
+        {
+            new ValueOption<int>(string.Empty, "w", choices: [1920, 1366, 1280]),
+            new ValueOption<double>(string.Empty, "H", choices: [1080, 768, 720]),
+            new ValueOption<string>("name", string.Empty, choices: ["Tom"]),
+        };
+
+        var optionsWithCorrectChoice = new ICommonOption[]
+        {
+            new ValueOption<int>(string.Empty, "a", choices: [0, 45, 90]),
+            new ValueOption<double>(string.Empty, "o", choices: [0.1, 0.5, 1]),
+            new ValueOption<string>("fruit", string.Empty, choices: ["apple", "banana"]),
+        };
+
+        var allOptions = optionsWithIncorrectChoice.Concat(optionsWithCorrectChoice);
+
+        var parser = new ArgumentParser();
+        parser.AddOptions(allOptions.ToArray());
+
+        foreach (ICommonOption option in optionsWithIncorrectChoice)
+        {
+            Assert.Throws<OptionValueNotSatisfyChoicesException>(() =>
+            {
+                parser.ParseKnownArguments(arguments, out _);
+            });
+
+            parser.RemoveOption(option);
+            parser.ResetOptionsHandledState();
+        }
+
+        Exception? ex = Record.Exception(
+            () => parser.ParseKnownArguments(arguments, out _));
+
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_EnumValueOptions_ThrowsExceptionIfValueNotSatisfyChoices()
+    {
+        var arguments = new string[]
+        {
+            "-a", BindMode.OneWay.ToString(),
+            "-c", BindMode.OneWay.ToString(),
+            "-b", StringSplitOptions.RemoveEmptyEntries.ToString(),
+            "-d", StringSplitOptions.RemoveEmptyEntries.ToString()
+        };
+
+        var optionsWithIncorrectChoice = new ICommonOption[]
+        {
+            new EnumValueOption<BindMode>(string.Empty, "a",
+                choices: [BindMode.TwoWay, BindMode.OneWayToSource]),
+
+            new EnumValueOption<StringSplitOptions>(string.Empty, "b",
+                choices: [StringSplitOptions.TrimEntries])
+        };
+
+        var optionsWithCorrectChoice = new ICommonOption[]
+        {
+            new EnumValueOption<BindMode>(string.Empty, "c",
+                choices: [BindMode.OneWay, BindMode.OneWayToSource]),
+
+            new EnumValueOption<StringSplitOptions>(string.Empty, "d",
+                choices: [StringSplitOptions.RemoveEmptyEntries])
+        };
+
+        var allOptions = optionsWithIncorrectChoice.Concat(optionsWithCorrectChoice);
+
+        var parser = new ArgumentParser();
+        parser.AddOptions(allOptions.ToArray());
+
+        foreach (ICommonOption option in optionsWithIncorrectChoice)
+        {
+            Assert.Throws<OptionValueNotSatisfyChoicesException>(() =>
+            {
+                parser.ParseKnownArguments(arguments, out _);
+            });
+
+            parser.RemoveOption(option);
+            parser.ResetOptionsHandledState();
+        }
+
+        Exception? ex = Record.Exception(
+            () => parser.ParseKnownArguments(arguments, out _));
+
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_MultipleValueOptions_ThrowsExceptionIfValueNotSatisfyChoices()
+    {
+        var arguments = new string[]
+        {
+            "-m", "4", "3", "2", "1",
+            "-n", "1000",
+            "-k", "3", "2", "1",
+            "--files", "img.jpg", "img.png"
+        };
+
+        var optionsWithIncorrectChoice = new ICommonOption[]
+        {
+            new MultipleValueOption<byte>("margin", "m",
+                contextCapture: new FixedContextCapture(4),
+                choices: [[1, 2, 3, 4], [0, 0, 1]]),
+
+            new MultipleValueOption<string>(string.Empty, "n",
+                contextCapture: new ZeroOrMoreContextCapture(),
+                choices: [["1", "2", "3"], ["3", "2", "1"]])
+        };
+
+        var optionsWithCorrectChoice = new ICommonOption[]
+        {
+            new MultipleValueOption<byte>(string.Empty, "k",
+                contextCapture: new OneOrMoreContextCapture(),
+                choices: [[1], [3, 2, 1]]),
+
+            new MultipleValueOption<string>("files", "f",
+                contextCapture: new ZeroOrMoreContextCapture(),
+                choices: [["img.jpg", "img.png"]])
+        };
+
+        var allOptions = optionsWithIncorrectChoice.Concat(optionsWithCorrectChoice);
+
+        var parser = new ArgumentParser();
+        parser.AddOptions(allOptions.ToArray());
+
+        foreach (ICommonOption option in optionsWithIncorrectChoice)
+        {
+            Assert.Throws<OptionValueNotSatisfyChoicesException>(() =>
+            {
+                parser.ParseKnownArguments(arguments, out _);
+            });
+
+            parser.RemoveOption(option);
+            parser.ResetOptionsHandledState();
+        }
+
+        Exception? ex = Record.Exception(
+            () => parser.ParseKnownArguments(arguments, out _));
+            
+        Assert.Null(ex);
+    }
+
+    [Fact]
     public void Parse_MinusBasedOptions_ExtraArgumentsExtracted()
     {
         var expectedExtraArguments = new string[]
@@ -1274,9 +1543,11 @@ public class ArgumentParserTest
                 afterValueParsingAction: t => splitOption = t),
 
             new ValueOption<int>("width", "w",
+                valueRestriction: new OptionValueRestriction<int>(t => t > 0),
                 afterValueParsingAction: t => width = t),
 
             new ValueOption<double>("angle", "a",
+                choices: [-153.123, 90],
                 afterValueParsingAction: t => angle = t),
 
             new ValueOption<double>("opacity", "o",
@@ -1287,6 +1558,7 @@ public class ArgumentParserTest
 
             new MultipleValueOption<byte>("margin", "m",
                 contextCapture: new FixedContextCapture(4),
+                choices: [[15, 10, 5, 15]],
                 afterValueParsingAction: t => margin = new Margin(t[0], t[1], t[2], t[3])),
 
             new MultipleValueOption<string>("files", "f",

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NetArgumentParser.Configuration;
 using NetArgumentParser.Converters;
@@ -8,13 +9,17 @@ namespace NetArgumentParser.Options;
 
 public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOption<T>>
 {
+    private readonly List<T> _choices;
+
     public ValueOption(
         string longName,
         string shortName = "",
         string description = "",
         string metaVariable = "",
         bool isRequired = false,
+        IEnumerable<T>? choices = null,
         DefaultOptionValue<T>? defaultValue = null,
+        OptionValueRestriction<T>? valueRestriction = null,
         Action<T>? afterValueParsingAction = null)
 
         : this(
@@ -23,7 +28,9 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
             description,
             metaVariable,
             isRequired,
+            choices,
             defaultValue,
+            valueRestriction,
             afterValueParsingAction,
             new FixedContextCapture(1))
     {
@@ -35,7 +42,9 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
         string description = "",
         string metaVariable = "",
         bool isRequired = false,
+        IEnumerable<T>? choices = null,
         DefaultOptionValue<T>? defaultValue = null,
+        OptionValueRestriction<T>? valueRestriction = null,
         Action<T>? afterValueParsingAction = null,
         IContextCapture? contextCapture = null)
         
@@ -47,12 +56,34 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
             contextCapture ?? new FixedContextCapture(1))
     {
         ArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
+
+        _choices = new List<T>(choices ?? []);
+
+        if (defaultValue is not null
+            && _choices.Count > 0
+            && !_choices.Contains(defaultValue.Value))
+        {
+            throw new ArgumentException("Choices don't contain default value.", nameof(defaultValue));
+        }
+
+        if (valueRestriction is not null)
+        {
+            if (defaultValue is not null && !valueRestriction.IsValueAllowed(defaultValue.Value))
+                throw new OptionValueNotSatisfyRestrictionException(null, [$"{defaultValue.Value}"]);
+            
+            if (_choices.Count > 0 && _choices.Any(t => !valueRestriction.IsValueAllowed(t)))
+            {
+                throw new OptionValueNotSatisfyRestrictionException(
+                    null, [$"{_choices.First(t => !valueRestriction.IsValueAllowed(t))}"]);
+            }
+        }
         
         MetaVariable = string.IsNullOrWhiteSpace(metaVariable)
             ? GetDefaultMetaVariable()
             : metaVariable;
 
         DefaultValue = defaultValue;
+        ValueRestriction = valueRestriction;
 
         if (afterValueParsingAction is not null)
             ValueParsed += (sender, e) => afterValueParsingAction.Invoke(e.Value);
@@ -63,8 +94,10 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
     public string MetaVariable { get; }
 
     public DefaultOptionValue<T>? DefaultValue { get; }
+    public OptionValueRestriction<T>? ValueRestriction { get; }
     public IValueConverter<T>? Converter { get; set; }
 
+    public IReadOnlyCollection<T> Choices => _choices;
     public bool HasDefaultValue => DefaultValue is not null;
     public bool HasConverter => Converter is not null;
 
@@ -150,6 +183,8 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
             throw new OptionValueNotSpecifiedException(null, ToString());
 
         T parsedValue = converter.Convert(value[0]);
+
+        VerifyValueIsAllowed(parsedValue, value);
         OnValueParsed(new OptionValueEventArgs<T>(parsedValue));
     }
 
@@ -173,9 +208,40 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
         return new string(transformedName);
     }
 
+    protected virtual string[] GetAllowedValues()
+    {
+        return _choices
+            .Select(t => t?.ToString() ?? string.Empty)
+            .ToArray();
+    }
+
+    protected virtual bool IsValueSatisfyChoices(T value)
+    {
+        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        return _choices.Count == 0 || _choices.Contains(value);
+    }
+
+    protected virtual bool IsValueSatisfyRestriction(T value)
+    {
+        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        return ValueRestriction is null || ValueRestriction.IsValueAllowed(value);
+    }
+
     protected virtual void OnValueParsed(OptionValueEventArgs<T> e)
     {
         ArgumentNullException.ThrowIfNull(e, nameof(e));
         ValueParsed?.Invoke(this, e);
+    }
+
+    protected void VerifyValueIsAllowed(T value, string[] valueSource)
+    {
+        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        ArgumentNullException.ThrowIfNull(valueSource, nameof(valueSource));
+
+        if (!IsValueSatisfyRestriction(value))
+            throw new OptionValueNotSatisfyRestrictionException(null, valueSource);
+
+        if (!IsValueSatisfyChoices(value))
+            throw new OptionValueNotSatisfyChoicesException(null, valueSource, GetAllowedValues());
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Options.Context;
 
@@ -13,7 +14,9 @@ public class EnumValueOption<T> : ValueOption<T>
         string description = "",
         string metaVariable = "",
         bool isRequired = false,
+        IEnumerable<T>? choices = null,
         DefaultOptionValue<T>? defaultValue = null,
+        OptionValueRestriction<T>? valueRestriction = null,
         Action<T>? afterValueParsingAction = null)
         
         : base(
@@ -22,7 +25,9 @@ public class EnumValueOption<T> : ValueOption<T>
             description ?? throw new ArgumentNullException(nameof(description)),
             metaVariable ?? throw new ArgumentNullException(nameof(metaVariable)),
             isRequired,
+            choices ?? Enum.GetValues<T>(),
             defaultValue,
+            valueRestriction,
             afterValueParsingAction,
             new FixedContextCapture(1))
     {

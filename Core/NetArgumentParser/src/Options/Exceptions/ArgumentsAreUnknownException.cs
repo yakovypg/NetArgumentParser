@@ -53,6 +53,8 @@ public class ArgumentsAreUnknownException : Exception
     private static string GetDefaultMessage(string[] arguments)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
-        return $"Arguments {string.Join(' ', arguments)} are unknown.";
+
+        string argumentsPresenter = string.Join(' ', arguments);
+        return $"Arguments {argumentsPresenter} are unknown.";
     }
 }

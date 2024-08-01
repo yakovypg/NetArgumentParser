@@ -1,4 +1,5 @@
 using NetArgumentParser.Converters;
+using System.Collections.Generic;
 
 namespace NetArgumentParser.Options;
 
@@ -9,7 +10,9 @@ public interface IValueOption<T> : ICommonOption
 
     string MetaVariable { get; }
 
+    IReadOnlyCollection<T> Choices { get; }
     DefaultOptionValue<T>? DefaultValue { get; }
+    OptionValueRestriction<T>? ValueRestriction { get; }
     IValueConverter<T>? Converter { get; set; }
 
     void HandleDefaultValue();

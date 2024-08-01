@@ -5,20 +5,20 @@ using System.Runtime.Serialization;
 namespace NetArgumentParser.Options;
 
 [Serializable]
-public class OptionValueNotRecognizedException : Exception
+public class OptionValueNotSatisfyRestrictionException : Exception
 {   
-    public OptionValueNotRecognizedException() {}
+    public OptionValueNotSatisfyRestrictionException() {}
 
-    public OptionValueNotRecognizedException(string? message)
+    public OptionValueNotSatisfyRestrictionException(string? message)
         : base(message) {}
 
-    public OptionValueNotRecognizedException(string? message, Exception? innerException)
+    public OptionValueNotSatisfyRestrictionException(string? message, Exception? innerException)
         : base(message, innerException) {}
 
-    public OptionValueNotRecognizedException(string? message, string[] optionValue)  
+    public OptionValueNotSatisfyRestrictionException(string? message, string[] optionValue)  
         : this(message, optionValue, null) {}
     
-    public OptionValueNotRecognizedException(
+    public OptionValueNotSatisfyRestrictionException(
         string? message,
         string[] optionValue,
         Exception? innerException)  
@@ -32,7 +32,7 @@ public class OptionValueNotRecognizedException : Exception
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
-    protected OptionValueNotRecognizedException(SerializationInfo info, StreamingContext context)
+    protected OptionValueNotSatisfyRestrictionException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
         ArgumentNullException.ThrowIfNull(info, nameof(info));
@@ -55,6 +55,6 @@ public class OptionValueNotRecognizedException : Exception
         ArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
 
         string value = string.Join(' ', optionValue);
-        return $"Option value '{value}' not recognized.";
+        return $"Option value '{value}' doesn't satisfy the restriction.";
     }
 }
