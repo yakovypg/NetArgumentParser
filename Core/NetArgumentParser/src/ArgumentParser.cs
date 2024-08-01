@@ -203,7 +203,7 @@ public class ArgumentParser
             .Skip(NumberOfArgumentsToSkip);
 
         return RecognizeCompoundOptions
-            ? Argument.ExpandShortMinusOptions(consideredArguments)
+            ? Argument.ExpandShortNamedOptions(consideredArguments)
             : consideredArguments;
     }
 

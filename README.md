@@ -61,9 +61,6 @@ You can find instructions for connecting **NetArgumentParser** to your project [
 ## Project Status And TODO List
 **NetArgumentParser** is currently under development. There are some features that need to be added to the project:
 - Add support of subcommands.
-- Add counter option.
-- Add support of custom option prefix characters.
-- Add support of custom assignment characters.
 - Add support of reflection-based configuring option set using special attributes.
 - Add support of restricting the set of values for an argument.
 - Add support of hidden arguments and aliases.
