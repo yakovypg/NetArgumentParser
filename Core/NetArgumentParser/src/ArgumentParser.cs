@@ -225,7 +225,7 @@ public class ArgumentParser
         string? finalOptionArgument = arguments
             .Where(t => new Argument(t, RecognizeSlashOptions).IsOption)
             .Select(t => new Argument(t, RecognizeSlashOptions).ExtractOptionName())
-            .FirstOrDefault(t => t == finalOption.LongName || t == finalOption.ShortName);
+            .FirstOrDefault(finalOption.HasName);
         
         if (finalOptionArgument is not null)
         {

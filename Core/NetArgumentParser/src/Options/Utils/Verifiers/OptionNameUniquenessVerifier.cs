@@ -14,25 +14,36 @@ internal sealed class OptionNameUniquenessVerifier
         _options = options;
     }
 
-    internal void VerifyLongNameIsUnique(ICommonOption option)
+    internal static void VerifyInternalNamesIsUnique(ICommonOption option)
     {
         ArgumentNullException.ThrowIfNull(option, nameof(option));
 
-        if (!string.IsNullOrEmpty(option.LongName)
-            && _options.Any(t => t.LongName == option.LongName))
-        {
+        if (option.LongName == option.ShortName)
             throw new OnlyUniqueOptionNameException(null, option.LongName);
-        }
+        
+        if (!string.IsNullOrEmpty(option.LongName) && option.Aliases.Contains(option.LongName))
+            throw new OnlyUniqueOptionNameException(null, option.LongName);
+        
+        if (!string.IsNullOrEmpty(option.ShortName) && option.Aliases.Contains(option.ShortName))
+            throw new OnlyUniqueOptionNameException(null, option.ShortName);
     }
 
-    internal void VerifyShortNameIsUnique(ICommonOption option)
+    internal void VerifyNamesIsUnique(ICommonOption option)
     {
         ArgumentNullException.ThrowIfNull(option, nameof(option));
 
-        if (!string.IsNullOrEmpty(option.ShortName)
-            &&_options.Any(t => t.ShortName == option.ShortName))
+        VerifyInternalNamesIsUnique(option);
+
+        var names = new List<string>(option.Aliases)
         {
-            throw new OnlyUniqueOptionNameException(null, option.ShortName);
+            option.LongName,
+            option.ShortName
+        };
+        
+        foreach (string name in names)
+        {
+            if (_options.Any(t => t.HasName(name)))
+                throw new OnlyUniqueOptionNameException(null, name);
         }
     }
 }

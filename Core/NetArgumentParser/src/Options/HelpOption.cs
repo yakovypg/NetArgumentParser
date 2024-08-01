@@ -1,17 +1,19 @@
 using System;
+using System.Collections.Generic;
 
 namespace NetArgumentParser.Options;
 
 public sealed class HelpOption : FlagOption, IEquatable<HelpOption>
 {
     public HelpOption(Action? afterHandlingAction = null)
-        : this("help", "h", "show command-line help", false, afterHandlingAction) {}
+        : this("help", "h", "show command-line help", false, [], afterHandlingAction) {}
 
     public HelpOption(
         string longName,
         string shortName = "",
         string description = "",
         bool isHidden = false,
+        IEnumerable<string>? aliases = null,
         Action? afterHandlingAction = null)
         
         : base(
@@ -20,6 +22,7 @@ public sealed class HelpOption : FlagOption, IEquatable<HelpOption>
             description ?? throw new ArgumentNullException(nameof(description)),
             false,
             isHidden,
+            aliases,
             afterHandlingAction)
     {
     }

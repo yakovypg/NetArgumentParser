@@ -57,6 +57,7 @@ var options = new ICommonOption[]
 
     new FlagOption(string.Empty, "q",
         description: "use fast algorithm",
+        aliases: ["quick", "fast"],
         afterHandlingAction: () => quick = true),
 
     new MultipleValueOption<string>("input", "i",

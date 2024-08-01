@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace NetArgumentParser.Options.Utils.Verifiers;
@@ -29,6 +30,16 @@ internal static partial class OptionNameCorrectnessVerifier
             && !CorrectNameRegex().IsMatch(name))
         {
             throw new IncorrectOptionNameException(null, name);
+        }
+    }
+
+    internal static void VerifyAliasesIsCorrect(IEnumerable<string> aliases)
+    {
+        ArgumentNullException.ThrowIfNull(aliases, nameof(aliases));
+        
+        foreach (string alias in aliases)
+        {
+            VerifyNameIsCorrect(alias);
         }
     }
 

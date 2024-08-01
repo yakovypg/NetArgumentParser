@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NetArgumentParser.Options.Context;
 
 namespace NetArgumentParser.Options;
@@ -11,6 +12,7 @@ public class FlagOption : CommonOption, IEquatable<FlagOption>
         string description = "",
         bool isRequired = false,
         bool isHidden = false,
+        IEnumerable<string>? aliases = null,
         Action? afterHandlingAction = null)
         
         : base(
@@ -19,6 +21,7 @@ public class FlagOption : CommonOption, IEquatable<FlagOption>
             description ?? throw new ArgumentNullException(nameof(description)),
             isRequired,
             isHidden,
+            aliases,
             new EmptyContextCapture())
     {
         if (afterHandlingAction is not null)
