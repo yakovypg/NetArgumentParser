@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NetArgumentParser.Configuration;
 using NetArgumentParser.Options.Context;
 using NetArgumentParser.Options.Utils.Verifiers;
@@ -7,12 +9,15 @@ namespace NetArgumentParser.Options;
 
 public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
 {
+    private readonly List<string> _aliases;
+
     protected CommonOption(
         string longName,
         string shortName = "",
         string description = "",
         bool isRequired = false,
         bool isHidden = false,
+        IEnumerable<string>? aliases = null,
         IContextCapture? contextCapture = null)
     {
         ArgumentNullException.ThrowIfNull(longName, nameof(longName));
@@ -22,6 +27,11 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
         OptionNameCorrectnessVerifier.VerifyAtLeastOneNameIsDefined(longName, shortName);
         OptionNameCorrectnessVerifier.VerifyNameIsCorrect(longName);
         OptionNameCorrectnessVerifier.VerifyNameIsCorrect(shortName);
+
+        if (aliases is not null)
+            OptionNameCorrectnessVerifier.VerifyAliasesIsCorrect(aliases);
+
+        _aliases = new List<string>(aliases?.Distinct() ?? []);
         
         LongName = longName;
         ShortName = shortName;
@@ -41,6 +51,8 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
     public IContextCapture ContextCapture { get; }
 
     public bool IsHandled { get; protected set; }
+
+    public IReadOnlyCollection<string> Aliases => _aliases;
     
     public bool Equals(CommonOption? other)
     {
@@ -48,7 +60,10 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
             && LongName == other.LongName
             && ShortName == other.ShortName
             && Description == other.Description
-            && IsRequired == other.IsRequired;
+            && IsRequired == other.IsRequired
+            && IsHidden == other.IsHidden
+            && EqualityComparer<IContextCapture>.Default.Equals(ContextCapture, other.ContextCapture)
+            && Aliases.Order().SequenceEqual(other.Aliases.Order());
     }
 
     public override bool Equals(object? obj)
@@ -58,7 +73,8 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(LongName, ShortName, Description, IsRequired);
+        return HashCode.Combine(LongName, ShortName, Description,
+            IsRequired, IsHidden, ContextCapture, Aliases);
     }
 
     public override string ToString()
@@ -94,6 +110,18 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
         return !string.IsNullOrEmpty(LongName) && !string.IsNullOrEmpty(ShortName)
             ? longExample
             : GetShortExample();
+    }
+
+    public bool HasName(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name, nameof(name));
+
+        if (name == string.Empty)
+            return false;
+
+        return LongName == name
+            || ShortName == name
+            || _aliases.Contains(name);
     }
 
     public virtual void ResetHandledState()

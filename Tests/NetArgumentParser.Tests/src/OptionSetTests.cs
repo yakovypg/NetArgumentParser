@@ -15,9 +15,9 @@ public class OptionSetTests
     {
         var options = new ICommonOption[]
         {
-            new FlagOption("save_log", "l"),
-            new FlagOption("auto-rotate", "r"),
-            new EnumValueOption<StringSplitOptions>("split-options", "s"),
+            new FlagOption("save_log", "l", aliases: ["save"]),
+            new FlagOption("auto-rotate", "r", aliases: ["rotate", "auto-r"]),
+            new EnumValueOption<StringSplitOptions>("split-options", "s", aliases: ["split"]),
             new ValueOption<int>("width", "w"),
             new ValueOption<double>("angle", "a"),
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
@@ -33,6 +33,11 @@ public class OptionSetTests
             
             if (!string.IsNullOrEmpty(option.ShortName))
                 Assert.True(optionSet.HasOption(option.ShortName));
+            
+            foreach (string alias in option.Aliases)
+            {
+                Assert.True(optionSet.HasOption(alias));
+            }
         }
     }
 
@@ -158,9 +163,9 @@ public class OptionSetTests
     {
         var options = new ICommonOption[]
         {
-            new FlagOption("save_log", "l"),
-            new FlagOption("auto-rotate", "r"),
-            new EnumValueOption<StringSplitOptions>("split-options", "s"),
+            new FlagOption("save_log", "l", aliases: ["save"]),
+            new FlagOption("auto-rotate", "r", aliases: ["rotate", "auto-r"]),
+            new EnumValueOption<StringSplitOptions>("split-options", "s", aliases: ["split"]),
             new ValueOption<int>("width", "w"),
             new ValueOption<double>("angle", "a"),
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
@@ -192,6 +197,26 @@ public class OptionSetTests
         Assert.Throws<OnlyUniqueOptionNameException>(() =>
         {
             optionSet.AddOption(new FlagOption(string.Empty, "f"));
+        });
+
+        Assert.Throws<OnlyUniqueOptionNameException>(() =>
+        {
+            optionSet.AddOption(new FlagOption("save"));
+        });
+
+        Assert.Throws<OnlyUniqueOptionNameException>(() =>
+        {
+            optionSet.AddOption(new FlagOption("rotate"));
+        });
+
+        Assert.Throws<OnlyUniqueOptionNameException>(() =>
+        {
+            optionSet.AddOption(new ValueOption<int>("auto-r"));
+        });
+
+        Assert.Throws<OnlyUniqueOptionNameException>(() =>
+        {
+            optionSet.AddOption(new ValueOption<int>("split"));
         });
     }
 
@@ -303,9 +328,9 @@ public class OptionSetTests
     {
         var options = new ICommonOption[]
         {
-            new FlagOption("save_log", "l"),
-            new FlagOption("auto-rotate", "r"),
-            new EnumValueOption<StringSplitOptions>("split-options", "s"),
+            new FlagOption("save_log", "l", aliases: ["save"]),
+            new FlagOption("auto-rotate", "r", aliases: ["rotate", "auto-r"]),
+            new EnumValueOption<StringSplitOptions>("split-options", "s", aliases: ["split"]),
             new ValueOption<int>("width", "w"),
             new ValueOption<double>("angle", "a"),
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
@@ -319,6 +344,11 @@ public class OptionSetTests
             Assert.True(optionSet.RemoveOption(option));
             Assert.False(optionSet.HasOption(option.LongName));
             Assert.False(optionSet.HasOption(option.ShortName));
+
+            foreach (string alias in option.Aliases)
+            {
+                Assert.False(optionSet.HasOption(alias));
+            }
         }
     }
 
@@ -409,9 +439,9 @@ public class OptionSetTests
     {
         var options = new ICommonOption[]
         {
-            new FlagOption("save_log", "l"),
-            new FlagOption("auto-rotate", "r"),
-            new EnumValueOption<StringSplitOptions>("split-options", "s"),
+            new FlagOption("save_log", "l", aliases: ["save"]),
+            new FlagOption("auto-rotate", "r", aliases: ["rotate", "auto-r"]),
+            new EnumValueOption<StringSplitOptions>("split-options", "s", aliases: ["split"]),
             new ValueOption<int>("width", "w"),
             new ValueOption<double>("angle", "a"),
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
@@ -424,6 +454,11 @@ public class OptionSetTests
         {
             Assert.Equal(option, optionSet.GetOption(option.LongName));
             Assert.Equal(option, optionSet.GetOption(option.ShortName));
+
+            foreach (string alias in option.Aliases)
+            {
+                Assert.Equal(option, optionSet.GetOption(alias));
+            }
         }
     }
 
@@ -432,9 +467,9 @@ public class OptionSetTests
     {
         var options = new ICommonOption[]
         {
-            new FlagOption("save_log", "l"),
-            new FlagOption("auto-rotate", "r"),
-            new EnumValueOption<StringSplitOptions>("split-options", "s"),
+            new FlagOption("save_log", "l", aliases: ["save"]),
+            new FlagOption("auto-rotate", "r", aliases: ["rotate", "auto-r"]),
+            new EnumValueOption<StringSplitOptions>("split-options", "s", aliases: ["split"]),
             new ValueOption<int>("width", "w"),
             new ValueOption<double>("angle", "a"),
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
@@ -448,6 +483,11 @@ public class OptionSetTests
         {
             Assert.Equal(option, optionSet.GetOption(option.LongName));
             Assert.Equal(option, optionSet.GetOption(option.ShortName));
+
+            foreach (string alias in option.Aliases)
+            {
+                Assert.Equal(option, optionSet.GetOption(alias));
+            }
         }
     }
 

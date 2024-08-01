@@ -70,7 +70,7 @@ public class ArgumentParserTest
         var arguments = new string[]
         {
             "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
-            "--bind-mode", "OneWayToSource"
+            "--bind-mode", BindMode.OneWayToSource.ToString()
         };
 
         StringSplitOptions splitOption = default;
@@ -757,6 +757,48 @@ public class ArgumentParserTest
             () => parser.ParseKnownArguments(arguments, out _));
             
         Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_OptionsWithAliases_OptionsHandledCorrectly()
+    {
+        const int expectedAngle = 45;
+        const BindMode expectedBindMode = BindMode.OneWayToSource;
+        
+        var arguments = new string[]
+        {
+            "-A", expectedAngle.ToString(),
+            "--binding", expectedBindMode.ToString()
+        };
+
+        int angle = default;
+        BindMode bindMode = default;
+
+        var options = new ICommonOption[]
+        {
+            new ValueOption<int>(
+                "angle", string.Empty,
+                aliases: ["ang", "A", "rotation"],
+                afterValueParsingAction: t => angle = t),
+
+            new EnumValueOption<BindMode>(
+                "bind-mode", "b",
+                aliases: ["binding"],
+                afterValueParsingAction: t => bindMode = t)
+        };
+
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
+
+        parser.AddOptions(options);
+        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+
+        Assert.Equal(expectedAngle, angle);
+        Assert.Equal(expectedBindMode, bindMode);
+
+        Assert.Empty(extraArguments);
     }
 
     [Fact]
@@ -1495,7 +1537,7 @@ public class ArgumentParserTest
             "-V",
             "/m", $"{marginLeft}", $"{marginTop}", $"{marginRight}", $"{marginBottom}",
             expectedExtraArguments[2],
-            "--P", $"({pointX};{pointY})",
+            "--point", $"({pointX};{pointY})",
             "-f", file1, file2, file3, file4,
             expectedExtraArguments[3],
             "-a", $"{expectedAngle}",
@@ -1555,6 +1597,7 @@ public class ArgumentParserTest
                 afterValueParsingAction: t => opacity = t),
 
             new ValueOption<Point>("P",
+                aliases: ["point"],
                 afterValueParsingAction: t => point = t),
 
             new MultipleValueOption<byte>("margin", "m",

@@ -127,8 +127,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
     {
         ArgumentNullException.ThrowIfNull(option, nameof(option));
 
-        _optionNameUniquenessVerifier.VerifyLongNameIsUnique(option);
-        _optionNameUniquenessVerifier.VerifyShortNameIsUnique(option);
+        _optionNameUniquenessVerifier.VerifyNamesIsUnique(option);
         _options.Add(option);
 
         var e = new NotifyOptionSetChangedEventArgs(
@@ -195,7 +194,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
     protected ICommonOption? GetOptionByName(string name)
     {
         ArgumentNullException.ThrowIfNull(name, nameof(name));
-        return _options.FirstOrDefault(t => t.LongName == name || t.ShortName == name);
+        return _options.FirstOrDefault(t => t.HasName(name));
     }
 
     protected IValueConverter? GetConverterByConversionType(Type conversionType)
