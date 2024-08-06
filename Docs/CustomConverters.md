@@ -9,7 +9,7 @@ Custom converters allow you to easily work with options whose values are non-sta
 ## Converter Types
 There are three converter types: value converter, multiple value converter and enum value converter. They are used in value options, multiple value options and enum value options. However, in the vast majority of situations it is sufficient to use only the value converter.
 
-Furthermore, you can create your own converters. To do this you need to inherit your class from the `IValueConverter` interface. You can also use an existing option class as a base class. See examples of this kind of inheritance, for example, by looking at the implementation of the `MultipleValueConverter` and `EnumValueConverter` classes.
+Furthermore, you can create your own converters. To do this you need to inherit your class from the `IValueConverter` interface and implement it. You can also use an existing option class as a base class. See examples of this kind of inheritance, for example, by looking at the implementation of the `MultipleValueConverter` and `EnumValueConverter` classes. Next, you can use this class in the same way as the standard ones.
 
 ### Value Converter
 To create a value converter for type T, you need a function that takes a string and returns T. Pass this function to the constructor of the appropriate class as shown in the example below.
