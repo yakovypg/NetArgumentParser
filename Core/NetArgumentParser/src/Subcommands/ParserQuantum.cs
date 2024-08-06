@@ -9,7 +9,7 @@ using NetArgumentParser.Subcommands.Utils.Verifiers;
 namespace NetArgumentParser.Subcommands;
 
 public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
-{   
+{
     private readonly OptionSet _optionSet;
     private readonly List<OptionGroup<ICommonOption>> _optionGroups;
     private readonly List<Subcommand> _subcommands;
@@ -18,10 +18,10 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
     private readonly SubcommandNameUniquenessVerifier _nameUniquenessVerifier;
 
     public ParserQuantum()
-    {        
+    {
         _optionSet = new OptionSet();
         _optionGroups = [new OptionGroup<ICommonOption>("Options:", _optionSet)];
-        
+
         _subcommands = [];
         _nameUniquenessVerifier = new SubcommandNameUniquenessVerifier(_subcommands);
 
@@ -118,7 +118,7 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
     public List<ICommonOption> GetAllOptions()
     {
         var options = new List<ICommonOption>(Options);
-        
+
         foreach (Subcommand subcommand in _subcommands)
         {
             List<ICommonOption> currOptions = subcommand.GetAllOptions();
@@ -165,7 +165,7 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
     #region Default Option Interaction Methods
 
     protected virtual void AddDefaultOptions()
-    {        
+    {
         foreach (ParserQuantum quantum in _subcommands.Append(this))
         {
             if (quantum.UseDefaultHelpOption && !quantum.OptionSet.HasHelpOption())

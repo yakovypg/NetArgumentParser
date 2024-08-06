@@ -6,22 +6,22 @@ namespace NetArgumentParser.Options;
 
 [Serializable]
 public class OptionValueNotRecognizedException : Exception
-{   
-    public OptionValueNotRecognizedException() {}
+{
+    public OptionValueNotRecognizedException() { }
 
     public OptionValueNotRecognizedException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public OptionValueNotRecognizedException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public OptionValueNotRecognizedException(string? message, string[] optionValue)  
-        : this(message, optionValue, null) {}
-    
+    public OptionValueNotRecognizedException(string? message, string[] optionValue)
+        : this(message, optionValue, null) { }
+
     public OptionValueNotRecognizedException(
         string? message,
         string[] optionValue,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(optionValue), innerException)
     {
         ArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));

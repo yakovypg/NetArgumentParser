@@ -19,7 +19,7 @@ public static class ValueConverters
     public static ValueConverter<ushort> UInt16Converter => new(Convert.ToUInt16);
     public static ValueConverter<uint> UInt32Converter => new(Convert.ToUInt32);
     public static ValueConverter<ulong> UInt64Converter => new(Convert.ToUInt64);
-    
+
     public static object GetDefaultEnumValueConverter<T>()
         where T : struct, Enum
     {

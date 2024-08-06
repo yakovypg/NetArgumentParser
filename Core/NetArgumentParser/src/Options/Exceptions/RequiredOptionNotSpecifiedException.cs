@@ -6,22 +6,22 @@ namespace NetArgumentParser.Options;
 
 [Serializable]
 public class RequiredOptionNotSpecifiedException : Exception
-{   
-    public RequiredOptionNotSpecifiedException() {}
+{
+    public RequiredOptionNotSpecifiedException() { }
 
     public RequiredOptionNotSpecifiedException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public RequiredOptionNotSpecifiedException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public RequiredOptionNotSpecifiedException(string? message, ICommonOption option)  
-        : this(message, option, null) {}
-    
+    public RequiredOptionNotSpecifiedException(string? message, ICommonOption option)
+        : this(message, option, null) { }
+
     public RequiredOptionNotSpecifiedException(
         string? message,
         ICommonOption option,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(option), innerException)
     {
         ArgumentNullException.ThrowIfNull(option, nameof(option));

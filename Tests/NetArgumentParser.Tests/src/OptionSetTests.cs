@@ -23,17 +23,17 @@ public class OptionSetTests
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
             new MultipleValueOption<string>("files", "f", contextCapture: new ZeroOrMoreContextCapture())
         };
-        
+
         var optionSet = new OptionSet(options);
 
         foreach (ICommonOption option in options)
         {
             if (!string.IsNullOrEmpty(option.LongName))
                 Assert.True(optionSet.HasOption(option.LongName));
-            
+
             if (!string.IsNullOrEmpty(option.ShortName))
                 Assert.True(optionSet.HasOption(option.ShortName));
-            
+
             foreach (string alias in option.Aliases)
             {
                 Assert.True(optionSet.HasOption(alias));
@@ -54,7 +54,7 @@ public class OptionSetTests
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
             new MultipleValueOption<string>("files", "f", contextCapture: new ZeroOrMoreContextCapture())
         };
-        
+
         var optionSet = new OptionSet(options);
 
         Assert.False(optionSet.HasOption("q"));
@@ -123,7 +123,7 @@ public class OptionSetTests
         var angleOption = new ValueOption<double>("angle", "a");
         var marginOption = new MultipleValueOption<int>("margin", "m");
         var filesOption = new MultipleValueOption<string>("files", "f");
-        
+
         var options = new ICommonOption[]
         {
             saveLogOption,
@@ -142,7 +142,7 @@ public class OptionSetTests
         angleOption.Handle("-15.4");
         marginOption.Handle("10", "20", "30", "-40");
         filesOption.Handle("/file1.txt", "C://path//file2.png", "./file3");
-        
+
         var optionSet = new OptionSet(options);
 
         foreach (ICommonOption option in options)
@@ -171,7 +171,7 @@ public class OptionSetTests
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
             new MultipleValueOption<string>("files", "f", contextCapture: new ZeroOrMoreContextCapture())
         };
-        
+
         var optionSet = new OptionSet(options);
 
         Assert.Throws<OnlyUniqueOptionNameException>(() =>
@@ -233,7 +233,7 @@ public class OptionSetTests
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
             new MultipleValueOption<string>("files", "f", contextCapture: new ZeroOrMoreContextCapture())
         };
-        
+
         var optionSet = new OptionSet();
 
         foreach (ICommonOption option in uniqueOptions)
@@ -336,7 +336,7 @@ public class OptionSetTests
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
             new MultipleValueOption<string>("files", "f", contextCapture: new ZeroOrMoreContextCapture())
         };
-        
+
         var optionSet = new OptionSet(options);
 
         foreach (ICommonOption option in options)
@@ -365,7 +365,7 @@ public class OptionSetTests
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
             new MultipleValueOption<string>("files", "f", contextCapture: new ZeroOrMoreContextCapture())
         };
-        
+
         var optionSet = new OptionSet(options);
 
         Assert.False(optionSet.RemoveOption(new FlagOption("quick", "q")));
@@ -447,7 +447,7 @@ public class OptionSetTests
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
             new MultipleValueOption<string>("files", "f", contextCapture: new ZeroOrMoreContextCapture())
         };
-        
+
         var optionSet = new OptionSet(options, null, true);
 
         foreach (ICommonOption option in options)
@@ -475,7 +475,7 @@ public class OptionSetTests
             new MultipleValueOption<byte>("margin", "m", contextCapture: new FixedContextCapture(4)),
             new MultipleValueOption<string>("files", "f", contextCapture: new ZeroOrMoreContextCapture())
         };
-        
+
         var optionSet = new OptionSet(options, null, false);
         optionSet.Build();
 
@@ -509,7 +509,7 @@ public class OptionSetTests
 
         var optionsWithConverter = new ICommonOption[]
         {
-            marginOption,    
+            marginOption,
             pointOption,
             bindOption,
             marginMultiOption
@@ -519,7 +519,7 @@ public class OptionSetTests
         var widthOption = new ValueOption<int>("width", "w");
         var angleOption = new ValueOption<double>("angle", "a");
         var filesOption = new MultipleValueOption<string>("files", "f");
-        
+
         var optionsWithoutConverter = new ICommonOption[]
         {
             splitOptionsOption,
@@ -530,7 +530,7 @@ public class OptionSetTests
 
         IEnumerable<ICommonOption> allOptions = optionsWithConverter
             .Concat(optionsWithoutConverter);
-        
+
         var optionSet = new OptionSet(allOptions, converters, false);
         optionSet.Build();
 

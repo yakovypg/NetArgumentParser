@@ -11,7 +11,7 @@ public class FixedContextCapture : IContextCapture, IEquatable<FixedContextCaptu
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(
             numberOfItemsToCapture,
             nameof(numberOfItemsToCapture));
-        
+
         NumberOfItemsToCapture = numberOfItemsToCapture;
     }
 
@@ -39,7 +39,7 @@ public class FixedContextCapture : IContextCapture, IEquatable<FixedContextCaptu
     public string GetDescription(string metaVariable)
     {
         ArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
-        
+
         IEnumerable<string> data = Enumerable.Repeat(metaVariable, NumberOfItemsToCapture);
         return string.Join(' ', data);
     }

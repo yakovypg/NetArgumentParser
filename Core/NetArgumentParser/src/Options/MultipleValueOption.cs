@@ -8,7 +8,7 @@ using NetArgumentParser.Options.Context;
 namespace NetArgumentParser.Options;
 
 public class MultipleValueOption<T> : ValueOption<IList<T>>, IEquatable<MultipleValueOption<T>>
-{   
+{
     public MultipleValueOption(
         string longName,
         string shortName = "",
@@ -22,7 +22,7 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>, IEquatable<Multiple
         OptionValueRestriction<IList<T>>? valueRestriction = null,
         Action<IList<T>>? afterValueParsingAction = null,
         IContextCapture? contextCapture = null)
-        
+
         : base(
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
@@ -74,7 +74,7 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>, IEquatable<Multiple
 
         if (value.Length == 0)
             throw new OptionValueNotSpecifiedException(null, ToString());
-        
+
         if (ContextCapture.MinNumberOfItemsToCapture > value.Length)
             throw new OptionValueNotRecognizedException(null, value);
 

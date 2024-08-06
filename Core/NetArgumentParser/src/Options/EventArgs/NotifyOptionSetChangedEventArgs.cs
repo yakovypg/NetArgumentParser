@@ -4,7 +4,7 @@ using System.Collections;
 namespace NetArgumentParser.Options;
 
 public class NotifyOptionSetChangedEventArgs : EventArgs
-{   
+{
     public NotifyOptionSetChangedEventArgs(
         NotifyOptionSetChangedAction action,
         IList? newItems = null,

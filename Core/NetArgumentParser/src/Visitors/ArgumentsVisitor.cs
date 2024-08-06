@@ -21,7 +21,7 @@ public class ArgumentsVisitor
 
     public ParserQuantum RootParserQuantum { get; }
     public IReadOnlyOptionSet<ICommonOption> RootOptions { get; }
-    
+
     public void VisitArguments(
         IEnumerable<string> arguments,
         bool recognizeSlashOptions = false,
@@ -51,7 +51,7 @@ public class ArgumentsVisitor
             }
 
             bool isContextItemHandled = false;
-            
+
             if (argument.IsOption)
             {
                 string optionName = argument.ExtractOptionName();

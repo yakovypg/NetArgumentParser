@@ -7,7 +7,7 @@ namespace NetArgumentParser.Options;
 
 public class EnumValueOption<T> : ValueOption<T>
     where T : struct, Enum
-{   
+{
     public EnumValueOption(
         string longName,
         string shortName = "",
@@ -20,7 +20,7 @@ public class EnumValueOption<T> : ValueOption<T>
         DefaultOptionValue<T>? defaultValue = null,
         OptionValueRestriction<T>? valueRestriction = null,
         Action<T>? afterValueParsingAction = null)
-        
+
         : base(
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),

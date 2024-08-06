@@ -13,7 +13,7 @@ public class CounterOption : FlagOption, IEquatable<FlagOption>
         bool isHidden = false,
         IEnumerable<string>? aliases = null,
         Action? increaseCounter = null)
-        
+
         : base(
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),

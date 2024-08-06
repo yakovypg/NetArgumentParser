@@ -91,7 +91,7 @@ public class OptionDescriptionGenerator
         ArgumentNullException.ThrowIfNull(option, nameof(option));
 
         int maxExampleLength = GetMaxOptionExampleLength();
-        
+
         string example = GetOptionExample(option);
         string exampleWithDelimiter = example + DelimiterAfterOptionExample;
 
@@ -113,11 +113,11 @@ public class OptionDescriptionGenerator
 
         int maxExampleLength = GetMaxOptionExampleLength();
         int emptySpaceLength = GetEmptySpaceForOptionExample(maxExampleLength).Length;
-        
+
         int charsForDescriptionLine = WindowWidth - emptySpaceLength;
         int leftOffset = emptySpaceLength;
 
-        List<string> descriptionParts = [..option.Description.Split()];
+        List<string> descriptionParts = [.. option.Description.Split()];
 
         var longTextWriter = new LongTextWriter(
             builder,
@@ -144,7 +144,7 @@ public class OptionDescriptionGenerator
         int maxOptionExampleLength = GetMaxOptionExampleLength();
         string example = OptionExamplePrefix + option.GetLongExample();
 
-        return example.AddEmptyPostfix(maxOptionExampleLength);;
+        return example.AddEmptyPostfix(maxOptionExampleLength);
     }
 
     protected int GetMaxOptionExampleLength()
@@ -152,7 +152,7 @@ public class OptionDescriptionGenerator
         int maxOptionExampleLength = Options
             .Where(t => t.GetLongExample().Length <= OptionExampleCharsLimit)
             .Max(t => t.GetLongExample().Length);
-        
+
         maxOptionExampleLength += OptionExamplePrefix?.Length ?? 0;
 
         return maxOptionExampleLength;

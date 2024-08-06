@@ -7,21 +7,21 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class ArgumentValueNotSpecifiedException : Exception
 {
-    public ArgumentValueNotSpecifiedException() {}
+    public ArgumentValueNotSpecifiedException() { }
 
     public ArgumentValueNotSpecifiedException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public ArgumentValueNotSpecifiedException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public ArgumentValueNotSpecifiedException(string? message, string argument)  
-        : this(message, argument, null) {}
-    
+    public ArgumentValueNotSpecifiedException(string? message, string argument)
+        : this(message, argument, null) { }
+
     public ArgumentValueNotSpecifiedException(
         string? message,
         string argument,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(argument), innerException)
     {
         ArgumentNullException.ThrowIfNull(argument, nameof(argument));

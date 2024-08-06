@@ -7,14 +7,14 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class OptionSetNotBuiltException : Exception
 {
-    public OptionSetNotBuiltException() {}
+    public OptionSetNotBuiltException() { }
 
     public OptionSetNotBuiltException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public OptionSetNotBuiltException(string? message, Exception? innerException)
-        : base(message ?? GetDefaultMessage(), innerException) {}
-    
+        : base(message ?? GetDefaultMessage(), innerException) { }
+
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
     protected OptionSetNotBuiltException(SerializationInfo info, StreamingContext context)
@@ -31,7 +31,7 @@ public class OptionSetNotBuiltException : Exception
 
         base.GetObjectData(info, context);
     }
-    
+
     private static string GetDefaultMessage()
     {
         return "Option set was not built.";

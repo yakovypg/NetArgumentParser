@@ -6,26 +6,26 @@ namespace NetArgumentParser.Options;
 
 [Serializable]
 public class OptionValueNotSatisfyChoicesException : Exception
-{   
-    public OptionValueNotSatisfyChoicesException() {}
+{
+    public OptionValueNotSatisfyChoicesException() { }
 
     public OptionValueNotSatisfyChoicesException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public OptionValueNotSatisfyChoicesException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
     public OptionValueNotSatisfyChoicesException(
         string? message,
         string[] optionValue,
-        string[] allowedValues)  
-        : this(message, optionValue, allowedValues, null) {}
-    
+        string[] allowedValues)
+        : this(message, optionValue, allowedValues, null) { }
+
     public OptionValueNotSatisfyChoicesException(
         string? message,
         string[] optionValue,
         string[] allowedValues,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(optionValue, allowedValues), innerException)
     {
         ArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
@@ -58,7 +58,7 @@ public class OptionValueNotSatisfyChoicesException : Exception
 
         info.AddValue(nameof(OptionValue), OptionValue, typeof(string[]));
         info.AddValue(nameof(AllowedValues), AllowedValues, typeof(string[]));
-        
+
         base.GetObjectData(info, context);
     }
 
@@ -69,7 +69,7 @@ public class OptionValueNotSatisfyChoicesException : Exception
 
         string optionValuePresenter = string.Join(", ", optionValue);
         string allowedValuesPresenter = string.Join(", ", allowedValues);
-        
+
         return $"Option value '{optionValuePresenter}' not allowed. " +
                "It must be one of {" + allowedValuesPresenter + "}.";
     }

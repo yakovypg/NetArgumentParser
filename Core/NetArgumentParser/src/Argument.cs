@@ -32,29 +32,29 @@ public class Argument
         && Data.Length >= 2
         && Data.StartsWith(SpecialCharacters.ShortNamedOptionPrefix)
         && !char.IsDigit(Data[1]);
-    
+
     public bool IsOption => IsShortNamedOption
         || IsLongNamedOption
         || (RecognizeSlashAsOption && IsSlashOption);
 
     public bool HasValueAfterAssignmentCharacter()
     {
-        int equationIndex = Data.IndexOf(SpecialCharacters.AssignmentCharacter);   
+        int equationIndex = Data.IndexOf(SpecialCharacters.AssignmentCharacter);
         return equationIndex >= 0 && equationIndex < Data.Length - 1;
     }
 
     public string ExtractOptionName()
-    {       
+    {
         if (!IsOption)
             throw new InvalidOperationException("Argument is not option.");
-        
+
         string argumentWithoutPrefix = Data.StartsWith(SpecialCharacters.LongNamedOptionPrefix)
             ? Data.Remove(0, SpecialCharacters.LongNamedOptionPrefix.Length)
             : Data.StartsWith(SpecialCharacters.ShortNamedOptionPrefix)
                 || Data.StartsWith(SpecialCharacters.SlashOptionPrefix)
             ? Data.Remove(0, 1)
             : Data;
-        
+
         if (argumentWithoutPrefix.Contains(SpecialCharacters.AssignmentCharacter))
         {
             int equationIndex = argumentWithoutPrefix.IndexOf(SpecialCharacters.AssignmentCharacter);
@@ -85,7 +85,7 @@ public class Argument
         {
             if (option.ContextCapture.MinNumberOfItemsToCapture > 1)
                 throw new ArgumentValueNotRecognizedException(null, Data);
-            
+
             return [ExtractValueAfterAssignmentCharacter()];
         }
         else
@@ -103,7 +103,7 @@ public class Argument
             if (capturedContext.Any(t => new Argument(t, RecognizeSlashAsOption).IsOption))
                 throw new ArgumentValueNotRecognizedException(null, Data);
 
-            return [..capturedContext];
+            return [.. capturedContext];
         }
     }
 
@@ -145,7 +145,7 @@ public class Argument
 
             if (argumentInfo.IsShortNamedOption && !argumentInfo.HasValueAfterAssignmentCharacter())
             {
-                IEnumerable<string> expandedOptions = argumentInfo.ExpandShortNamedOptionName();          
+                IEnumerable<string> expandedOptions = argumentInfo.ExpandShortNamedOptionName();
                 newOptions.AddRange(expandedOptions);
             }
             else

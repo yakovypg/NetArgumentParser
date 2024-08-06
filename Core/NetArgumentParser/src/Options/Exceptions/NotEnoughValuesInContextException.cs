@@ -6,26 +6,26 @@ namespace NetArgumentParser.Options;
 
 [Serializable]
 public class NotEnoughValuesInContextException : Exception
-{   
-    public NotEnoughValuesInContextException() {}
+{
+    public NotEnoughValuesInContextException() { }
 
     public NotEnoughValuesInContextException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public NotEnoughValuesInContextException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
     public NotEnoughValuesInContextException(
         string? message,
         string[] context,
-        int numberOfNecessaryValues)  
-        : this(message, context, numberOfNecessaryValues, null) {}
-    
+        int numberOfNecessaryValues)
+        : this(message, context, numberOfNecessaryValues, null) { }
+
     public NotEnoughValuesInContextException(
         string? message,
         string[] context,
         int numberOfNecessaryValues,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(), innerException)
     {
         ArgumentNullException.ThrowIfNull(context, nameof(context));

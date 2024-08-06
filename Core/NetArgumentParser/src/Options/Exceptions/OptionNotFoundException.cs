@@ -7,21 +7,21 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class OptionNotFoundException : Exception
 {
-    public OptionNotFoundException() {}
+    public OptionNotFoundException() { }
 
     public OptionNotFoundException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public OptionNotFoundException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public OptionNotFoundException(string? message, string optionName)  
-        : this(message, optionName, null) {}
-    
+    public OptionNotFoundException(string? message, string optionName)
+        : this(message, optionName, null) { }
+
     public OptionNotFoundException(
         string? message,
         string optionName,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(optionName), innerException)
     {
         ArgumentNullException.ThrowIfNull(optionName, nameof(optionName));

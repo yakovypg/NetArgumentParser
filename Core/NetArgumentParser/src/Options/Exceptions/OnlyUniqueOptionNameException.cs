@@ -6,22 +6,22 @@ namespace NetArgumentParser.Options;
 
 [Serializable]
 public class OnlyUniqueOptionNameException : Exception
-{   
-    public OnlyUniqueOptionNameException() {}
+{
+    public OnlyUniqueOptionNameException() { }
 
     public OnlyUniqueOptionNameException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public OnlyUniqueOptionNameException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public OnlyUniqueOptionNameException(string? message, string optionName)  
-        : this(message, optionName, null) {}
-    
+    public OnlyUniqueOptionNameException(string? message, string optionName)
+        : this(message, optionName, null) { }
+
     public OnlyUniqueOptionNameException(
         string? message,
         string optionName,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(optionName), innerException)
     {
         ArgumentNullException.ThrowIfNull(optionName, nameof(optionName));

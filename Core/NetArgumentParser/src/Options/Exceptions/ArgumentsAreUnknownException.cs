@@ -6,22 +6,22 @@ namespace NetArgumentParser.Options;
 
 [Serializable]
 public class ArgumentsAreUnknownException : Exception
-{   
-    public ArgumentsAreUnknownException() {}
+{
+    public ArgumentsAreUnknownException() { }
 
     public ArgumentsAreUnknownException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public ArgumentsAreUnknownException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public ArgumentsAreUnknownException(string? message, string[] arguments)  
-        : this(message, arguments, null) {}
-    
+    public ArgumentsAreUnknownException(string? message, string[] arguments)
+        : this(message, arguments, null) { }
+
     public ArgumentsAreUnknownException(
         string? message,
         string[] arguments,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(arguments), innerException)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));

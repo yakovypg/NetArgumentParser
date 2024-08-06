@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NetArgumentParser.Subcommands;
@@ -36,7 +36,7 @@ public class ArgumentParser : ParserQuantum
 
         DescriptionGenerator = descriptionGenerator ?? new ApplicationDescriptionGenerator(this);
         OutputWriter = outputWriter ?? new ConsoleTextWriter();
-        
+
         SubcommandDescriptionGeneratorCreator = subcommandDescriptionGeneratorCreator
             ?? (t => new SubcommandDescriptionGenerator(t));
     }
@@ -118,7 +118,7 @@ public class ArgumentParser : ParserQuantum
             RecognizeSlashOptions,
             optionValue => optionValue.Option.Handle(optionValue.Value),
             visitorExtraArguments.Add);
-        
+
         extraArguments = visitorExtraArguments;
 
         List<ICommonOption> allOptions = GetAllOptions();
@@ -136,7 +136,7 @@ public class ArgumentParser : ParserQuantum
         ParseKnownArguments(arguments, out List<string> extraArguments);
 
         if (extraArguments?.Count > 0)
-            throw new ArgumentsAreUnknownException(null, [..extraArguments]);
+            throw new ArgumentsAreUnknownException(null, [.. extraArguments]);
     }
 
     #endregion
@@ -146,7 +146,7 @@ public class ArgumentParser : ParserQuantum
     protected override void AddDefaultOptions()
     {
         base.AddDefaultOptions();
-        
+
         if (UseDefaultVersionOption && !OptionSet.HasVersionOption())
             AddDefaultVersionOption();
     }

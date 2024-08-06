@@ -5,7 +5,7 @@ namespace NetArgumentParser.Converters;
 public class ValueConverter<T> : IValueConverter<T>
 {
     private readonly Func<string, T> _converter;
-    
+
     public ValueConverter(Func<string, T> converter)
     {
         ArgumentNullException.ThrowIfNull(converter, nameof(converter));

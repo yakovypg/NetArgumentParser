@@ -39,7 +39,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
             new FixedContextCapture(1))
     {
     }
-    
+
     protected ValueOption(
         string longName,
         string shortName = "",
@@ -53,7 +53,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
         OptionValueRestriction<T>? valueRestriction = null,
         Action<T>? afterValueParsingAction = null,
         IContextCapture? contextCapture = null)
-        
+
         : base(
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
@@ -85,7 +85,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
                     null, [$"{_choices.First(t => !valueRestriction.IsValueAllowed(t))}"]);
             }
         }
-        
+
         MetaVariable = string.IsNullOrWhiteSpace(metaVariable)
             ? GetDefaultMetaVariable()
             : metaVariable;
@@ -147,10 +147,10 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
     {
         if (IsHandled)
             throw new OptionAlreadyHandledException(null, this);
-        
+
         if (DefaultValue is null)
             throw new NullReferenceException("Default value is not specified.");
-        
+
         IsHandled = true;
         OnValueParsed(new OptionValueEventArgs<T>(DefaultValue.Value));
     }
@@ -171,7 +171,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
             $"{SpecialCharacters.LongNamedOptionPrefix}{LongName} {extendedMetavariable}, " +
             $"{SpecialCharacters.ShortNamedOptionPrefix}{ShortName} {extendedMetavariable}";
 
-        return !string.IsNullOrEmpty(LongName) && ! string.IsNullOrEmpty(ShortName)
+        return !string.IsNullOrEmpty(LongName) && !string.IsNullOrEmpty(ShortName)
             ? longExample
             : GetShortExample();
     }
@@ -179,7 +179,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
     protected override void HandleValue(params string[] value)
     {
         ArgumentNullException.ThrowIfNull(value, nameof(value));
-        
+
         IValueConverter<T> converter = Converter ?? GetDefaultConverter();
         ParseValue(converter, value);
     }
@@ -188,7 +188,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
     {
         ArgumentNullException.ThrowIfNull(converter, nameof(converter));
         ArgumentNullException.ThrowIfNull(value, nameof(value));
-        
+
         if (value.Length == 0)
             throw new OptionValueNotSpecifiedException(null, ToString());
 
@@ -210,7 +210,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
     protected string GetDefaultMetaVariable()
     {
         string prefferedName = GetPrefferedName();
-        
+
         char[] transformedName = prefferedName
             .Select(t => char.IsLetter(t) ? char.ToUpper(t) : '_')
             .ToArray();

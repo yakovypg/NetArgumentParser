@@ -22,7 +22,7 @@ public static class ContextInteractor
 
             numberOfSuitableValuesToCapture++;
         }
-        
+
         return numberOfSuitableValuesToCapture;
     }
 
@@ -35,12 +35,12 @@ public static class ContextInteractor
         ArgumentOutOfRangeException.ThrowIfNegative(
             numberOfItemsToCapture,
             nameof(numberOfItemsToCapture));
-        
+
         if (numberOfItemsToCapture > context.Count)
         {
             throw new NotEnoughValuesInContextException(
                 null,
-                [..context],
+                [.. context],
                 numberOfItemsToCapture);
         }
 
