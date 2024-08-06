@@ -189,7 +189,7 @@ parser.Parse(new string[] { "--split-option", "TrimEntries" });
 ```
 
 ## Custom Options
-You can create your own options. To do this you need to inherit your class from the `ICommonOption` interface. You can also use an existing option class as a base class. See examples of this kind of inheritance, for example, by looking at the implementation of the `FlagOption` and `EnumValueOption` classes.
+You can create your own options. To do this you need to inherit your class from the `ICommonOption` interface and implement it. You can also use an existing option class as a base class. See examples of this kind of inheritance, for example, by looking at the implementation of the `FlagOption` and `EnumValueOption` classes. Next, you can use this class in the same way as the standard ones.
 
 ## Option Groups
 Options can be divided into groups. This division may be useful when there are a lot of options.

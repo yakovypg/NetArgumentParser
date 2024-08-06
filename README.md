@@ -12,7 +12,7 @@
 </p>
 
 ## About
-**NetArgumentParser** is a cross-platform, free and open source library for parsing command-line options and arguments.
+**NetArgumentParser** is a cross-platform, free and open source library for parsing command-line options, arguments and sub-commands.
 
 [![Contributors](https://img.shields.io/github/contributors/yakovypg/NetArgumentParser)](https://github.com/yakovypg/NetArgumentParser/graphs/contributors)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/yakovypg/NetArgumentParser/dotnet.yml?branch=main)](https://github.com/yakovypg/NetArgumentParser/actions/workflows/dotnet.yml?query=branch%3Amain)
@@ -31,26 +31,29 @@
 
 ## Main Features
 This library supports the following main features:
-- Parse options starting with a minus (such as `-v`).
-- Parse options starting with a double minus (such as `--version`).
-- Parse options starting with a slash (such as `/v` or `/version`).
+- Parse short-named options (such as `-v`).
+- Parse long-named options (such as `--version` or `-version`).
+- Parse windows-based options (such as `/v` or `/version`).
 - Parse compound options (such as `-lah`).
-- Parse long name options starting with a minus (such as `-version`).
+- Parse nested subcommands (such as `app subcommand subsubcommand`).
 - Extract extra arguments.
-- Support custom converters.
-- Configure command-line help generation.
+- Provide a lot of default option types.
+- Support custom options and converters.
+- Configure command-line help generation and output stream.
+
+Many other features you can find in [documentation](#documentation).
 
 ## Quick Start
-To start working with the library you need to build it and then connect it to your project.
+To start working with the library you need to [connect](#connect-project) it to your project. If you are going to connect a library cloned from a repository, you may want to [build](#build-project) and [test](#test-project) it before doing so.
 
 ### Build Project
-You can [build](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build) the library with the following command, which should be run from the root of the library.
+You can [build](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build) the library with the following command, which should be run from the root of the library project.
 ```
 dotnet build
 ```
 
 ### Test Project
-You can [test](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test) the library with the following command, which should be run from the root of the library.
+You can [test](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test) the library with the following command, which should be run from the root of the library project.
 ```
 dotnet test
 ```
@@ -60,7 +63,6 @@ You can find instructions for connecting **NetArgumentParser** to your project [
 
 ## Project Status And TODO List
 **NetArgumentParser** is currently under development. There are some features that need to be added to the project:
-- Add support of subcommands.
 - Add support of reflection-based configuring option set using special attributes.
 - Add support of import and export JSON configuration.
 - Add support of parent parsers.
@@ -73,6 +75,7 @@ The main topics are:
 - [Optional arguments](Docs/OptionalArguments.md)
 - [Optional arguments config](Docs/OptionalArgumentsConfig.md)
 - [Custom converters](Docs/CustomConverters.md)
+- [Subcommands](Docs/Subcommands.md)
 - [Printing help](Docs/PrintingHelp.md)
 - [Additional features](Docs/AdditionalFeatures.md)
 
@@ -83,4 +86,4 @@ The project is developed on the .NET 8.0 platform. To continue development you w
 Contributions are welcome, have a look at the [CONTRIBUTING.md](CONTRIBUTING.md) document for more information.
 
 ## License
-The project is available under the [GPL-3.0](LICENSE) license.
+The project is available under the [GPLv3](LICENSE) license.
