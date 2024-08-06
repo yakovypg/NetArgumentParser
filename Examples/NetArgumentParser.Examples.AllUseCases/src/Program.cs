@@ -7,6 +7,7 @@ using NetArgumentParser.Converters;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
+using NetArgumentParser.Subcommands;
 
 bool verbose = false;
 bool quick = false;
@@ -18,15 +19,19 @@ List<string> inputFiles = [];
 DateTime? date = default;
 string? name = default;
 
+int? width = default;
+int? height = default;
+
 var parser = new ArgumentParser()
 {
     NumberOfArgumentsToSkip = 0,
     RecognizeCompoundOptions = true,
-    RecognizeSlashOptions = true,
+    RecognizeSlashOptions = false,
     ProgramName = "ProgramName",
     ProgramVersion = "ProgramName v1.0.0",
     ProgramDescription = "What the program does",
-    ProgramEpilog = "Text at the bottom"
+    ProgramEpilog = "Text at the bottom",
+    SubcommandDescriptionGeneratorCreator = t => new SubcommandDescriptionGenerator(t)
 };
 
 var nameOption = new ValueOption<string>("name", "n", afterValueParsingAction: t => name = t)
@@ -40,6 +45,7 @@ var options = new ICommonOption[]
     
     new HelpOption("help", "h",
         description: "show command-line help",
+        aliases: ["?"],
         afterHandlingAction: () =>
         {
             Console.WriteLine(parser.GenerateProgramDescription());
@@ -96,6 +102,17 @@ var additionalOptions = new ICommonOption[]
         afterValueParsingAction: t => date = new DateTime(t[0], t[1], t[2]))
 };
 
+var resizeSubcommandOptions = new ICommonOption[]
+{
+    new ValueOption<int>("width", "w",
+        description: "new width of the image",
+        afterValueParsingAction: t => width = t),
+    
+    new ValueOption<int>("height", "H",
+        description: "new height of the image",
+        afterValueParsingAction: t => height = t)
+};
+
 var converters = new IValueConverter[]
 {
     new ValueConverter<TimeSpan>(t =>
@@ -115,22 +132,30 @@ var converters = new IValueConverter[]
     })
 };
 
-var descriptionGenerator = new DescriptionGenerator(parser)
+var descriptionGenerator = new ApplicationDescriptionGenerator(parser)
 {
     UsageHeader = "Usage: ",
     OptionExamplePrefix = new string(' ', 2),
     DelimiterAfterOptionExample = new string(' ', 2),
+    SubcommandsHeader = "Subcommands:",
+    SubcommandNamePrefix = new string(' ', 2),
+    DelimiterAfterSubcommandName = new string(' ', 2),
     OptionExampleCharsLimit = 30,
     WindowWidth = Console.WindowWidth
 };
 
 parser.DescriptionGenerator = descriptionGenerator;
+parser.ChangeOutputWriter(new ConsoleTextWriter());
 
 parser.AddOptions(options);
 parser.AddConverters(converters);
 
 OptionGroup<ICommonOption> group = parser.AddOptionGroup("Additional options:");
 group.AddOptions(additionalOptions);
+
+Subcommand resizeSubcommand = parser.AddSubcommand("resize", "resize the image");
+resizeSubcommand.UseDefaultHelpOption = true;
+resizeSubcommand.AddOptions(resizeSubcommandOptions);
 
 List<string> extraArguments = [];
 
@@ -154,3 +179,5 @@ Console.WriteLine($"File mode: {fileMode}");
 Console.WriteLine($"Input files: {string.Join(' ', inputFiles)}");
 Console.WriteLine($"Date: {date?.ToLongDateString()}");
 Console.WriteLine($"Name: {name}");
+Console.WriteLine($"Width: {width}");
+Console.WriteLine($"Height: {height}");
