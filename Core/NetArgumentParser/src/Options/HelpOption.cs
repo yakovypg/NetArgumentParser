@@ -6,7 +6,7 @@ namespace NetArgumentParser.Options;
 public sealed class HelpOption : FlagOption, IEquatable<HelpOption>
 {
     public HelpOption(Action? afterHandlingAction = null)
-        : this("help", "h", "show command-line help", false, [], afterHandlingAction) {}
+        : this("help", "h", "show command-line help", false, ["?"], afterHandlingAction) {}
 
     public HelpOption(
         string longName,
