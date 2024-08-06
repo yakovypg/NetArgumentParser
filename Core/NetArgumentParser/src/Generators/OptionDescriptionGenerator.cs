@@ -9,32 +9,35 @@ namespace NetArgumentParser.Generators;
 
 using OutOfRange = ArgumentOutOfRangeException;
 
-public class DescriptionGenerator : IDescriptionGenerator
+public class OptionDescriptionGenerator
 {
     private int _windowWidth;
     private int _optionExampleCharsLimit;
-    
-    public DescriptionGenerator(ArgumentParser parser)
-    {
-        ArgumentNullException.ThrowIfNull(parser, nameof(parser));
 
-        Parser = parser;
+    public OptionDescriptionGenerator(
+        IEnumerable<ICommonOption> options,
+        IEnumerable<OptionGroup<ICommonOption>> optionGroups)
+    {
+        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ArgumentNullException.ThrowIfNull(optionGroups, nameof(optionGroups));
+
+        Options = options;
+        OptionGroups = optionGroups;
+
         WindowWidth = int.MaxValue;
         OptionExampleCharsLimit = 30;
 
-        UsageHeader = "Usage: ";
         OptionExamplePrefix = new string(' ', 2);
         DelimiterAfterOptionExample = new string(' ', 2);
     }
 
-    public string? UsageHeader { get; init; }
-    public string? OptionExamplePrefix { get; init; }
-    public string? DelimiterAfterOptionExample { get; init; }
+    public string? OptionExamplePrefix { get; set; }
+    public string? DelimiterAfterOptionExample { get; set; }
 
     public int WindowWidth
     {
         get => _windowWidth;
-        init
+        set
         {
             OutOfRange.ThrowIfNegativeOrZero(value, nameof(value));
             _windowWidth = value;
@@ -44,48 +47,21 @@ public class DescriptionGenerator : IDescriptionGenerator
     public int OptionExampleCharsLimit
     {
         get => _optionExampleCharsLimit;
-        init
+        set
         {
             OutOfRange.ThrowIfNegativeOrZero(value, nameof(value));
             _optionExampleCharsLimit = value;
         }
     }
 
-    protected ArgumentParser Parser { get; }
+    protected IEnumerable<ICommonOption> Options { get; }
+    protected IEnumerable<OptionGroup<ICommonOption>> OptionGroups { get; }
 
-    public virtual string GenerateDescription()
-    {
-        var descriptionBuilder = new StringBuilder();
-
-        AddUsage(descriptionBuilder);
-
-        if (!string.IsNullOrEmpty(Parser.ProgramDescription))
-        {
-            AddProgramDescription(descriptionBuilder);
-            descriptionBuilder.AppendLine();
-        }
-
-        AddOptionDescriptions(descriptionBuilder);
-
-        if (!string.IsNullOrEmpty(Parser.ProgramEpilog))
-            AddProgramEpilog(descriptionBuilder);
-
-        return descriptionBuilder.ToString().RemoveLineBreakFromEnd();
-    }
-
-    protected virtual void AddUsage(StringBuilder builder)
+    public virtual void AddOptionDescriptions(StringBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
 
-        string usage = GenerateUsage();
-        _ = builder.AppendLine(usage);
-    }
-
-    protected virtual void AddOptionDescriptions(StringBuilder builder)
-    {
-        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
-
-        foreach (OptionGroup<ICommonOption> group in Parser.OptionGroups)
+        foreach (OptionGroup<ICommonOption> group in OptionGroups)
         {
             string optionDescriptions = GenerateOptionDescriptions(group);
 
@@ -94,60 +70,7 @@ public class DescriptionGenerator : IDescriptionGenerator
         }
     }
 
-    protected virtual void AddProgramDescription(StringBuilder builder)
-    {
-        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
-
-        if (!string.IsNullOrEmpty(Parser.ProgramDescription))
-            _ = builder.AppendLine(Parser.ProgramDescription);
-    }
-
-    protected virtual void AddProgramEpilog(StringBuilder builder)
-    {
-        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
-
-        if (!string.IsNullOrEmpty(Parser.ProgramEpilog))
-            _ = builder.AppendLine(Parser.ProgramEpilog);
-    }
-
-    protected virtual string GenerateUsage()
-    {
-        var usageBuilder = new StringBuilder(UsageHeader);
-        int emptySpaceLength = UsageHeader?.Length ?? 0;
-
-        if (!string.IsNullOrEmpty(Parser.ProgramName))
-        {
-            string nameWithDelimiter = Parser.ProgramName + ' ';
-            _ = usageBuilder.Append(nameWithDelimiter);
-
-            emptySpaceLength += nameWithDelimiter.Length;
-        }
-
-        List<string> descriptionParts = GenerateOptionDescriptionsForUsage().ToList();
-        
-        int charsForDescriptionLine = WindowWidth - emptySpaceLength;
-        int leftOffset = emptySpaceLength;
-
-        var longTextWriter = new LongTextWriter(
-            usageBuilder,
-            leftOffset,
-            charsForDescriptionLine);
-
-        longTextWriter.AppendParts(descriptionParts);
-
-        return usageBuilder.ToString();
-    }
-
-    protected virtual IEnumerable<string> GenerateOptionDescriptionsForUsage()
-    {
-        return Parser.VisibleOptions.Select(t =>
-        {
-            string example = t.GetShortExample();
-            return t.IsRequired ? example : $"[{example}]";
-        });
-    }
-
-    protected virtual string GenerateOptionDescriptions(OptionGroup<ICommonOption> optionGroup)
+    public virtual string GenerateOptionDescriptions(OptionGroup<ICommonOption> optionGroup)
     {
         ArgumentNullException.ThrowIfNull(optionGroup, nameof(optionGroup));
 
@@ -204,7 +127,7 @@ public class DescriptionGenerator : IDescriptionGenerator
         longTextWriter.AppendParts(descriptionParts);
     }
 
-    private string GetEmptySpaceForOptionExample(int maxOptionExampleLength)
+    protected string GetEmptySpaceForOptionExample(int maxOptionExampleLength)
     {
         OutOfRange.ThrowIfNegative(
             maxOptionExampleLength,
@@ -214,25 +137,19 @@ public class DescriptionGenerator : IDescriptionGenerator
         return LongTextWriter.GetEmptySpace(maxOptionExampleLength + postfixLength);
     }
 
-    private string GetOptionExample(ICommonOption option)
+    protected string GetOptionExample(ICommonOption option)
     {
         ArgumentNullException.ThrowIfNull(option, nameof(option));
 
         int maxOptionExampleLength = GetMaxOptionExampleLength();
         string example = OptionExamplePrefix + option.GetLongExample();
 
-        if (example.Length < maxOptionExampleLength)
-        {
-            string emptyPostfix = new(' ', maxOptionExampleLength - example.Length);
-            example += emptyPostfix;
-        }
-
-        return example;
+        return example.AddEmptyPostfix(maxOptionExampleLength);;
     }
 
-    private int GetMaxOptionExampleLength()
+    protected int GetMaxOptionExampleLength()
     {
-        int maxOptionExampleLength = Parser.VisibleOptions
+        int maxOptionExampleLength = Options
             .Where(t => t.GetLongExample().Length <= OptionExampleCharsLimit)
             .Max(t => t.GetLongExample().Length);
         

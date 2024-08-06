@@ -1,52 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetArgumentParser.Converters;
+using NetArgumentParser.Subcommands;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Utils;
 using NetArgumentParser.Options.Utils.Verifiers;
+using NetArgumentParser.Visitors;
 
 namespace NetArgumentParser;
 
-public class ArgumentParser
+public class ArgumentParser : ParserQuantum
 {
+    private string _programName;
     private int _numberOfArgumentsToSkip;
-    private ITextWriter _outputWriter;
-    private IDescriptionGenerator _descriptionGenerator;
-
-    private readonly List<OptionGroup<ICommonOption>> _optionGroups;
+    private readonly ArgumentsVisitor _argumentsVisitor;
 
     public ArgumentParser(
         IDescriptionGenerator? descriptionGenerator = null,
-        ITextWriter? outputWriter = null)
+        ITextWriter? outputWriter = null,
+        Func<Subcommand, IDescriptionGenerator>? subcommandDescriptionGeneratorCreator = null)
     {
-        _descriptionGenerator = descriptionGenerator ?? new DescriptionGenerator(this);
-        _outputWriter = outputWriter ?? new ConsoleTextWriter();
+        _programName = string.Empty;
+        _numberOfArgumentsToSkip = 0;
+        _argumentsVisitor = new ArgumentsVisitor(this, OptionSet);
 
-        OptionSet = new OptionSet();
-
-        _optionGroups = [new OptionGroup<ICommonOption>("Options:", OptionSet)];
-
-        UseDefaultHelpOption = true;
-        UseDefaultVersionOption = true;
-
-        ProgramName = string.Empty;
         ProgramVersion = string.Empty;
         ProgramDescription = string.Empty;
         ProgramEpilog = string.Empty;
+
+        RecognizeCompoundOptions = false;
+        RecognizeSlashOptions = false;
+        UseDefaultHelpOption = true;
+        UseDefaultVersionOption = true;
+
+        DescriptionGenerator = descriptionGenerator ?? new ApplicationDescriptionGenerator(this);
+        OutputWriter = outputWriter ?? new ConsoleTextWriter();
+        
+        SubcommandDescriptionGeneratorCreator = subcommandDescriptionGeneratorCreator
+            ?? (t => new SubcommandDescriptionGenerator(t));
     }
 
-    public string ProgramName { get; init; }
+    #region Public Properties
+
+    public string ProgramName
+    {
+        get => _programName;
+        init
+        {
+            _programName = value;
+            UsageStartTerm = value;
+        }
+    }
+
     public string ProgramVersion { get; init; }
     public string ProgramDescription { get; init; }
     public string ProgramEpilog { get; init; }
 
     public bool RecognizeCompoundOptions { get; init; }
     public bool RecognizeSlashOptions { get; init; }
-
-    public bool UseDefaultHelpOption { get; init; }
-    public bool UseDefaultVersionOption { get; init; }
+    public bool UseDefaultVersionOption { get; set; }
 
     public int NumberOfArgumentsToSkip
     {
@@ -58,34 +71,9 @@ public class ArgumentParser
         }
     }
 
-    public ITextWriter OutputWriter
-    {
-        get => _outputWriter;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value, nameof(value));
-            _outputWriter = value;
-        }
-    }
+    #endregion
 
-    public IDescriptionGenerator DescriptionGenerator
-    {
-        get => _descriptionGenerator;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value, nameof(value));
-            _descriptionGenerator = value;
-        }
-    }
-
-    public IReadOnlyList<ICommonOption> AllOptions => OptionSet.Options;
-    public IEnumerable<ICommonOption> HiddenOptions => AllOptions.Where(t => t.IsHidden);
-    public IEnumerable<ICommonOption> VisibleOptions => AllOptions.Where(t => !t.IsHidden);
-
-    public IReadOnlyList<OptionGroup<ICommonOption>> OptionGroups => _optionGroups;
-    public OptionGroup<ICommonOption> DefaultGroup => _optionGroups.First();
-
-    protected IOptionSet<ICommonOption> OptionSet { get; }
+    #region String Representation Generation Methods
 
     public override string ToString()
     {
@@ -94,16 +82,19 @@ public class ArgumentParser
 
     public string GenerateProgramDescription()
     {
-        return DescriptionGenerator.GenerateDescription();
+        return DescriptionGenerator?.GenerateDescription() ?? string.Empty;
     }
 
-    public OptionGroup<ICommonOption> AddOptionGroup(string name)
+    #endregion
+
+    #region Output Stream Interaction Methods
+
+    public void ChangeOutputWriter(ITextWriter? outputWriter)
     {
-        var group = new OptionGroup<ICommonOption>(name, OptionSet);
-        _optionGroups.Add(group);
-
-        return group;
+        OutputWriter = outputWriter;
     }
+
+    #endregion
 
     #region Parsing Methods
 
@@ -112,42 +103,30 @@ public class ArgumentParser
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
         AddDefaultOptions();
-
         IEnumerable<string> adaptedArguments = AdaptArguments(arguments);
-        var context = new Queue<string>(adaptedArguments);
-
-        extraArguments = [];
 
         if (HandleFinalOptions(adaptedArguments))
-            return;
-
-        while (context.Count > 0)
         {
-            string contextItem = context.Dequeue();
-            var argument = new Argument(contextItem, RecognizeSlashOptions);
-
-            bool isContextItemHandled = false;
-            
-            if (argument.IsOption)
-            {
-                string optionName = argument.ExtractOptionName();
-
-                if (OptionSet.HasOption(optionName))
-                {
-                    OptionValue optionValue = argument.ExtractOptionValueFromContext(context, OptionSet);
-                    optionValue.Option.Handle(optionValue.Value);
-                    isContextItemHandled = true;
-                }
-            }
-
-            if (!isContextItemHandled)
-                extraArguments.Add(contextItem);
+            extraArguments = [];
+            return;
         }
 
-        DynamicOptionInteractor.HandleDefaultValueBySuitableOptions(OptionSet.Options);
-        ReuiredOptionVerifier.VerifyRequiredOptionsIsHandled(OptionSet.Options);
+        var visitorExtraArguments = new List<string>();
 
-        OptionSet.ResetOptionsHandledState();
+        _argumentsVisitor.VisitArguments(
+            adaptedArguments,
+            RecognizeSlashOptions,
+            optionValue => optionValue.Option.Handle(optionValue.Value),
+            visitorExtraArguments.Add);
+        
+        extraArguments = visitorExtraArguments;
+
+        List<ICommonOption> allOptions = GetAllOptions();
+
+        DynamicOptionInteractor.HandleDefaultValueBySuitableOptions(allOptions);
+        ReuiredOptionVerifier.VerifyRequiredOptionsIsHandled(allOptions);
+
+        ResetOptionsHandledState();
     }
 
     public void Parse(IEnumerable<string> arguments)
@@ -162,41 +141,61 @@ public class ArgumentParser
 
     #endregion
 
-    #region Option Set Interaction Methods
+    #region Default Option Interaction Methods
 
-    public void AddOptions(params ICommonOption[] options)
+    protected override void AddDefaultOptions()
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
-        DefaultGroup.AddOptions(options);
-    }
-
-    public void AddConverters(params IValueConverter[] converters)
-    {
-        ArgumentNullException.ThrowIfNull(converters, nameof(converters));
-        Array.ForEach(converters, OptionSet.AddConverter);
-    }
-
-    public bool RemoveOption(ICommonOption option)
-    {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
-        return OptionSet.RemoveOption(option);
-    }
-
-    public void ResetOptionsHandledState()
-    {
-        OptionSet.ResetOptionsHandledState();
-    }
-
-    #endregion
-
-    protected virtual void AddDefaultOptions()
-    {
-        if (UseDefaultHelpOption && !OptionSet.HasHelpOption())
-            AddDefaultHelpOption();
+        base.AddDefaultOptions();
         
         if (UseDefaultVersionOption && !OptionSet.HasVersionOption())
             AddDefaultVersionOption();
     }
+
+    protected virtual void AddDefaultVersionOption()
+    {
+        var versionOption = new VersionOption(() =>
+        {
+            OutputWriter?.WriteLine(ProgramVersion);
+            Environment.Exit(0);
+        });
+
+        AddOptions(versionOption);
+    }
+
+    #endregion
+
+    #region Final Option Interaction Methods
+
+    protected virtual bool HandleFinalOptions(IEnumerable<string> arguments)
+    {
+        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+
+        return HandleFinalOption<HelpOption>(arguments)
+            || HandleFinalOption<VersionOption>(arguments);
+    }
+
+    protected virtual bool HandleFinalOption<T>(IEnumerable<string> arguments)
+        where T : ICommonOption
+    {
+        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+
+        bool isFinalOptionHandled = false;
+
+        _argumentsVisitor.VisitArguments(arguments, RecognizeSlashOptions, t =>
+        {
+            if (t.Option is T)
+            {
+                t.Option.Handle(t.Value);
+                isFinalOptionHandled = true;
+            }
+        });
+
+        return isFinalOptionHandled;
+    }
+
+    #endregion
+
+    #region Argument Conversion Methods
 
     protected virtual IEnumerable<string> AdaptArguments(IEnumerable<string> arguments)
     {
@@ -210,51 +209,5 @@ public class ArgumentParser
             : consideredArguments;
     }
 
-    protected virtual bool HandleFinalOptions(IEnumerable<string> arguments)
-    {
-        return HandleFinalOption<HelpOption>(arguments)
-            || HandleFinalOption<VersionOption>(arguments);
-    }
-
-    protected virtual bool HandleFinalOption<T>(IEnumerable<string> arguments)
-        where T : ICommonOption
-    {
-        if (AllOptions.FirstOrDefault(t => t is T) is not T finalOption)
-            return false;
-
-        string? finalOptionArgument = arguments
-            .Where(t => new Argument(t, RecognizeSlashOptions).IsOption)
-            .Select(t => new Argument(t, RecognizeSlashOptions).ExtractOptionName())
-            .FirstOrDefault(finalOption.HasName);
-        
-        if (finalOptionArgument is not null)
-        {
-            finalOption.Handle();
-            return true;
-        }
-
-        return false;
-    }
-
-    private void AddDefaultHelpOption()
-    {
-        var helpOption = new HelpOption(() =>
-        {
-            OutputWriter.WriteLine(GenerateProgramDescription());
-            Environment.Exit(0);
-        });
-
-        AddOptions(helpOption);
-    }
-
-    private void AddDefaultVersionOption()
-    {
-        var versionOption = new VersionOption(() =>
-        {
-            OutputWriter.WriteLine(ProgramVersion);
-            Environment.Exit(0);
-        });
-
-        AddOptions(versionOption);
-    }
+    #endregion
 }
