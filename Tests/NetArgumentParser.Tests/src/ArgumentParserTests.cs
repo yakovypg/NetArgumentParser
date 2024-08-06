@@ -1660,8 +1660,8 @@ public class ArgumentParserTest
         ArgumentNullException.ThrowIfNull(actual, nameof(expected));
         ArgumentNullException.ThrowIfNull(actual, nameof(actual));
 
-        expected = expected.OrderBy(t => t);
-        actual = actual.OrderBy(t => t);
+        expected = expected.Order();
+        actual = actual.Order();
 
         Assert.True(expected.SequenceEqual(actual));
     }
