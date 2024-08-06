@@ -46,19 +46,21 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>, IEquatable<Multiple
 
     public override string GetShortExample()
     {
+        string extendedMetavariable = GetExtendedMetavariable();
         string prefferedName = GetPrefferedNameWithPrefix();
-        string contextDescription = ContextCapture.GetDescription(MetaVariable);
+        string contextDescription = ContextCapture.GetDescription(extendedMetavariable);
 
         return $"{prefferedName} {contextDescription}";
     }
 
     public override string GetLongExample()
     {
-        string value = ContextCapture.GetDescription(MetaVariable);
+        string extendedMetavariable = GetExtendedMetavariable();
+        string contextDescription = ContextCapture.GetDescription(extendedMetavariable);
 
         string longExample =
-            $"{SpecialCharacters.LongNamedOptionPrefix}{LongName} {value}, " +
-            $"{SpecialCharacters.ShortNamedOptionPrefix}{ShortName} {value}";
+            $"{SpecialCharacters.LongNamedOptionPrefix}{LongName} {contextDescription}, " +
+            $"{SpecialCharacters.ShortNamedOptionPrefix}{ShortName} {contextDescription}";
 
         return !string.IsNullOrEmpty(LongName) && !string.IsNullOrEmpty(ShortName)
             ? longExample
@@ -100,7 +102,7 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>, IEquatable<Multiple
     protected override string[] GetAllowedValues()
     {
         return Choices
-            .Select(t => $"[{string.Join(", ", t)}]")
+            .Select(t => $"[{string.Join(',', t)}]")
             .ToArray();
     }
 
