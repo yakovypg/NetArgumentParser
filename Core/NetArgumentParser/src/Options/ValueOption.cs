@@ -157,17 +157,19 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
 
     public override string GetShortExample()
     {
+        string extendedMetavariable = GetExtendedMetavariable();
         string prefferedName = GetPrefferedNameWithPrefix();
-        return $"{prefferedName} {MetaVariable}";
+
+        return $"{prefferedName} {extendedMetavariable}";
     }
 
     public override string GetLongExample()
     {
-        string value = MetaVariable;
+        string extendedMetavariable = GetExtendedMetavariable();
 
         string longExample =
-            $"{SpecialCharacters.LongNamedOptionPrefix}{LongName} {value}, " +
-            $"{SpecialCharacters.ShortNamedOptionPrefix}{ShortName} {value}";
+            $"{SpecialCharacters.LongNamedOptionPrefix}{LongName} {extendedMetavariable}, " +
+            $"{SpecialCharacters.ShortNamedOptionPrefix}{ShortName} {extendedMetavariable}";
 
         return !string.IsNullOrEmpty(LongName) && ! string.IsNullOrEmpty(ShortName)
             ? longExample
@@ -251,5 +253,12 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
 
         if (!IsValueSatisfyChoices(value))
             throw new OptionValueNotSatisfyChoicesException(null, valueSource, GetAllowedValues());
+    }
+
+    protected string GetExtendedMetavariable()
+    {
+        return Choices.Count > 0
+            ? "{" + string.Join(',', GetAllowedValues()) + "}"
+            : MetaVariable;
     }
 }
