@@ -7,7 +7,7 @@
   <a href="https://github.com/yakovypg/NetArgumentParser/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-GPLv3-darkyellow.svg" alt="license" />
   </a>
-  <img src="https://img.shields.io/badge/Version-0.0.1-red.svg" alt="version" />
+  <img src="https://img.shields.io/badge/Version-0.0.2-red.svg" alt="version" />
   <img src="https://img.shields.io/badge/C%23-.NET 8-blue" />
 </p>
 
@@ -64,8 +64,6 @@ You can find instructions for connecting **NetArgumentParser** to your project [
 ## Project Status And TODO List
 **NetArgumentParser** is currently under development. There are some features that need to be added to the project:
 - Add support of reflection-based configuring option set using special attributes.
-- Add support of import and export JSON configuration.
-- Add support of parent parsers.
 - Add NuGet package.
 
 ## Documentation
