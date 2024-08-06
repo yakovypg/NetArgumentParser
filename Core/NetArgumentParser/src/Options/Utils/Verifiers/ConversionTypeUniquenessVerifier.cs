@@ -18,7 +18,7 @@ internal sealed class ConversionTypeUniquenessVerifier
     internal void VerifyConversionTypeIsUnique(IValueConverter converter)
     {
         ArgumentNullException.ThrowIfNull(converter, nameof(converter));
-        
+
         if (_converters.Any(t => t.ConversionType == converter.ConversionType))
             throw new OnlyUniqueConversionTypeException(null, converter.ConversionType);
     }

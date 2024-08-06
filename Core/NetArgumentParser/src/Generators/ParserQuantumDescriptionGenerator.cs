@@ -11,7 +11,7 @@ public abstract class ParserQuantumDescriptionGenerator : IDescriptionGenerator
     private string? _usageHeader;
     private string? _optionExamplePrefix;
     private string? _delimiterAfterOptionExample;
-    
+
     private int _windowWidth;
     private int _optionExampleCharsLimit;
 
@@ -29,7 +29,7 @@ public abstract class ParserQuantumDescriptionGenerator : IDescriptionGenerator
         _delimiterAfterOptionExample = new string(' ', 2);
         _windowWidth = int.MaxValue;
         _optionExampleCharsLimit = 30;
-        
+
         ParserQuantum = parserQuantum;
         ParserQuantumName = parserQuantumName;
         ParserQuantumDescription = parserQuantumDescription;

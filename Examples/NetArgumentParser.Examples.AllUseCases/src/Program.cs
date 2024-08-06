@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,7 +42,7 @@ var nameOption = new ValueOption<string>("name", "n", afterValueParsingAction: t
 var options = new ICommonOption[]
 {
     nameOption,
-    
+
     new HelpOption("help", "h",
         description: "show command-line help",
         aliases: ["?"],
@@ -55,7 +55,7 @@ var options = new ICommonOption[]
     new FlagOption("verbose", "v",
         description: "be verbose",
         afterHandlingAction: () => verbose = true),
-    
+
     new FlagOption("legacy-verbose", string.Empty,
         description: "be verbose",
         isHidden: true,
@@ -78,7 +78,7 @@ var options = new ICommonOption[]
         isRequired: true,
         choices: [0, 45, 90, 180],
         afterValueParsingAction: t => angle = t),
-    
+
     new CounterOption(string.Empty, "V",
         description: "increase verbosity level",
         increaseCounter: () => verbosityLevel++)
@@ -94,7 +94,7 @@ var additionalOptions = new ICommonOption[]
         description: "specifies how the operatng system should open a file",
         defaultValue: new DefaultOptionValue<FileMode>(FileMode.OpenOrCreate),
         afterValueParsingAction: t => fileMode = t),
-    
+
     new MultipleValueOption<int>("date",
         description: "next date the program update notification will be displayed",
         metaVariable: "D",
@@ -107,7 +107,7 @@ var resizeSubcommandOptions = new ICommonOption[]
     new ValueOption<int>("width", "w",
         description: "new width of the image",
         afterValueParsingAction: t => width = t),
-    
+
     new ValueOption<int>("height", "H",
         description: "new height of the image",
         afterValueParsingAction: t => height = t)

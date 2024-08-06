@@ -7,21 +7,21 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class IncorrectOptionNameException : Exception
 {
-    public IncorrectOptionNameException() {}
+    public IncorrectOptionNameException() { }
 
     public IncorrectOptionNameException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public IncorrectOptionNameException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public IncorrectOptionNameException(string? message, string optionName)  
-        : this(message, optionName, null) {}
-    
+    public IncorrectOptionNameException(string? message, string optionName)
+        : this(message, optionName, null) { }
+
     public IncorrectOptionNameException(
         string? message,
         string optionName,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(optionName), innerException)
     {
         ArgumentNullException.ThrowIfNull(optionName, nameof(optionName));

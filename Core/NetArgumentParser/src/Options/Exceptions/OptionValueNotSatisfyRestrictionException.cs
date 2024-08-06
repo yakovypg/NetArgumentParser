@@ -6,22 +6,22 @@ namespace NetArgumentParser.Options;
 
 [Serializable]
 public class OptionValueNotSatisfyRestrictionException : Exception
-{   
-    public OptionValueNotSatisfyRestrictionException() {}
+{
+    public OptionValueNotSatisfyRestrictionException() { }
 
     public OptionValueNotSatisfyRestrictionException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public OptionValueNotSatisfyRestrictionException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public OptionValueNotSatisfyRestrictionException(string? message, string[] optionValue)  
-        : this(message, optionValue, null) {}
-    
+    public OptionValueNotSatisfyRestrictionException(string? message, string[] optionValue)
+        : this(message, optionValue, null) { }
+
     public OptionValueNotSatisfyRestrictionException(
         string? message,
         string[] optionValue,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(optionValue), innerException)
     {
         ArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));

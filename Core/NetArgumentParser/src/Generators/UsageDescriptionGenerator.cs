@@ -13,9 +13,9 @@ public class UsageDescriptionGenerator
     public UsageDescriptionGenerator(IEnumerable<ICommonOption> options)
     {
         ArgumentNullException.ThrowIfNull(options, nameof(options));
-        
+
         Options = options;
-        
+
         WindowWidth = int.MaxValue;
         UsageHeader = "Usage: ";
         ProgramName = string.Empty;
@@ -58,7 +58,7 @@ public class UsageDescriptionGenerator
         }
 
         List<string> descriptionParts = GenerateOptionDescriptionsForUsage().ToList();
-        
+
         int charsForDescriptionLine = WindowWidth - emptySpaceLength;
         int leftOffset = emptySpaceLength;
 

@@ -6,7 +6,7 @@ namespace NetArgumentParser.Options;
 public sealed class VersionOption : FlagOption, IEquatable<VersionOption>
 {
     public VersionOption(Action? afterHandlingAction = null)
-        : this("version", string.Empty, "show version information", false, [], afterHandlingAction) {}
+        : this("version", string.Empty, "show version information", false, [], afterHandlingAction) { }
 
     public VersionOption(
         string longName,
@@ -15,7 +15,7 @@ public sealed class VersionOption : FlagOption, IEquatable<VersionOption>
         bool isHidden = false,
         IEnumerable<string>? aliases = null,
         Action? afterHandlingAction = null)
-        
+
         : base(
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),

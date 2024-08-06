@@ -6,7 +6,7 @@ namespace NetArgumentParser.Options.Context;
 
 public class OneOrMoreContextCapture : IContextCapture
 {
-    public OneOrMoreContextCapture() {}
+    public OneOrMoreContextCapture() { }
 
     public int MinNumberOfItemsToCapture => 1;
     public int? MaxNumberOfItemsToCapture => null;

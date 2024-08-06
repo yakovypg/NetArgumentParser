@@ -3,7 +3,7 @@ using System;
 namespace NetArgumentParser.Subcommands;
 
 public class Subcommand : ParserQuantum
-{   
+{
     internal Subcommand(string name, string description)
     {
         ArgumentNullException.ThrowIfNull(name, nameof(name));

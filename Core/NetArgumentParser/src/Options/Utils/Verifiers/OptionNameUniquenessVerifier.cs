@@ -20,10 +20,10 @@ internal sealed class OptionNameUniquenessVerifier
 
         if (option.LongName == option.ShortName)
             throw new OnlyUniqueOptionNameException(null, option.LongName);
-        
+
         if (!string.IsNullOrEmpty(option.LongName) && option.Aliases.Contains(option.LongName))
             throw new OnlyUniqueOptionNameException(null, option.LongName);
-        
+
         if (!string.IsNullOrEmpty(option.ShortName) && option.Aliases.Contains(option.ShortName))
             throw new OnlyUniqueOptionNameException(null, option.ShortName);
     }
@@ -39,7 +39,7 @@ internal sealed class OptionNameUniquenessVerifier
             option.LongName,
             option.ShortName
         };
-        
+
         foreach (string name in names)
         {
             if (_options.Any(t => t.HasName(name)))

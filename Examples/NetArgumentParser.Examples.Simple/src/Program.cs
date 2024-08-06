@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NetArgumentParser;
@@ -10,7 +10,7 @@ FileMode? fileMode = default;
 List<string> inputFiles = [];
 
 var options = new ICommonOption[]
-{   
+{
     new MultipleValueOption<string>("input", "i",
         description: "images that need to be processed",
         isRequired: true,
@@ -21,7 +21,7 @@ var options = new ICommonOption[]
         description: "angle by which you want to rotate the image",
         isRequired: true,
         afterValueParsingAction: t => angle = t),
-    
+
     new EnumValueOption<FileMode>("file-mode", string.Empty,
         description: "specifies how the operatng system should open a file",
         defaultValue: new DefaultOptionValue<FileMode>(FileMode.OpenOrCreate),

@@ -43,7 +43,7 @@ public class ArgumentParserTest
             new FlagOption("print-y-coord", "y", afterHandlingAction: () => printY = true),
             new FlagOption("print-z-coord", "z", afterHandlingAction: () => printZ = true)
         };
-        
+
         var parser = new ArgumentParser()
         {
             UseDefaultHelpOption = false,
@@ -135,7 +135,7 @@ public class ArgumentParserTest
         ushort recievedUShort = default;
         uint recievedUInt = default;
         ulong recievedULong = default;
-        
+
         var arguments = new string[]
         {
             "-b", boolValue,
@@ -233,12 +233,12 @@ public class ArgumentParserTest
                 string.Empty, "m",
                 contextCapture: new FixedContextCapture(4),
                 afterValueParsingAction: t => margin = new Margin(t[0], t[1], t[2], t[3])),
-            
+
             new MultipleValueOption<string>(
                 string.Empty, "f",
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = new List<string>(t)),
-            
+
             new MultipleValueOption<double>(
                 string.Empty, "p",
                 contextCapture: new FixedContextCapture(2),
@@ -258,11 +258,11 @@ public class ArgumentParserTest
             int.Parse(topMargin),
             int.Parse(rightMargin),
             int.Parse(bottomMargin));
-        
+
         var expectedPoint = new Point(
             double.Parse(pointX),
             double.Parse(pointY));
-        
+
         List<string> expectedFiles = [file1, file2, file3];
 
         Assert.Equal(expectedMargin, margin);
@@ -284,7 +284,7 @@ public class ArgumentParserTest
         const double pointY = -14.15;
 
         const int inputAngle = -45;
-        
+
         int? angle = null;
         Margin? margin = null;
         Point? point = null;
@@ -299,7 +299,7 @@ public class ArgumentParserTest
         var options = new ICommonOption[]
         {
             new ValueOption<int>(string.Empty, "a", afterValueParsingAction: t => angle = t),
-            new ValueOption<Margin>(string.Empty, "m", afterValueParsingAction: t => margin = t),    
+            new ValueOption<Margin>(string.Empty, "m", afterValueParsingAction: t => margin = t),
             new ValueOption<Point>(string.Empty, "p", afterValueParsingAction: t => point = t)
         };
 
@@ -331,7 +331,7 @@ public class ArgumentParserTest
 
         parser.AddOptions(options);
         parser.AddConverters(converters);
-        
+
         parser.ParseKnownArguments(arguments, out List<string> extraArguments);
 
         var expectedMargin = new Margin(
@@ -339,7 +339,7 @@ public class ArgumentParserTest
             topMargin,
             rightMargin,
             bottomMargin);
-        
+
         var expectedPoint = new Point(pointX, pointY);
 
         Assert.Equal(Math.Abs(inputAngle), angle);
@@ -361,7 +361,7 @@ public class ArgumentParserTest
         const double expectedWidth = 1920;
         const double expectedHeight = defaultHeight;
         const string expectedName = "some_name";
-        
+
         int angle = default;
         double width = default;
         double height = default;
@@ -372,7 +372,7 @@ public class ArgumentParserTest
             "-n", expectedName,
             "-w", expectedWidth.ToString()
         };
-        
+
         var options = new ICommonOption[]
         {
             new ValueOption<int>(
@@ -443,7 +443,7 @@ public class ArgumentParserTest
             new ValueOption<int>(
                 string.Empty, "a",
                 isRequired: true),
-            
+
             new ValueOption<string>(
                 string.Empty, "b",
                 isRequired: true),
@@ -458,12 +458,12 @@ public class ArgumentParserTest
             new ValueOption<int>(
                 string.Empty, "A",
                 isRequired: false),
-            
+
             new ValueOption<double>(
                 string.Empty, "o",
                 isRequired: false)
         };
-        
+
         IEnumerable<ICommonOption> allOptions = requiredOptions
             .Concat(notSpecifiedRequiredOptionWithoutDefaultValue)
             .Concat(notRequiredOptions);
@@ -600,7 +600,7 @@ public class ArgumentParserTest
 
         Exception? ex = Record.Exception(
             () => parser.ParseKnownArguments(arguments, out _));
-            
+
         Assert.Null(ex);
     }
 
@@ -755,7 +755,7 @@ public class ArgumentParserTest
 
         Exception? ex = Record.Exception(
             () => parser.ParseKnownArguments(arguments, out _));
-            
+
         Assert.Null(ex);
     }
 
@@ -764,7 +764,7 @@ public class ArgumentParserTest
     {
         const int expectedAngle = 45;
         const BindMode expectedBindMode = BindMode.OneWayToSource;
-        
+
         var arguments = new string[]
         {
             "-A", expectedAngle.ToString(),
@@ -840,10 +840,10 @@ public class ArgumentParserTest
             new EnumValueOption<StringSplitOptions>("split-option", "s"),
             new ValueOption<int>("width", "w"),
             new ValueOption<double>("angle", "a"),
-            
+
             new MultipleValueOption<byte>("margin", "m",
                 contextCapture: new FixedContextCapture(4)),
-                
+
             new MultipleValueOption<string>("files", "f",
                 contextCapture: new ZeroOrMoreContextCapture())
         };
@@ -926,7 +926,7 @@ public class ArgumentParserTest
     public void Parse_SlashBasedOptionsDisabled_SlashBasedOptionsNotRecognized()
     {
         const StringSplitOptions expectedSplitOption = StringSplitOptions.TrimEntries;
-        
+
         const string file1 = "./file1";
         const string file2 = "/file2";
         const string file3 = "file3";
@@ -938,7 +938,7 @@ public class ArgumentParserTest
         int width = default;
         StringSplitOptions splitOption = default;
         List<string> files = [];
-        
+
         var arguments = new string[]
         {
             "/l",
@@ -967,7 +967,7 @@ public class ArgumentParserTest
 
             new EnumValueOption<StringSplitOptions>("Split",
                 afterValueParsingAction: t => splitOption = t),
-            
+
             new MultipleValueOption<string>("files",
                 afterValueParsingAction: t => files = [..t])
         };
@@ -994,7 +994,7 @@ public class ArgumentParserTest
     {
         const int expectedWidth = 100;
         const StringSplitOptions expectedSplitOption = StringSplitOptions.RemoveEmptyEntries;
-        
+
         const string file1 = "./file1";
         const string file2 = "/file2";
         const string file3 = "file3";
@@ -1006,7 +1006,7 @@ public class ArgumentParserTest
         int width = default;
         StringSplitOptions splitOption = default;
         List<string> files = [];
-        
+
         var arguments = new string[]
         {
             "/l",
@@ -1032,11 +1032,11 @@ public class ArgumentParserTest
 
             new EnumValueOption<StringSplitOptions>("Split",
                 afterValueParsingAction: t => splitOption = t),
-            
+
             new MultipleValueOption<string>("files",
                 afterValueParsingAction: t => files = [..t])
         };
-        
+
         var parser = new ArgumentParser()
         {
             UseDefaultHelpOption = false,
@@ -1263,11 +1263,11 @@ public class ArgumentParserTest
 
             new ValueOption<int>("height", "H",
                 afterValueParsingAction: t => height = t),
-            
+
             new EnumValueOption<StringSplitOptions>("split-option", "s",
                 afterValueParsingAction: t => splitOption = t),
         };
-        
+
         var parser = new ArgumentParser()
         {
             UseDefaultHelpOption = false,
@@ -1340,7 +1340,7 @@ public class ArgumentParserTest
             "-s", StringSplitOptions.TrimEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
-        
+
         var options = new ICommonOption[]
         {
             new FlagOption("verbose", "v",
@@ -1352,7 +1352,7 @@ public class ArgumentParserTest
             new ValueOption<double>("angle", "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
-            
+
             new EnumValueOption<StringSplitOptions>("split-option", "s",
                 afterValueParsingAction: t => splitOption = t),
 
@@ -1361,7 +1361,7 @@ public class ArgumentParserTest
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
         };
-        
+
         var parser = new ArgumentParser()
         {
             UseDefaultHelpOption = false,
@@ -1398,7 +1398,7 @@ public class ArgumentParserTest
             "-s", StringSplitOptions.TrimEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
-        
+
         var options = new ICommonOption[]
         {
             new FlagOption("verbose", "v",
@@ -1410,7 +1410,7 @@ public class ArgumentParserTest
             new ValueOption<double>("angle", "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
-            
+
             new EnumValueOption<StringSplitOptions>("split-option", "s",
                 afterValueParsingAction: t => splitOption = t),
 
@@ -1419,7 +1419,7 @@ public class ArgumentParserTest
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
         };
-        
+
         var parser = new ArgumentParser()
         {
             UseDefaultHelpOption = false,
@@ -1498,7 +1498,7 @@ public class ArgumentParserTest
             marginTop,
             marginRight,
             marginBottom);
-        
+
         var expectedPoint = new Point(pointX, pointY);
         string[] expectedFiles = [file1, file2, file3, file4];
 
@@ -1515,7 +1515,7 @@ public class ArgumentParserTest
         Point point = default;
         Margin? margin = null;
         List<string>? files = [];
-        
+
         var expectedExtraArguments = new string[]
         {
             "height",
@@ -1639,7 +1639,7 @@ public class ArgumentParserTest
         Assert.True(saveLog);
         Assert.True(autoRotate);
         Assert.True(quickMode);
-  
+
         Assert.Equal(expectedSplitOption, splitOption);
         Assert.Equal(expectedWidth, width);
         Assert.Equal(expectedVerbosityLevel, verbosityLevel);

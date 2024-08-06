@@ -18,7 +18,7 @@ public class ContextCaptureTests
 
         var contexts = new List<string[]>()
         {
-            context1, context2, context3, context4, context5 
+            context1, context2, context3, context4, context5
         };
 
         var contextCapure = new EmptyContextCapture();
@@ -41,7 +41,7 @@ public class ContextCaptureTests
 
         var contexts = new List<string[]>()
         {
-            context1, context2, context3, context4, context5 
+            context1, context2, context3, context4, context5
         };
 
         for (int i = 1; i <= contexts.Max(t => t.Length); ++i)
@@ -94,11 +94,11 @@ public class ContextCaptureTests
         int items3 = contextCapure.GetNumberOfItemsToCapture(context3);
         int items4 = contextCapure.GetNumberOfItemsToCapture(context4);
         int items5 = contextCapure.GetNumberOfItemsToCapture(context5);
-        
+
         Assert.Equal(1, items3);
         Assert.Equal(3, items4);
         Assert.Equal(3, items5);
-        
+
         int items6SlashOptionDisabled = contextCapure.
             GetNumberOfItemsToCapture(context6, false);
 
@@ -144,11 +144,11 @@ public class ContextCaptureTests
         int items3 = contextCapure.GetNumberOfItemsToCapture(context3);
         int items4 = contextCapure.GetNumberOfItemsToCapture(context4);
         int items5 = contextCapure.GetNumberOfItemsToCapture(context5);
-        
+
         Assert.Equal(1, items3);
         Assert.Equal(3, items4);
         Assert.Equal(3, items5);
-        
+
         int items6SlashOptionDisabled = contextCapure.
             GetNumberOfItemsToCapture(context6, false);
 
@@ -192,11 +192,11 @@ public class ContextCaptureTests
         int items3 = contextCapure.GetNumberOfItemsToCapture(context3);
         int items4 = contextCapure.GetNumberOfItemsToCapture(context4);
         int items5 = contextCapure.GetNumberOfItemsToCapture(context5);
-        
+
         Assert.Equal(1, items3);
         Assert.Equal(1, items4);
         Assert.Equal(1, items5);
-        
+
         int items6SlashOptionDisabled = contextCapure.
             GetNumberOfItemsToCapture(context6, false);
 

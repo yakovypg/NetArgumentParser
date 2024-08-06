@@ -6,22 +6,22 @@ namespace NetArgumentParser.Converters;
 
 [Serializable]
 public class DefaultConverterNotFoundException : Exception
-{   
-    public DefaultConverterNotFoundException() {}
+{
+    public DefaultConverterNotFoundException() { }
 
     public DefaultConverterNotFoundException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public DefaultConverterNotFoundException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public DefaultConverterNotFoundException(string? message, Type outputType)  
-        : this(message, outputType, null) {}
-    
+    public DefaultConverterNotFoundException(string? message, Type outputType)
+        : this(message, outputType, null) { }
+
     public DefaultConverterNotFoundException(
         string? message,
         Type outputType,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(outputType), innerException)
     {
         ArgumentNullException.ThrowIfNull(outputType, nameof(outputType));

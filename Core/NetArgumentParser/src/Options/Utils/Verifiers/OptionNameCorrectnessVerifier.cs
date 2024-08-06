@@ -7,8 +7,8 @@ namespace NetArgumentParser.Options.Utils.Verifiers;
 
 internal static partial class OptionNameCorrectnessVerifier
 {
-    private static readonly List<string> _reservedNames = [ "?" ];
-    
+    private static readonly List<string> _reservedNames = ["?"];
+
     internal static void VerifyAtLeastOneNameIsDefined(string longName, string shortName)
     {
         ArgumentNullException.ThrowIfNull(longName, nameof(longName));
@@ -36,7 +36,7 @@ internal static partial class OptionNameCorrectnessVerifier
     internal static void VerifyAliasesIsCorrect(IEnumerable<string> aliases)
     {
         ArgumentNullException.ThrowIfNull(aliases, nameof(aliases));
-        
+
         foreach (string alias in aliases)
         {
             VerifyNameIsCorrect(alias);

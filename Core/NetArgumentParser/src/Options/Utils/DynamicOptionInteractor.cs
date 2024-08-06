@@ -12,17 +12,17 @@ internal static class DynamicOptionInteractor
     private const string _setConverterMethodName = "TrySetConverter";
     private const string _hasDefaultValuePropertyName = "HasDefaultValue";
     private const string _handleDefaultValueMethodName = "HandleDefaultValue";
-    
+
     internal static void HandleDefaultValueBySuitableOptions(IEnumerable<ICommonOption> options)
     {
         ArgumentNullException.ThrowIfNull(options, nameof(options));
 
         IEnumerable<ICommonOption> unhandledOptions = options
-            .Where(t => !t.IsHandled); 
+            .Where(t => !t.IsHandled);
 
         IEnumerable<dynamic> optionsWithAbilityToHandleDefaultValue =
             GetOptionsWithAbilityToHandleDefaultValue(unhandledOptions);
-        
+
         IEnumerable<dynamic> suitableOptions = optionsWithAbilityToHandleDefaultValue
             .Where(t => t.HasDefaultValue);
 
@@ -31,7 +31,7 @@ internal static class DynamicOptionInteractor
             option.HandleDefaultValue();
         }
     }
-    
+
     internal static void SetConverterToSuitableOptions(
         IEnumerable<ICommonOption> options,
         IValueConverter converter)
@@ -69,7 +69,7 @@ internal static class DynamicOptionInteractor
     {
         ArgumentNullException.ThrowIfNull(option, nameof(option));
         ArgumentNullException.ThrowIfNull(converterType, nameof(converterType));
-        
+
         return CheckOptionHasConverterSetMethod(option, converterType)
             && CheckOptionHasConverterProperty(option, converterType);
     }
@@ -105,7 +105,7 @@ internal static class DynamicOptionInteractor
 
         if (property is null)
             return false;
-        
+
         MethodInfo? propertyGetter = property.GetMethod;
 
         return propertyGetter is not null
@@ -151,7 +151,7 @@ internal static class DynamicOptionInteractor
 
         if (property is null)
             return false;
-        
+
         MethodInfo? propertyGetter = property.GetMethod;
 
         return propertyGetter is not null

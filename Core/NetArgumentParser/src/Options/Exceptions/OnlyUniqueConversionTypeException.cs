@@ -7,21 +7,21 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class OnlyUniqueConversionTypeException : Exception
 {
-    public OnlyUniqueConversionTypeException() {}
+    public OnlyUniqueConversionTypeException() { }
 
     public OnlyUniqueConversionTypeException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public OnlyUniqueConversionTypeException(string? message, Exception? innerException)
-        : base(message, innerException) {}
-    
-    public OnlyUniqueConversionTypeException(string? message, Type outputType)  
-        : this(message, outputType, null) {}
-    
+        : base(message, innerException) { }
+
+    public OnlyUniqueConversionTypeException(string? message, Type outputType)
+        : this(message, outputType, null) { }
+
     public OnlyUniqueConversionTypeException(
         string? message,
         Type conversionType,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(conversionType), innerException)
     {
         ArgumentNullException.ThrowIfNull(conversionType, nameof(conversionType));

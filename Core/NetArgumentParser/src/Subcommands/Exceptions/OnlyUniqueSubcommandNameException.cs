@@ -6,22 +6,22 @@ namespace NetArgumentParser.Subcommands;
 
 [Serializable]
 public class OnlyUniqueSubcommandNameException : Exception
-{   
-    public OnlyUniqueSubcommandNameException() {}
+{
+    public OnlyUniqueSubcommandNameException() { }
 
     public OnlyUniqueSubcommandNameException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public OnlyUniqueSubcommandNameException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public OnlyUniqueSubcommandNameException(string? message, string subcommandName)  
-        : this(message, subcommandName, null) {}
-    
+    public OnlyUniqueSubcommandNameException(string? message, string subcommandName)
+        : this(message, subcommandName, null) { }
+
     public OnlyUniqueSubcommandNameException(
         string? message,
         string subcommandName,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(subcommandName), innerException)
     {
         ArgumentNullException.ThrowIfNull(subcommandName, nameof(subcommandName));

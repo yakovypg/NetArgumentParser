@@ -9,7 +9,7 @@ public sealed class OptionGroup<T>
 {
     private readonly List<T> _options;
     private string _header = string.Empty;
-    
+
     internal OptionGroup(string header, IOptionSet<T> optionSet)
     {
         ArgumentNullException.ThrowIfNull(header, nameof(header));

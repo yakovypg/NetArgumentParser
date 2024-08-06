@@ -7,21 +7,21 @@ namespace NetArgumentParser.Subcommands;
 [Serializable]
 public class IncorrectSubcommandNameException : Exception
 {
-    public IncorrectSubcommandNameException() {}
+    public IncorrectSubcommandNameException() { }
 
     public IncorrectSubcommandNameException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public IncorrectSubcommandNameException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public IncorrectSubcommandNameException(string? message, string subcommandName)  
-        : this(message, subcommandName, null) {}
-    
+    public IncorrectSubcommandNameException(string? message, string subcommandName)
+        : this(message, subcommandName, null) { }
+
     public IncorrectSubcommandNameException(
         string? message,
         string subcommandName,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(subcommandName), innerException)
     {
         ArgumentNullException.ThrowIfNull(subcommandName, nameof(subcommandName));

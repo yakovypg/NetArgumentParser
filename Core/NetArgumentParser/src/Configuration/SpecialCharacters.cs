@@ -9,7 +9,7 @@ public class SpecialCharacters
     public static char ShortNamedOptionPrefix { get; set; } = '-';
 
     public static string LongNamedOptionPrefix => new(ShortNamedOptionPrefix, 2);
-    
+
     public static bool IsStateValid()
     {
         char[] characters = [AssignmentCharacter, SlashOptionPrefix, ShortNamedOptionPrefix];

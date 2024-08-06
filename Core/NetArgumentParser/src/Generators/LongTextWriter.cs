@@ -16,7 +16,7 @@ public sealed class LongTextWriter
         ArgumentNullException.ThrowIfNull(textBuilder, nameof(textBuilder));
         OutOfRange.ThrowIfNegative(leftOffset, nameof(leftOffset));
         OutOfRange.ThrowIfNegativeOrZero(charsInOneLine, nameof(charsInOneLine));
-        
+
         TextBuilder = textBuilder;
         LeftOffset = leftOffset;
         CharsInOneLine = charsInOneLine;
@@ -50,7 +50,7 @@ public sealed class LongTextWriter
             _ = TextBuilder.AppendLine();
             return;
         }
-        
+
         if (!isFirstPartInLine && remainingChars > 0)
         {
             _ = TextBuilder.Append(' ');
@@ -73,7 +73,7 @@ public sealed class LongTextWriter
             return;
 
         string firstPart = parts[0];
-        
+
         if (firstPart.Length > remainingChars && firstPart.Length <= CharsInOneLine)
             AppendLineBreak(ref remainingChars, ref isFirstPartInLine);
 
@@ -94,7 +94,7 @@ public sealed class LongTextWriter
 
         if (parts.Count == 0)
             return;
-        
+
         string firstPart = parts[0];
         string appended = firstPart.Remove(remainingChars);
         string remaining = firstPart[remainingChars..];
@@ -119,10 +119,10 @@ public sealed class LongTextWriter
 
         if (parts.Count == 0)
             return;
-        
+
         string firstPart = parts[0];
 
-        _ = TextBuilder.Append(firstPart);    
+        _ = TextBuilder.Append(firstPart);
         parts.RemoveAt(0);
 
         remainingChars -= firstPart.Length;

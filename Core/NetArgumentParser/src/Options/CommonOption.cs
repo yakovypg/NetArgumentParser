@@ -32,7 +32,7 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
             OptionNameCorrectnessVerifier.VerifyAliasesIsCorrect(aliases);
 
         _aliases = new List<string>(aliases?.Distinct() ?? []);
-        
+
         LongName = longName;
         ShortName = shortName;
         Description = description;
@@ -53,7 +53,7 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
     public bool IsHandled { get; protected set; }
 
     public IReadOnlyCollection<string> Aliases => _aliases;
-    
+
     public bool Equals(CommonOption? other)
     {
         return other is not null
@@ -95,7 +95,7 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
             ? $"{SpecialCharacters.ShortNamedOptionPrefix}{ShortName}"
             : $"{SpecialCharacters.LongNamedOptionPrefix}{LongName}";
     }
-    
+
     public virtual string GetShortExample()
     {
         return GetPrefferedNameWithPrefix();

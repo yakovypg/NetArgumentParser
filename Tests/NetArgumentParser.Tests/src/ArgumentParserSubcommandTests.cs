@@ -15,10 +15,10 @@ public class ArgumentParserSubcommandTests
     {
         const string subcommand1Name = "subcommand1";
         const string subcommand2Name = "subcommand2";
-        
+
         const string dateTimeValue = "1 January 2024";
         const StringSplitOptions expectedSplitOptions = StringSplitOptions.RemoveEmptyEntries;
-        
+
         const int angleValue = 45;
         const int subcommand2AngleOffset = 90;
         const int expectedAngle = angleValue + subcommand2AngleOffset;
@@ -37,7 +37,7 @@ public class ArgumentParserSubcommandTests
             "-125",
             "None"
         };
-        
+
         var arguments = new string[]
         {
             expectedExtraArguments[0],
@@ -70,31 +70,31 @@ public class ArgumentParserSubcommandTests
         };
 
         var subcommand1Options = new ICommonOption[]
-        {           
+        {
             new ValueOption<DateTime>("date", string.Empty,
                 afterValueParsingAction: t => recievedDateTime = t),
-            
+
             new MultipleValueOption<int>(string.Empty, "m",
                 contextCapture: new FixedContextCapture(4),
                 afterValueParsingAction: t => margin = new Margin(t[0], t[1], t[2], t[3])),
-            
+
             new ValueOption<int>("angle", "a",
                 afterValueParsingAction: t => angle = t)
         };
 
         var subcommand2Options = new ICommonOption[]
-        {           
+        {
             new ValueOption<DateTime>("date", string.Empty,
                 afterValueParsingAction: t => recievedDateTime = t),
-            
+
             new MultipleValueOption<int>(string.Empty, "m",
                 contextCapture: new FixedContextCapture(4),
                 afterValueParsingAction: t => margin = new Margin(t[0], t[1], t[2], t[3])),
-            
+
             new ValueOption<int>("angle", "a",
                 afterValueParsingAction: t => angle = t + subcommand2AngleOffset)
         };
-        
+
         var parser = new ArgumentParser();
         parser.AddOptions(options);
 
@@ -137,7 +137,7 @@ public class ArgumentParserSubcommandTests
         const int subcommand2Offset = 20;
         const int subsubcommand1Offset = 30;
         const int subsubcommand2Offset = 40;
-        
+
         const int expectedAngle = angleValue;
         const int expectedWidth = widthValue + subcommand2Offset;
         const int expectedHeight = heightValue + subsubcommand2Offset;
@@ -151,7 +151,7 @@ public class ArgumentParserSubcommandTests
             "-125",
             "None"
         };
-        
+
         var arguments = new string[]
         {
             expectedExtraArguments[0],
@@ -175,10 +175,10 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t)
         };
@@ -187,10 +187,10 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subcommand1Offset)
         };
@@ -199,10 +199,10 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subcommand2Offset)
         };
@@ -211,10 +211,10 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subsubcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subsubcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subsubcommand1Offset)
         };
@@ -223,14 +223,14 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subsubcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subsubcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subsubcommand2Offset)
         };
-        
+
         var parser = new ArgumentParser();
         parser.AddOptions(options);
 
@@ -285,7 +285,7 @@ public class ArgumentParserSubcommandTests
         const int subsubsubcommand2Offset = 80;
         const int subsubsubcommand3Offset = 90;
         const int subsubsubcommand4Offset = 100;
-        
+
         const int expectedAngle = angleValue;
         const int expectedWidth = widthValue + subcommand2Offset;
         const int expectedHeight = heightValue + subsubcommand3Offset;
@@ -301,7 +301,7 @@ public class ArgumentParserSubcommandTests
             "-125",
             subcommand0Name
         };
-        
+
         var arguments = new string[]
         {
             expectedExtraArguments[0],
@@ -329,13 +329,13 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t)
         };
@@ -344,13 +344,13 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t)
         };
@@ -359,13 +359,13 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t + subcommand1Offset)
         };
@@ -374,13 +374,13 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t + subcommand2Offset)
         };
@@ -389,13 +389,13 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subsubcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subsubcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subsubcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t + subsubcommand1Offset)
         };
@@ -404,13 +404,13 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subsubcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subsubcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subsubcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t + subsubcommand2Offset)
         };
@@ -419,13 +419,13 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subsubcommand3Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subsubcommand3Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subsubcommand3Offset),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t + subsubcommand3Offset)
         };
@@ -434,13 +434,13 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subsubcommand4Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subsubcommand4Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subsubcommand4Offset),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t + subsubcommand4Offset)
         };
@@ -449,13 +449,13 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subsubsubcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subsubsubcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subsubsubcommand1Offset),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t + subsubsubcommand1Offset)
         };
@@ -464,13 +464,13 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subsubsubcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subsubsubcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subsubsubcommand2Offset),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t + subsubsubcommand2Offset)
         };
@@ -479,13 +479,13 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subsubsubcommand3Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subsubsubcommand3Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subsubsubcommand3Offset),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t + subsubsubcommand3Offset)
         };
@@ -494,17 +494,17 @@ public class ArgumentParserSubcommandTests
         {
             new ValueOption<int>(string.Empty, "A",
                 afterValueParsingAction: t => angle = t + subsubsubcommand4Offset),
-            
+
             new ValueOption<int>(string.Empty, "W",
                 afterValueParsingAction: t => width = t + subsubsubcommand4Offset),
-            
+
             new ValueOption<int>(string.Empty, "H",
                 afterValueParsingAction: t => height = t + subsubsubcommand4Offset),
-            
+
             new ValueOption<int>(string.Empty, "O",
                 afterValueParsingAction: t => opacity = t + subsubsubcommand4Offset)
         };
-        
+
         var parser = new ArgumentParser();
         parser.AddOptions(options);
 
@@ -556,7 +556,7 @@ public class ArgumentParserSubcommandTests
     {
         const string subcommand1Name = "subcommand1";
         const string subcommand2Name = "subcommand2";
-        
+
         bool help = default;
         bool verbose = default;
         double angle = default;
@@ -573,7 +573,7 @@ public class ArgumentParserSubcommandTests
             "-s", StringSplitOptions.TrimEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
-        
+
         var options = new ICommonOption[]
         {
             new FlagOption("verbose", "v",
@@ -585,7 +585,7 @@ public class ArgumentParserSubcommandTests
             new ValueOption<double>("angle", "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
-            
+
             new EnumValueOption<StringSplitOptions>("split-option", "s",
                 afterValueParsingAction: t => splitOption = t),
 
@@ -606,7 +606,7 @@ public class ArgumentParserSubcommandTests
             new ValueOption<double>("angle", "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
-            
+
             new EnumValueOption<StringSplitOptions>("split-option", "s",
                 afterValueParsingAction: t => splitOption = t),
 
@@ -627,7 +627,7 @@ public class ArgumentParserSubcommandTests
             new ValueOption<double>("angle", "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
-            
+
             new EnumValueOption<StringSplitOptions>("split-option", "s",
                 afterValueParsingAction: t => splitOption = t),
 
@@ -636,7 +636,7 @@ public class ArgumentParserSubcommandTests
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
         };
-        
+
         var parser = new ArgumentParser()
         {
             UseDefaultHelpOption = false,
@@ -667,7 +667,7 @@ public class ArgumentParserSubcommandTests
     {
         const string subcommand1Name = "subcommand1";
         const string subcommand2Name = "subcommand2";
-        
+
         bool version = default;
         bool verbose = default;
         double angle = default;
@@ -684,7 +684,7 @@ public class ArgumentParserSubcommandTests
             "-s", StringSplitOptions.TrimEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
-        
+
         var options = new ICommonOption[]
         {
             new FlagOption("verbose", "v",
@@ -696,7 +696,7 @@ public class ArgumentParserSubcommandTests
             new ValueOption<double>("angle", "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
-            
+
             new EnumValueOption<StringSplitOptions>("split-option", "s",
                 afterValueParsingAction: t => splitOption = t),
 
@@ -717,7 +717,7 @@ public class ArgumentParserSubcommandTests
             new ValueOption<double>("angle", "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
-            
+
             new EnumValueOption<StringSplitOptions>("split-option", "s",
                 afterValueParsingAction: t => splitOption = t),
 
@@ -738,7 +738,7 @@ public class ArgumentParserSubcommandTests
             new ValueOption<double>("angle", "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
-            
+
             new EnumValueOption<StringSplitOptions>("split-option", "s",
                 afterValueParsingAction: t => splitOption = t),
 
@@ -747,7 +747,7 @@ public class ArgumentParserSubcommandTests
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
         };
-        
+
         var parser = new ArgumentParser()
         {
             UseDefaultHelpOption = false,
@@ -788,35 +788,35 @@ public class ArgumentParserSubcommandTests
 
         Exception? ex1 = Record.Exception(
             () => s1 = parser.AddSubcommand(name1, string.Empty));
-        
+
         Assert.Null(ex1);
         Assert.NotNull(s1);
-        
+
         Exception? ex2 = Record.Exception(
             () => parser.AddSubcommand(name1, string.Empty));
-        
+
         Assert.NotNull(ex2);
 
         Exception? ex3 = Record.Exception(
             () => s2 = parser.AddSubcommand(name2, string.Empty));
-        
+
         Assert.Null(ex3);
         Assert.NotNull(s2);
 
         Exception? ex4 = Record.Exception(
             () => ss1 = s1?.AddSubcommand(name1, string.Empty));
-        
+
         Assert.Null(ex4);
         Assert.NotNull(ss1);
 
         Exception? ex5 = Record.Exception(
             () => s1?.AddSubcommand(name1, string.Empty));
-        
+
         Assert.NotNull(ex5);
 
         Exception? ex6 = Record.Exception(
             () => ss2 = s1?.AddSubcommand(name2, string.Empty));
-        
+
         Assert.Null(ex6);
         Assert.NotNull(ss2);
     }

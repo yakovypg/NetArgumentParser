@@ -14,7 +14,7 @@ public class FlagOption : CommonOption, IEquatable<FlagOption>
         bool isHidden = false,
         IEnumerable<string>? aliases = null,
         Action? afterHandlingAction = null)
-        
+
         : base(
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),

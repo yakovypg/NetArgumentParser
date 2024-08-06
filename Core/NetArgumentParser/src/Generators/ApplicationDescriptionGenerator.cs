@@ -5,7 +5,7 @@ using NetArgumentParser.Extensions;
 namespace NetArgumentParser.Generators;
 
 public class ApplicationDescriptionGenerator : ParserQuantumDescriptionGenerator
-{   
+{
     public ApplicationDescriptionGenerator(ArgumentParser parser)
         : base(parser, parser.ProgramName, parser.ProgramDescription)
     {

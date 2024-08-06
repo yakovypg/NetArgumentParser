@@ -18,7 +18,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
         IEnumerable<ICommonOption>? options = null,
         IEnumerable<IValueConverter>? converters = null,
         bool automaticBuild = true)
-    {   
+    {
         _options = [];
         _converters = [];
         _optionNameUniquenessVerifier = new(_options);
@@ -40,7 +40,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
     public IReadOnlyList<IValueConverter> Converters => _converters;
 
     public virtual void Build()
-    {       
+    {
         foreach (IValueConverter converter in _converters)
         {
             DynamicOptionInteractor.SetConverterToSuitableOptions(_options, converter);
@@ -58,7 +58,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
             if (AutomaticBuild) Build();
             else throw new OptionSetNotBuiltException();
         }
-        
+
         ICommonOption? foundOption = GetOptionByName(name);
 
         return foundOption is not null
@@ -112,7 +112,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
             AddOption(option);
         }
     }
-    
+
     public void AddConverters(IEnumerable<IValueConverter> converters)
     {
         ArgumentNullException.ThrowIfNull(converters, nameof(converters));
@@ -158,7 +158,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
         ArgumentNullException.ThrowIfNull(option, nameof(option));
 
         bool isRemoved = _options.Remove(option);
-        
+
         if (isRemoved)
         {
             var e = new NotifyOptionSetChangedEventArgs(
@@ -177,7 +177,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
         ArgumentNullException.ThrowIfNull(converter, nameof(converter));
 
         bool isRemoved = _converters.Remove(converter);
-        
+
         if (isRemoved)
         {
             var e = new NotifyOptionSetChangedEventArgs(

@@ -7,21 +7,21 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class ArgumentValueNotRecognizedException : Exception
 {
-    public ArgumentValueNotRecognizedException() {}
+    public ArgumentValueNotRecognizedException() { }
 
     public ArgumentValueNotRecognizedException(string? message)
-        : base(message) {}
+        : base(message) { }
 
     public ArgumentValueNotRecognizedException(string? message, Exception? innerException)
-        : base(message, innerException) {}
+        : base(message, innerException) { }
 
-    public ArgumentValueNotRecognizedException(string? message, string argument)  
-        : this(message, argument, null) {}
-    
+    public ArgumentValueNotRecognizedException(string? message, string argument)
+        : this(message, argument, null) { }
+
     public ArgumentValueNotRecognizedException(
         string? message,
         string argument,
-        Exception? innerException)  
+        Exception? innerException)
         : base(message ?? GetDefaultMessage(argument), innerException)
     {
         ArgumentNullException.ThrowIfNull(argument, nameof(argument));
