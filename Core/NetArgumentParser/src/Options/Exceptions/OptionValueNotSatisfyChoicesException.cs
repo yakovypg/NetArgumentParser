@@ -71,6 +71,6 @@ public class OptionValueNotSatisfyChoicesException : Exception
         string allowedValuesPresenter = string.Join(", ", allowedValues);
         
         return $"Option value '{optionValuePresenter}' not allowed. " +
-               $"It must be one of [{allowedValuesPresenter}].";
+               "It must be one of {" + allowedValuesPresenter + "}.";
     }
 }

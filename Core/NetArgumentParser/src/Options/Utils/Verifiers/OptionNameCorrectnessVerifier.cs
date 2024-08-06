@@ -7,7 +7,7 @@ namespace NetArgumentParser.Options.Utils.Verifiers;
 
 internal static partial class OptionNameCorrectnessVerifier
 {
-    private static readonly List<string> _specialNames = [ "?" ];
+    private static readonly List<string> _reservedNames = [ "?" ];
     
     internal static void VerifyAtLeastOneNameIsDefined(string longName, string shortName)
     {
@@ -26,7 +26,7 @@ internal static partial class OptionNameCorrectnessVerifier
         ArgumentNullException.ThrowIfNull(name, nameof(name));
 
         if (!string.IsNullOrEmpty(name)
-            && !_specialNames.Contains(name)
+            && !_reservedNames.Contains(name)
             && !CorrectNameRegex().IsMatch(name))
         {
             throw new IncorrectOptionNameException(null, name);
