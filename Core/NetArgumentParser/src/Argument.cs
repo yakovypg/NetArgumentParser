@@ -109,7 +109,7 @@ public class Argument
 
     public OptionValue ExtractOptionValueFromContext(
         Queue<string> context,
-        IOptionSet<ICommonOption> options)
+        IReadOnlyOptionSet<ICommonOption> options)
     {
         ArgumentNullException.ThrowIfNull(context, nameof(context));
         ArgumentNullException.ThrowIfNull(options, nameof(options));
