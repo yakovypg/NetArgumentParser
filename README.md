@@ -7,7 +7,7 @@
   <a href="https://github.com/yakovypg/NetArgumentParser/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-GPLv3-darkyellow.svg" alt="license" />
   </a>
-  <img src="https://img.shields.io/badge/Version-0.0.2-red.svg" alt="version" />
+  <img src="https://img.shields.io/badge/Version-1.0.0-red.svg" alt="version" />
   <img src="https://img.shields.io/badge/C%23-.NET 8-blue" />
 </p>
 
@@ -67,15 +67,7 @@ You can find instructions for connecting **NetArgumentParser** to your project [
 - Add NuGet package.
 
 ## Documentation
-You can find documentation in the [Docs](Docs) folder.
-
-The main topics are:
-- [Optional arguments](Docs/OptionalArguments.md)
-- [Optional arguments config](Docs/OptionalArgumentsConfig.md)
-- [Custom converters](Docs/CustomConverters.md)
-- [Subcommands](Docs/Subcommands.md)
-- [Printing help](Docs/PrintingHelp.md)
-- [Additional features](Docs/AdditionalFeatures.md)
+You can read our documentation in the [DOCUMENTATION.md](DOCUMENTATION.md).
 
 ## Development
 The project is developed on the .NET 8.0 platform. To continue development you will need the .NET SDK and .NET Runtime of the appropriate version.
