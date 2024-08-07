@@ -12,7 +12,7 @@
 </p>
 
 ## About
-**NetArgumentParser** is a cross-platform, free and open source library for parsing command-line options, arguments and sub-commands.
+**NetArgumentParser** is a cross-platform, free and open source library for parsing command-line options, arguments and subcommands.
 
 [![Contributors](https://img.shields.io/github/contributors/yakovypg/NetArgumentParser)](https://github.com/yakovypg/NetArgumentParser/graphs/contributors)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/yakovypg/NetArgumentParser/dotnet.yml?branch=main)](https://github.com/yakovypg/NetArgumentParser/actions/workflows/dotnet.yml?query=branch%3Amain)
