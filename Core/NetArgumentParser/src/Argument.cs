@@ -9,6 +9,8 @@ namespace NetArgumentParser;
 
 public class Argument
 {
+    private const StringComparison _defaultStringComparison = StringComparison.CurrentCulture;
+
     public Argument(string argument, bool recognizeSlashAsOption = false)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(argument, nameof(argument));
@@ -22,7 +24,7 @@ public class Argument
 
     public bool IsLongNamedOption =>
         Data.Length >= SpecialCharacters.LongNamedOptionPrefix.Length + 1
-        && Data.StartsWith(SpecialCharacters.LongNamedOptionPrefix);
+            && Data.StartsWith(SpecialCharacters.LongNamedOptionPrefix, _defaultStringComparison);
 
     public bool IsSlashOption => RecognizeSlashAsOption
         && Data.Length >= 2
@@ -37,9 +39,36 @@ public class Argument
         || IsLongNamedOption
         || (RecognizeSlashAsOption && IsSlashOption);
 
+    public static IList<string> ExpandShortNamedOptions(IEnumerable<string> arguments)
+    {
+        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+
+        var newOptions = new List<string>();
+
+        foreach (string argument in arguments)
+        {
+            var argumentInfo = new Argument(argument, false);
+
+            if (argumentInfo.IsShortNamedOption && !argumentInfo.HasValueAfterAssignmentCharacter())
+            {
+                IEnumerable<string> expandedOptions = argumentInfo.ExpandShortNamedOptionName();
+                newOptions.AddRange(expandedOptions);
+            }
+            else
+            {
+                newOptions.Add(argument);
+            }
+        }
+
+        return newOptions;
+    }
+
     public bool HasValueAfterAssignmentCharacter()
     {
-        int equationIndex = Data.IndexOf(SpecialCharacters.AssignmentCharacter);
+        int equationIndex = Data.IndexOf(
+            SpecialCharacters.AssignmentCharacter,
+            _defaultStringComparison);
+
         return equationIndex >= 0 && equationIndex < Data.Length - 1;
     }
 
@@ -48,16 +77,27 @@ public class Argument
         if (!IsOption)
             throw new InvalidOperationException("Argument is not option.");
 
-        string argumentWithoutPrefix = Data.StartsWith(SpecialCharacters.LongNamedOptionPrefix)
+        bool dataStartsWithongNamedOptionPrefix = Data.StartsWith(
+            SpecialCharacters.LongNamedOptionPrefix,
+            _defaultStringComparison);
+
+        string argumentWithoutPrefix = dataStartsWithongNamedOptionPrefix
             ? Data.Remove(0, SpecialCharacters.LongNamedOptionPrefix.Length)
             : Data.StartsWith(SpecialCharacters.ShortNamedOptionPrefix)
                 || Data.StartsWith(SpecialCharacters.SlashOptionPrefix)
             ? Data.Remove(0, 1)
             : Data;
 
-        if (argumentWithoutPrefix.Contains(SpecialCharacters.AssignmentCharacter))
+        bool argumentWithoutPrefixContainsAssignmentCharacter = argumentWithoutPrefix.Contains(
+            SpecialCharacters.AssignmentCharacter,
+            _defaultStringComparison);
+
+        if (argumentWithoutPrefixContainsAssignmentCharacter)
         {
-            int equationIndex = argumentWithoutPrefix.IndexOf(SpecialCharacters.AssignmentCharacter);
+            int equationIndex = argumentWithoutPrefix.IndexOf(
+                SpecialCharacters.AssignmentCharacter,
+                _defaultStringComparison);
+
             return argumentWithoutPrefix.Remove(equationIndex);
         }
 
@@ -69,7 +109,10 @@ public class Argument
         if (!HasValueAfterAssignmentCharacter())
             throw new ArgumentValueNotSpecifiedException(null, Data);
 
-        int equationIndex = Data.IndexOf(SpecialCharacters.AssignmentCharacter);
+        int equationIndex = Data.IndexOf(
+            SpecialCharacters.AssignmentCharacter,
+            _defaultStringComparison);
+
         return Data[(equationIndex + 1)..];
     }
 
@@ -96,7 +139,7 @@ public class Argument
             if (numberOfItemsToCapture > context.Count)
                 throw new ArgumentValueNotRecognizedException(null, Data);
 
-            List<string> capturedContext = ContextInteractor.CaptureContext(
+            IList<string> capturedContext = ContextInteractor.CaptureContext(
                 context,
                 numberOfItemsToCapture);
 
@@ -131,29 +174,5 @@ public class Argument
 
         string name = ExtractOptionName();
         return name.ToCharArray().Select(t => $"-{t}");
-    }
-
-    public static List<string> ExpandShortNamedOptions(IEnumerable<string> arguments)
-    {
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
-
-        var newOptions = new List<string>();
-
-        foreach (string argument in arguments)
-        {
-            var argumentInfo = new Argument(argument, false);
-
-            if (argumentInfo.IsShortNamedOption && !argumentInfo.HasValueAfterAssignmentCharacter())
-            {
-                IEnumerable<string> expandedOptions = argumentInfo.ExpandShortNamedOptionName();
-                newOptions.AddRange(expandedOptions);
-            }
-            else
-            {
-                newOptions.Add(argument);
-            }
-        }
-
-        return newOptions;
     }
 }

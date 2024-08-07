@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using NetArgumentParser;
@@ -36,14 +37,16 @@ var parser = new ArgumentParser()
 
 var nameOption = new ValueOption<string>("name", "n", afterValueParsingAction: t => name = t)
 {
-    Converter = new ValueConverter<string>(t => t.ToUpper())
+    Converter = new ValueConverter<string>(t => t.ToUpper(CultureInfo.CurrentCulture))
 };
 
 var options = new ICommonOption[]
 {
     nameOption,
 
-    new HelpOption("help", "h",
+    new HelpOption(
+        longName: "help",
+        shortName: "h",
         description: "show command-line help",
         aliases: ["?"],
         afterHandlingAction: () =>
@@ -52,50 +55,67 @@ var options = new ICommonOption[]
             Environment.Exit(0);
         }),
 
-    new FlagOption("verbose", "v",
+    new FlagOption(
+        longName: "verbose",
+        shortName: "v",
         description: "be verbose",
         afterHandlingAction: () => verbose = true),
 
-    new FlagOption("legacy-verbose", string.Empty,
+    new FlagOption(
+        longName: "legacy-verbose",
+        shortName: string.Empty,
         description: "be verbose",
         isHidden: true,
         afterHandlingAction: () => verbose = true),
 
-    new FlagOption(string.Empty, "q",
+    new FlagOption(
+        longName: string.Empty,
+        shortName: "q",
         description: "use fast algorithm",
         aliases: ["quick", "fast"],
         afterHandlingAction: () => quick = true),
 
-    new MultipleValueOption<string>("input", "i",
+    new MultipleValueOption<string>(
+        longName: "input",
+        shortName: "i",
         description: "images that need to be processed",
         isRequired: true,
         valueRestriction: new OptionValueRestriction<IList<string>>(t => t.All(p => File.Exists(p))),
         contextCapture: new OneOrMoreContextCapture(),
         afterValueParsingAction: t => inputFiles = new List<string>(t)),
 
-    new ValueOption<int>("angle", "a",
+    new ValueOption<int>(
+        longName: "angle",
+        shortName: "a",
         description: "angle by which you want to rotate the image",
         isRequired: true,
         choices: [0, 45, 90, 180],
         afterValueParsingAction: t => angle = t),
 
-    new CounterOption(string.Empty, "V",
+    new CounterOption(
+        longName: string.Empty,
+        shortName: "V",
         description: "increase verbosity level",
         increaseCounter: () => verbosityLevel++)
 };
 
 var additionalOptions = new ICommonOption[]
 {
-    new ValueOption<TimeSpan>("time", "t",
+    new ValueOption<TimeSpan>(
+        longName: "time",
+        shortName: "t",
         description: "maximum algorithm execution time",
         afterValueParsingAction: t => time = t),
 
-    new EnumValueOption<FileMode>("file-mode", string.Empty,
+    new EnumValueOption<FileMode>(
+        longName: "file-mode",
+        shortName: string.Empty,
         description: "specifies how the operatng system should open a file",
         defaultValue: new DefaultOptionValue<FileMode>(FileMode.OpenOrCreate),
         afterValueParsingAction: t => fileMode = t),
 
-    new MultipleValueOption<int>("date",
+    new MultipleValueOption<int>(
+        longName: "date",
         description: "next date the program update notification will be displayed",
         metaVariable: "D",
         contextCapture: new FixedContextCapture(3),
@@ -104,11 +124,15 @@ var additionalOptions = new ICommonOption[]
 
 var resizeSubcommandOptions = new ICommonOption[]
 {
-    new ValueOption<int>("width", "w",
+    new ValueOption<int>(
+        longName: "width",
+        shortName: "w",
         description: "new width of the image",
         afterValueParsingAction: t => width = t),
 
-    new ValueOption<int>("height", "H",
+    new ValueOption<int>(
+        longName: "height",
+        shortName: "H",
         description: "new height of the image",
         afterValueParsingAction: t => height = t)
 };
@@ -157,17 +181,19 @@ Subcommand resizeSubcommand = parser.AddSubcommand("resize", "resize the image")
 resizeSubcommand.UseDefaultHelpOption = true;
 resizeSubcommand.AddOptions(resizeSubcommandOptions);
 
-List<string> extraArguments = [];
+IList<string> extraArguments = [];
 
 try
 {
     parser.ParseKnownArguments(args, out extraArguments);
 }
+#pragma warning disable CA1031
 catch (Exception ex)
 {
     Console.WriteLine($"Error: {ex.Message}");
     return;
 }
+#pragma warning restore CA1031
 
 Console.WriteLine($"Extra arguments: {string.Join(' ', extraArguments)}");
 Console.WriteLine($"Verbose: {verbose}");

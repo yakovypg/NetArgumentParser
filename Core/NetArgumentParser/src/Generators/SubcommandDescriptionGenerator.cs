@@ -7,14 +7,14 @@ using NetArgumentParser.Subcommands;
 
 namespace NetArgumentParser.Generators;
 
-using OutOfRange = ArgumentOutOfRangeException;
-
 public class SubcommandDescriptionGenerator : ParserQuantumDescriptionGenerator
 {
     public SubcommandDescriptionGenerator(Subcommand subcommand)
-        : base(subcommand, subcommand.UsageStartTerm, subcommand.Description)
+        : base(
+            subcommand ?? throw new ArgumentNullException(nameof(subcommand)),
+            subcommand.UsageStartTerm,
+            subcommand.Description)
     {
-        ArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
         Subcommand = subcommand;
     }
 
@@ -47,7 +47,7 @@ public class SubcommandDescriptionGenerator : ParserQuantumDescriptionGenerator
         namePrefix ??= string.Empty;
         delimiterAfterName ??= string.Empty;
 
-        OutOfRange.ThrowIfLessThan(
+        ArgumentOutOfRangeException.ThrowIfLessThan(
             nameAreaLength,
             subcommand.Name.Length + namePrefix.Length,
             nameof(nameAreaLength));

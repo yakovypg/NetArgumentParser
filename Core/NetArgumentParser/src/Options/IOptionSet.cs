@@ -7,8 +7,8 @@ public interface IOptionSet<T> : IReadOnlyOptionSet<T>
 {
     void ResetOptionsHandledState();
 
-    void AddOption(T option);
+    void AddOption(T item);
     void AddConverter(IValueConverter converter);
-    bool RemoveOption(T option);
+    bool RemoveOption(T item);
     bool RemoveConverter(IValueConverter converter);
 }

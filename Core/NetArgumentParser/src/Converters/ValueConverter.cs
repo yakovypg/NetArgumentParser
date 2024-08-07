@@ -22,7 +22,7 @@ public class ValueConverter<T> : IValueConverter<T>
         return _converter.Invoke(value);
     }
 
-    object? IValueConverter.ConvertToType(string value)
+    public object? ConvertToType(string value)
     {
         ArgumentNullException.ThrowIfNull(value, nameof(value));
         return Convert(value);

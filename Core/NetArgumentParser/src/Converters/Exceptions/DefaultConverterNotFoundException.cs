@@ -28,8 +28,6 @@ public class DefaultConverterNotFoundException : Exception
         OutputType = outputType;
     }
 
-    public Type? OutputType { get; private set; }
-
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
     protected DefaultConverterNotFoundException(SerializationInfo info, StreamingContext context)
@@ -38,6 +36,8 @@ public class DefaultConverterNotFoundException : Exception
         ArgumentNullException.ThrowIfNull(info, nameof(info));
         OutputType = info.GetValue(nameof(OutputType), typeof(Type)) as Type;
     }
+
+    public Type? OutputType { get; private set; }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]

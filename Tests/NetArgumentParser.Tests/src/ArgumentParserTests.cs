@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetArgumentParser.Converters;
@@ -12,7 +13,7 @@ using NetArgumentParser.Tests.Models;
 
 namespace NetArgumentParser.Tests;
 
-public class ArgumentParserTest
+public class ArgumentParserTests
 {
     [Fact]
     public void Parse_FlagOptions_OptionsHandledCorrectly()
@@ -51,7 +52,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.True(savaLog);
         Assert.True(autoRotate);
@@ -79,11 +80,13 @@ public class ArgumentParserTest
         var options = new ICommonOption[]
         {
             new EnumValueOption<StringSplitOptions>(
-                "split-option", "s",
+                "split-option",
+                "s",
                 afterValueParsingAction: t => splitOption = t),
 
             new EnumValueOption<BindMode>(
-                "bind-mode", "b",
+                "bind-mode",
+                "b",
                 afterValueParsingAction: t => bindMode = t)
         };
 
@@ -93,7 +96,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.Equal(StringSplitOptions.RemoveEmptyEntries, splitOption);
         Assert.Equal(BindMode.OneWayToSource, bindMode);
@@ -152,7 +155,7 @@ public class ArgumentParserTest
             "-S", stringValue,
             "-U", ushortValue,
             "-I", uintValue,
-            "-L", ulongValue,
+            "-L", ulongValue
         };
 
         var options = new ICommonOption[]
@@ -171,7 +174,7 @@ public class ArgumentParserTest
             new ValueOption<string>(string.Empty, "S", afterValueParsingAction: t => recievedString = t),
             new ValueOption<ushort>(string.Empty, "U", afterValueParsingAction: t => recievedUShort = t),
             new ValueOption<uint>(string.Empty, "I", afterValueParsingAction: t => recievedUInt = t),
-            new ValueOption<ulong>(string.Empty, "L", afterValueParsingAction: t => recievedULong = t),
+            new ValueOption<ulong>(string.Empty, "L", afterValueParsingAction: t => recievedULong = t)
         };
 
         var parser = new ArgumentParser()
@@ -180,23 +183,23 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.Equal(bool.Parse(boolValue), recievedBool);
-        Assert.Equal(byte.Parse(byteValue), recievedByte);
+        Assert.Equal(byte.Parse(byteValue, CultureInfo.CurrentCulture), recievedByte);
         Assert.Equal(char.Parse(charValue), recievedChar);
-        Assert.Equal(DateTime.Parse(dateTimeValue), recievedDateTime);
-        Assert.Equal(decimal.Parse(decimalValue), recievedDecimal);
-        Assert.Equal(double.Parse(doubleValue), recievedDouble);
-        Assert.Equal(short.Parse(shortValue), recievedShort);
-        Assert.Equal(int.Parse(intValue), recievedInt);
-        Assert.Equal(long.Parse(longValue), recievedLong);
-        Assert.Equal(sbyte.Parse(sbyteValue), recievedSByte);
-        Assert.Equal(float.Parse(floatValue), recievedFloat);
+        Assert.Equal(DateTime.Parse(dateTimeValue, CultureInfo.CurrentCulture), recievedDateTime);
+        Assert.Equal(decimal.Parse(decimalValue, CultureInfo.CurrentCulture), recievedDecimal);
+        Assert.Equal(double.Parse(doubleValue, CultureInfo.CurrentCulture), recievedDouble);
+        Assert.Equal(short.Parse(shortValue, CultureInfo.CurrentCulture), recievedShort);
+        Assert.Equal(int.Parse(intValue, CultureInfo.CurrentCulture), recievedInt);
+        Assert.Equal(long.Parse(longValue, CultureInfo.CurrentCulture), recievedLong);
+        Assert.Equal(sbyte.Parse(sbyteValue, CultureInfo.CurrentCulture), recievedSByte);
+        Assert.Equal(float.Parse(floatValue, CultureInfo.CurrentCulture), recievedFloat);
         Assert.Equal(stringValue, recievedString);
-        Assert.Equal(ushort.Parse(ushortValue), recievedUShort);
-        Assert.Equal(uint.Parse(uintValue), recievedUInt);
-        Assert.Equal(ulong.Parse(ulongValue), recievedULong);
+        Assert.Equal(ushort.Parse(ushortValue, CultureInfo.CurrentCulture), recievedUShort);
+        Assert.Equal(uint.Parse(uintValue, CultureInfo.CurrentCulture), recievedUInt);
+        Assert.Equal(ulong.Parse(ulongValue, CultureInfo.CurrentCulture), recievedULong);
 
         Assert.Empty(extraArguments);
     }
@@ -230,17 +233,20 @@ public class ArgumentParserTest
         var options = new ICommonOption[]
         {
             new MultipleValueOption<int>(
-                string.Empty, "m",
+                string.Empty,
+                "m",
                 contextCapture: new FixedContextCapture(4),
                 afterValueParsingAction: t => margin = new Margin(t[0], t[1], t[2], t[3])),
 
             new MultipleValueOption<string>(
-                string.Empty, "f",
+                string.Empty,
+                "f",
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = new List<string>(t)),
 
             new MultipleValueOption<double>(
-                string.Empty, "p",
+                string.Empty,
+                "p",
                 contextCapture: new FixedContextCapture(2),
                 afterValueParsingAction: t => point = new Point(t[0], t[1]))
         };
@@ -251,17 +257,17 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         var expectedMargin = new Margin(
-            int.Parse(leftMargin),
-            int.Parse(topMargin),
-            int.Parse(rightMargin),
-            int.Parse(bottomMargin));
+            int.Parse(leftMargin, CultureInfo.CurrentCulture),
+            int.Parse(topMargin, CultureInfo.CurrentCulture),
+            int.Parse(rightMargin, CultureInfo.CurrentCulture),
+            int.Parse(bottomMargin, CultureInfo.CurrentCulture));
 
         var expectedPoint = new Point(
-            double.Parse(pointX),
-            double.Parse(pointY));
+            double.Parse(pointX, CultureInfo.CurrentCulture),
+            double.Parse(pointY, CultureInfo.CurrentCulture));
 
         List<string> expectedFiles = [file1, file2, file3];
 
@@ -292,7 +298,7 @@ public class ArgumentParserTest
         var arguments = new string[]
         {
             "-m", $"{leftMargin},{topMargin},{rightMargin},{bottomMargin}",
-            "-a", inputAngle.ToString(),
+            "-a", inputAngle.ToString(CultureInfo.CurrentCulture),
             "-p", $"({pointX};{pointY})"
         };
 
@@ -321,7 +327,8 @@ public class ArgumentParserTest
                 return new Point(data[0], data[1]);
             }),
 
-            new ValueConverter<int>(t => Math.Abs(int.Parse(t)))
+            new ValueConverter<int>(
+                t => Math.Abs(int.Parse(t, CultureInfo.CurrentCulture)))
         };
 
         var parser = new ArgumentParser()
@@ -332,7 +339,7 @@ public class ArgumentParserTest
         parser.AddOptions(options);
         parser.AddConverters(converters);
 
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         var expectedMargin = new Margin(
             leftMargin,
@@ -370,28 +377,32 @@ public class ArgumentParserTest
         var arguments = new string[]
         {
             "-n", expectedName,
-            "-w", expectedWidth.ToString()
+            "-w", expectedWidth.ToString(CultureInfo.CurrentCulture)
         };
 
         var options = new ICommonOption[]
         {
             new ValueOption<int>(
-                string.Empty, "a",
+                string.Empty,
+                "a",
                 defaultValue: new DefaultOptionValue<int>(defaultAngle),
                 afterValueParsingAction: t => angle = t),
 
             new ValueOption<double>(
-                string.Empty, "w",
+                string.Empty,
+                "w",
                 defaultValue: new DefaultOptionValue<double>(defaultWidth),
                 afterValueParsingAction: t => width = t),
 
             new ValueOption<double>(
-                string.Empty, "h",
+                string.Empty,
+                "h",
                 defaultValue: new DefaultOptionValue<double>(defaultHeight),
                 afterValueParsingAction: t => height = t),
 
             new ValueOption<string>(
-                string.Empty, "n",
+                string.Empty,
+                "n",
                 defaultValue: new DefaultOptionValue<string>(defaultName),
                 afterValueParsingAction: t => name = t)
         };
@@ -402,7 +413,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.Equal(expectedAngle, angle);
         Assert.Equal(expectedWidth, width);
@@ -418,22 +429,25 @@ public class ArgumentParserTest
         var arguments = new string[]
         {
             "-n", "name",
-            "-w", "100.5",
+            "-w", "100.5"
         };
 
         var requiredOptions = new List<ICommonOption>()
         {
             new ValueOption<double>(
-                string.Empty, "w",
+                string.Empty,
+                "w",
                 isRequired: true),
 
             new ValueOption<double>(
-                string.Empty, "h",
+                string.Empty,
+                "h",
                 isRequired: true,
                 defaultValue: new DefaultOptionValue<double>(1080)),
 
             new ValueOption<string>(
-                string.Empty, "n",
+                string.Empty,
+                "n",
                 isRequired: true,
                 defaultValue: new DefaultOptionValue<string>("name"))
         };
@@ -441,26 +455,31 @@ public class ArgumentParserTest
         var notSpecifiedRequiredOptionWithoutDefaultValue = new List<ICommonOption>()
         {
             new ValueOption<int>(
-                string.Empty, "a",
+                string.Empty,
+                "a",
                 isRequired: true),
 
             new ValueOption<string>(
-                string.Empty, "b",
+                string.Empty,
+                "b",
                 isRequired: true),
 
             new ValueOption<float>(
-                string.Empty, "c",
-                isRequired: true),
+                string.Empty,
+                "c",
+                isRequired: true)
         };
 
         var notRequiredOptions = new List<ICommonOption>()
         {
             new ValueOption<int>(
-                string.Empty, "A",
+                string.Empty,
+                "A",
                 isRequired: false),
 
             new ValueOption<double>(
-                string.Empty, "o",
+                string.Empty,
+                "o",
                 isRequired: false)
         };
 
@@ -505,26 +524,38 @@ public class ArgumentParserTest
 
         var optionsWithIncorrectChoice = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "w",
+            new ValueOption<int>(
+                string.Empty,
+                "w",
                 valueRestriction: new OptionValueRestriction<int>(t => t > 0)),
 
-            new ValueOption<double>(string.Empty, "H",
+            new ValueOption<double>(
+                string.Empty,
+                "H",
                 valueRestriction: new OptionValueRestriction<double>(t => t > -1 && t < 1)),
 
-            new ValueOption<string>("name", string.Empty,
-                valueRestriction: new OptionValueRestriction<string>(t => !t.Any(c => char.IsDigit(c)))),
+            new ValueOption<string>(
+                "name",
+                string.Empty,
+                valueRestriction: new OptionValueRestriction<string>(t => !t.Any(c => char.IsDigit(c))))
         };
 
         var optionsWithCorrectChoice = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "a",
+            new ValueOption<int>(
+                string.Empty,
+                "a",
                 valueRestriction: new OptionValueRestriction<int>(t => t > 0)),
 
-            new ValueOption<double>(string.Empty, "o",
+            new ValueOption<double>(
+                string.Empty,
+                "o",
                 valueRestriction: new OptionValueRestriction<double>(t => t > -1 && t < 1)),
 
-            new ValueOption<string>("fruit", string.Empty,
-                valueRestriction: new OptionValueRestriction<string>(t => !t.Any(c => char.IsDigit(c)))),
+            new ValueOption<string>(
+                "fruit",
+                string.Empty,
+                valueRestriction: new OptionValueRestriction<string>(t => !t.Any(c => char.IsDigit(c))))
         };
 
         var allOptions = optionsWithIncorrectChoice.Concat(optionsWithCorrectChoice);
@@ -562,22 +593,30 @@ public class ArgumentParserTest
 
         var optionsWithIncorrectChoice = new ICommonOption[]
         {
-            new MultipleValueOption<byte>("margin", "m",
+            new MultipleValueOption<byte>(
+                "margin",
+                "m",
                 contextCapture: new FixedContextCapture(4),
                 valueRestriction: new OptionValueRestriction<IList<byte>>(t => t.Contains(5))),
 
-            new MultipleValueOption<string>(string.Empty, "n",
+            new MultipleValueOption<string>(
+                string.Empty,
+                "n",
                 contextCapture: new ZeroOrMoreContextCapture(),
                 valueRestriction: new OptionValueRestriction<IList<string>>(t => !t.Contains("0")))
         };
 
         var optionsWithCorrectChoice = new ICommonOption[]
         {
-            new MultipleValueOption<byte>(string.Empty, "k",
+            new MultipleValueOption<byte>(
+                string.Empty,
+                "k",
                 contextCapture: new OneOrMoreContextCapture(),
                 valueRestriction: new OptionValueRestriction<IList<byte>>(t => !t.Contains(4))),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 contextCapture: new ZeroOrMoreContextCapture(),
                 valueRestriction: new OptionValueRestriction<IList<string>>(t => t.Count > 1))
         };
@@ -621,14 +660,14 @@ public class ArgumentParserTest
         {
             new ValueOption<int>(string.Empty, "w", choices: [1920, 1366, 1280]),
             new ValueOption<double>(string.Empty, "H", choices: [1080, 768, 720]),
-            new ValueOption<string>("name", string.Empty, choices: ["Tom"]),
+            new ValueOption<string>("name", string.Empty, choices: ["Tom"])
         };
 
         var optionsWithCorrectChoice = new ICommonOption[]
         {
             new ValueOption<int>(string.Empty, "a", choices: [0, 45, 90]),
             new ValueOption<double>(string.Empty, "o", choices: [0.1, 0.5, 1]),
-            new ValueOption<string>("fruit", string.Empty, choices: ["apple", "banana"]),
+            new ValueOption<string>("fruit", string.Empty, choices: ["apple", "banana"])
         };
 
         var allOptions = optionsWithIncorrectChoice.Concat(optionsWithCorrectChoice);
@@ -666,19 +705,27 @@ public class ArgumentParserTest
 
         var optionsWithIncorrectChoice = new ICommonOption[]
         {
-            new EnumValueOption<BindMode>(string.Empty, "a",
+            new EnumValueOption<BindMode>(
+                string.Empty,
+                "a",
                 choices: [BindMode.TwoWay, BindMode.OneWayToSource]),
 
-            new EnumValueOption<StringSplitOptions>(string.Empty, "b",
+            new EnumValueOption<StringSplitOptions>(
+                string.Empty,
+                "b",
                 choices: [StringSplitOptions.TrimEntries])
         };
 
         var optionsWithCorrectChoice = new ICommonOption[]
         {
-            new EnumValueOption<BindMode>(string.Empty, "c",
+            new EnumValueOption<BindMode>(
+                string.Empty,
+                "c",
                 choices: [BindMode.OneWay, BindMode.OneWayToSource]),
 
-            new EnumValueOption<StringSplitOptions>(string.Empty, "d",
+            new EnumValueOption<StringSplitOptions>(
+                string.Empty,
+                "d",
                 choices: [StringSplitOptions.RemoveEmptyEntries])
         };
 
@@ -717,22 +764,30 @@ public class ArgumentParserTest
 
         var optionsWithIncorrectChoice = new ICommonOption[]
         {
-            new MultipleValueOption<byte>("margin", "m",
+            new MultipleValueOption<byte>(
+                "margin",
+                "m",
                 contextCapture: new FixedContextCapture(4),
                 choices: [[1, 2, 3, 4], [0, 0, 1]]),
 
-            new MultipleValueOption<string>(string.Empty, "n",
+            new MultipleValueOption<string>(
+                string.Empty,
+                "n",
                 contextCapture: new ZeroOrMoreContextCapture(),
                 choices: [["1", "2", "3"], ["3", "2", "1"]])
         };
 
         var optionsWithCorrectChoice = new ICommonOption[]
         {
-            new MultipleValueOption<byte>(string.Empty, "k",
+            new MultipleValueOption<byte>(
+                string.Empty,
+                "k",
                 contextCapture: new OneOrMoreContextCapture(),
                 choices: [[1], [3, 2, 1]]),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 contextCapture: new ZeroOrMoreContextCapture(),
                 choices: [["img.jpg", "img.png"]])
         };
@@ -767,7 +822,7 @@ public class ArgumentParserTest
 
         var arguments = new string[]
         {
-            "-A", expectedAngle.ToString(),
+            "-A", expectedAngle.ToString(CultureInfo.CurrentCulture),
             "--binding", expectedBindMode.ToString()
         };
 
@@ -777,12 +832,14 @@ public class ArgumentParserTest
         var options = new ICommonOption[]
         {
             new ValueOption<int>(
-                "angle", string.Empty,
+                "angle",
+                string.Empty,
                 aliases: ["ang", "A", "rotation"],
                 afterValueParsingAction: t => angle = t),
 
             new EnumValueOption<BindMode>(
-                "bind-mode", "b",
+                "bind-mode",
+                "b",
                 aliases: ["binding"],
                 afterValueParsingAction: t => bindMode = t)
         };
@@ -793,7 +850,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.Equal(expectedAngle, angle);
         Assert.Equal(expectedBindMode, bindMode);
@@ -841,10 +898,14 @@ public class ArgumentParserTest
             new ValueOption<int>("width", "w"),
             new ValueOption<double>("angle", "a"),
 
-            new MultipleValueOption<byte>("margin", "m",
+            new MultipleValueOption<byte>(
+                "margin",
+                "m",
                 contextCapture: new FixedContextCapture(4)),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 contextCapture: new ZeroOrMoreContextCapture())
         };
 
@@ -856,7 +917,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         VerifyExtraArguments(expectedExtraArguments, extraArguments);
     }
@@ -901,10 +962,14 @@ public class ArgumentParserTest
             new ValueOption<int>("width", "w"),
             new ValueOption<double>("angle", "a"),
 
-            new MultipleValueOption<byte>("Margin", "m",
+            new MultipleValueOption<byte>(
+                "Margin",
+                "m",
                 contextCapture: new FixedContextCapture(4)),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 contextCapture: new ZeroOrMoreContextCapture())
         };
 
@@ -917,7 +982,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         VerifyExtraArguments(expectedExtraArguments, extraArguments);
     }
@@ -959,16 +1024,22 @@ public class ArgumentParserTest
 
         var options = new ICommonOption[]
         {
-            new FlagOption(string.Empty, "l",
+            new FlagOption(
+                string.Empty,
+                "l",
                 afterHandlingAction: () => saveLog = true),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t),
 
-            new EnumValueOption<StringSplitOptions>("Split",
+            new EnumValueOption<StringSplitOptions>(
+                "Split",
                 afterValueParsingAction: t => splitOption = t),
 
-            new MultipleValueOption<string>("files",
+            new MultipleValueOption<string>(
+                "files",
                 afterValueParsingAction: t => files = [..t])
         };
 
@@ -979,7 +1050,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.Equal(default, saveLog);
         Assert.Equal(default, width);
@@ -1010,7 +1081,7 @@ public class ArgumentParserTest
         var arguments = new string[]
         {
             "/l",
-            "/W", expectedWidth.ToString(),
+            "/W", expectedWidth.ToString(CultureInfo.CurrentCulture),
             "/Split", expectedSplitOption.ToString(),
             "--files", file1, file2, file3, file4
         };
@@ -1024,16 +1095,22 @@ public class ArgumentParserTest
 
         var options = new ICommonOption[]
         {
-            new FlagOption(string.Empty, "l",
+            new FlagOption(
+                string.Empty,
+                "l",
                 afterHandlingAction: () => saveLog = true),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t),
 
-            new EnumValueOption<StringSplitOptions>("Split",
+            new EnumValueOption<StringSplitOptions>(
+                "Split",
                 afterValueParsingAction: t => splitOption = t),
 
-            new MultipleValueOption<string>("files",
+            new MultipleValueOption<string>(
+                "files",
                 afterValueParsingAction: t => files = [..t])
         };
 
@@ -1044,7 +1121,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.True(saveLog);
         Assert.Equal(expectedWidth, width);
@@ -1089,7 +1166,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.True(a);
         Assert.True(abc);
@@ -1128,7 +1205,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.True(a);
         Assert.True(b);
@@ -1169,7 +1246,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.True(a);
         Assert.True(b);
@@ -1210,7 +1287,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.False(a);
         Assert.False(b);
@@ -1255,17 +1332,25 @@ public class ArgumentParserTest
 
         var options = new ICommonOption[]
         {
-            new ValueOption<double>("angle", "a",
+            new ValueOption<double>(
+                "angle",
+                "a",
                 afterValueParsingAction: t => angle = t),
 
-            new ValueOption<int>("width", "w",
+            new ValueOption<int>(
+                "width",
+                "w",
                 afterValueParsingAction: t => width = t),
 
-            new ValueOption<int>("height", "H",
+            new ValueOption<int>(
+                "height",
+                "H",
                 afterValueParsingAction: t => height = t),
 
-            new EnumValueOption<StringSplitOptions>("split-option", "s",
-                afterValueParsingAction: t => splitOption = t),
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
+                afterValueParsingAction: t => splitOption = t)
         };
 
         var parser = new ArgumentParser()
@@ -1275,7 +1360,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.Equal(expectedAngle, angle);
         Assert.Equal(expectedWidth, width);
@@ -1316,7 +1401,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.Equal(expectedVerbosityLevel, verbosityLevel);
 
@@ -1343,20 +1428,28 @@ public class ArgumentParserTest
 
         var options = new ICommonOption[]
         {
-            new FlagOption("verbose", "v",
+            new FlagOption(
+                "verbose",
+                "v",
                 isRequired: true,
                 afterHandlingAction: () => verbose = true),
 
             new HelpOption("help", afterHandlingAction: () => help = true),
 
-            new ValueOption<double>("angle", "a",
+            new ValueOption<double>(
+                "angle",
+                "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
 
-            new EnumValueOption<StringSplitOptions>("split-option", "s",
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
                 afterValueParsingAction: t => splitOption = t),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 isRequired: true,
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
@@ -1369,7 +1462,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.True(help);
 
@@ -1401,20 +1494,28 @@ public class ArgumentParserTest
 
         var options = new ICommonOption[]
         {
-            new FlagOption("verbose", "v",
+            new FlagOption(
+                "verbose",
+                "v",
                 isRequired: true,
                 afterHandlingAction: () => verbose = true),
 
             new VersionOption("version", afterHandlingAction: () => version = true),
 
-            new ValueOption<double>("angle", "a",
+            new ValueOption<double>(
+                "angle",
+                "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
 
-            new EnumValueOption<StringSplitOptions>("split-option", "s",
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
                 afterValueParsingAction: t => splitOption = t),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 isRequired: true,
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
@@ -1427,7 +1528,7 @@ public class ArgumentParserTest
         };
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.True(version);
 
@@ -1559,53 +1660,78 @@ public class ArgumentParserTest
             longName: "abs-angle",
             afterValueParsingAction: t => absAngle = t)
         {
-            Converter = new ValueConverter<double>(t => Math.Abs(double.Parse(t)))
+            Converter = new ValueConverter<double>(
+                t => Math.Abs(double.Parse(t, CultureInfo.CurrentCulture)))
         };
 
         var options = new ICommonOption[]
         {
             optionWithCustomConverter,
 
-            new FlagOption("save_log", "l",
+            new FlagOption(
+                "save_log",
+                "l",
                 afterHandlingAction: () => saveLog = true),
 
-            new FlagOption("auto-rotate", "r",
+            new FlagOption(
+                "auto-rotate",
+                "r",
                 afterHandlingAction: () => autoRotate = true),
 
-            new FlagOption("quick-mode", "q",
+            new FlagOption(
+                "quick-mode",
+                "q",
                 afterHandlingAction: () => quickMode = true),
 
-            new CounterOption(string.Empty, "V",
+            new CounterOption(
+                string.Empty,
+                "V",
                 increaseCounter: () => verbosityLevel++),
 
-            new EnumValueOption<BindMode>("bind", "b",
+            new EnumValueOption<BindMode>(
+                "bind",
+                "b",
                 valueRestriction: new OptionValueRestriction<BindMode>(t => t == BindMode.TwoWay),
                 afterValueParsingAction: t => bindMode = t),
 
-            new EnumValueOption<StringSplitOptions>("split-option", "s",
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
                 afterValueParsingAction: t => splitOption = t),
 
-            new ValueOption<int>("width", "w",
+            new ValueOption<int>(
+                "width",
+                "w",
                 valueRestriction: new OptionValueRestriction<int>(t => t > 0),
                 afterValueParsingAction: t => width = t),
 
-            new ValueOption<double>("angle", "a",
+            new ValueOption<double>(
+                "angle",
+                "a",
                 choices: [-153.123, 90],
                 afterValueParsingAction: t => angle = t),
 
-            new ValueOption<double>("opacity", "o",
+            new ValueOption<double>(
+                "opacity",
+                "o",
                 afterValueParsingAction: t => opacity = t),
 
-            new ValueOption<Point>("P",
+            new ValueOption<Point>(
+                string.Empty,
+                "P",
                 aliases: ["point"],
                 afterValueParsingAction: t => point = t),
 
-            new MultipleValueOption<byte>("margin", "m",
+            new MultipleValueOption<byte>(
+                "margin",
+                "m",
                 contextCapture: new FixedContextCapture(4),
                 choices: [[15, 10, 5, 15]],
                 afterValueParsingAction: t => margin = new Margin(t[0], t[1], t[2], t[3])),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
         };
@@ -1634,7 +1760,7 @@ public class ArgumentParserTest
         parser.AddOptions(options);
         parser.AddConverters(converters);
 
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.True(saveLog);
         Assert.True(autoRotate);

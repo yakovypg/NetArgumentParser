@@ -26,7 +26,7 @@ public static class ContextInteractor
         return numberOfSuitableValuesToCapture;
     }
 
-    public static List<string> CaptureContext(
+    public static IList<string> CaptureContext(
         Queue<string> context,
         int numberOfItemsToCapture)
     {

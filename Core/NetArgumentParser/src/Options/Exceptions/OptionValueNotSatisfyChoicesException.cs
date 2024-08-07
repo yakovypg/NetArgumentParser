@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
@@ -7,6 +8,9 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class OptionValueNotSatisfyChoicesException : Exception
 {
+    private readonly string[]? _optionValue;
+    private readonly string[]? _allowedValues;
+
     public OptionValueNotSatisfyChoicesException() { }
 
     public OptionValueNotSatisfyChoicesException(string? message)
@@ -31,12 +35,9 @@ public class OptionValueNotSatisfyChoicesException : Exception
         ArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
         ArgumentNullException.ThrowIfNull(allowedValues, nameof(allowedValues));
 
-        OptionValue = optionValue;
-        AllowedValues = allowedValues;
+        _optionValue = optionValue;
+        _allowedValues = allowedValues;
     }
-
-    public string[]? OptionValue { get; private set; }
-    public string[]? AllowedValues { get; private set; }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
@@ -45,9 +46,12 @@ public class OptionValueNotSatisfyChoicesException : Exception
     {
         ArgumentNullException.ThrowIfNull(info, nameof(info));
 
-        OptionValue = info.GetValue(nameof(OptionValue), typeof(string[])) as string[];
-        AllowedValues = info.GetValue(nameof(AllowedValues), typeof(string[])) as string[];
+        _optionValue = info.GetValue(nameof(_optionValue), typeof(string[])) as string[];
+        _allowedValues = info.GetValue(nameof(_allowedValues), typeof(string[])) as string[];
     }
+
+    public IReadOnlyCollection<string> OptionValue => _optionValue ?? [];
+    public IReadOnlyCollection<string> AllowedValues => _allowedValues ?? [];
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
@@ -56,8 +60,8 @@ public class OptionValueNotSatisfyChoicesException : Exception
         ArgumentNullException.ThrowIfNull(info, nameof(info));
         ArgumentNullException.ThrowIfNull(context, nameof(context));
 
-        info.AddValue(nameof(OptionValue), OptionValue, typeof(string[]));
-        info.AddValue(nameof(AllowedValues), AllowedValues, typeof(string[]));
+        info.AddValue(nameof(_optionValue), _optionValue, typeof(string[]));
+        info.AddValue(nameof(_allowedValues), _allowedValues, typeof(string[]));
 
         base.GetObjectData(info, context);
     }

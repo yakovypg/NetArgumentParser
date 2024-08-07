@@ -2,7 +2,7 @@ using System.Linq;
 
 namespace NetArgumentParser.Configuration;
 
-public class SpecialCharacters
+public static class SpecialCharacters
 {
     public static char AssignmentCharacter { get; set; } = '=';
     public static char SlashOptionPrefix { get; set; } = '/';

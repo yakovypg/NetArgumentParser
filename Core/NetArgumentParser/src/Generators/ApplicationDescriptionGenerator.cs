@@ -7,9 +7,11 @@ namespace NetArgumentParser.Generators;
 public class ApplicationDescriptionGenerator : ParserQuantumDescriptionGenerator
 {
     public ApplicationDescriptionGenerator(ArgumentParser parser)
-        : base(parser, parser.ProgramName, parser.ProgramDescription)
+        : base(
+            parser ?? throw new ArgumentNullException(nameof(parser)),
+            parser.ProgramName,
+            parser.ProgramDescription)
     {
-        ArgumentNullException.ThrowIfNull(parser, nameof(parser));
         Parser = parser;
     }
 

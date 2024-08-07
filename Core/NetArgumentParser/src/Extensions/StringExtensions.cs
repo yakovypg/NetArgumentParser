@@ -14,7 +14,7 @@ internal static class StringExtensions
     {
         ArgumentNullException.ThrowIfNull(text, nameof(text));
 
-        while (text.EndsWith(lineBreak))
+        while (text.EndsWith(lineBreak, StringComparison.CurrentCulture))
         {
             int lineBreakLength = lineBreak.Length;
             text = text.Remove(text.Length - lineBreakLength);

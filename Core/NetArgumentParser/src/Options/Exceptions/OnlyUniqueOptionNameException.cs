@@ -28,8 +28,6 @@ public class OnlyUniqueOptionNameException : Exception
         OptionName = optionName;
     }
 
-    public string? OptionName { get; private set; }
-
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
     protected OnlyUniqueOptionNameException(SerializationInfo info, StreamingContext context)
@@ -38,6 +36,8 @@ public class OnlyUniqueOptionNameException : Exception
         ArgumentNullException.ThrowIfNull(info, nameof(info));
         OptionName = info.GetString(nameof(OptionName));
     }
+
+    public string? OptionName { get; private set; }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]

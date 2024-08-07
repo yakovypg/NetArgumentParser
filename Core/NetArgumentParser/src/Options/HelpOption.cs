@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NetArgumentParser.Options;
 
-public sealed class HelpOption : FlagOption, IEquatable<HelpOption>
+public sealed class HelpOption : FlagOption
 {
     public HelpOption(Action? afterHandlingAction = null)
         : this("help", "h", "show command-line help", false, ["?"], afterHandlingAction) { }
@@ -25,20 +25,5 @@ public sealed class HelpOption : FlagOption, IEquatable<HelpOption>
             aliases,
             afterHandlingAction)
     {
-    }
-
-    public bool Equals(HelpOption? other)
-    {
-        return other is not null && base.Equals(other);
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as HelpOption);
-    }
-
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
     }
 }

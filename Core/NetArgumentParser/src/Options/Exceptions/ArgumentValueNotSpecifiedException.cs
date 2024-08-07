@@ -28,8 +28,6 @@ public class ArgumentValueNotSpecifiedException : Exception
         Argument = argument;
     }
 
-    public string? Argument { get; private set; }
-
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
     protected ArgumentValueNotSpecifiedException(SerializationInfo info, StreamingContext context)
@@ -38,6 +36,8 @@ public class ArgumentValueNotSpecifiedException : Exception
         ArgumentNullException.ThrowIfNull(info, nameof(info));
         Argument = info.GetString(nameof(Argument));
     }
+
+    public string? Argument { get; private set; }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
