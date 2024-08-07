@@ -6,6 +6,7 @@
 *    [Use `option=value` Syntax](#use-optionvalue-syntax)
 *    [Parse Known Arguments](#parse-known-arguments)
 *    [Skip Arguments](#skip-arguments)
+*    [Getting Info About Handled Options And Subcommands](#getting-info-about-handled-options-and-subcommands)
 
 ## Negative Numbers & Scientific Notation
 As you can see here, **NetArgumentParser** supports negative numbers and scientific notation.
@@ -88,4 +89,28 @@ var parser = new ArgumentParser()
 
 parser.Parse(new string[] { "merge", "./first.txt", "./second.txt" });
 // Only ["./first.txt", "./second.txt"] will be parsed
+```
+
+## Getting Info About Handled Options And Subcommands
+You can get information about options and subcommands that were handled during argument parsing. To do this, get the `ParseArgumentsResult` and access its properties. `HandledOptions` contains the options in the order they are handled. `HandledSubcommands` contains the subcommands in the order they are handled.
+
+```cs
+var verboseOption = new FlagOption("verbose", "v");
+var angleOption = new ValueOption<int>("angle", "a");
+var offsetOption = new ValueOption<int>("offset", "o");
+
+var filesOption = new MultipleValueOption<string>(
+    "input", "i", contextCapture: new OneOrMoreContextCapture());
+
+var parser = new ArgumentParser();
+parser.AddOptions(verboseOption, angleOption);
+
+Subcommand compressSubcommand = parser.AddSubcommand("compress", "compress images");
+compressSubcommand.AddOptions(filesOption, offsetOption);
+
+string[] args = ["--verbose", "compress", "-i", "img.jpg", "img.png"];
+ParseArgumentsResult result = parser.ParseKnownArguments(args, out _);
+
+// result.HandledOptions: verboseOption (without value), filesOption (with values img.jpg, img.png)
+// result.HandledSubcommands: compressSubcommand
 ```
