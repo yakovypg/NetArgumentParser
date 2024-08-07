@@ -2,10 +2,10 @@
 All project features are divided into topics and fully documented.
 
 There are the following topics:
-- [Optional arguments](Docs/OptionalArguments.md)
-- [Optional arguments config](Docs/OptionalArgumentsConfig.md)
-- [Custom converters](Docs/CustomConverters.md)
-- [Subcommands](Docs/Subcommands.md)
-- [Printing help](Docs/PrintingHelp.md)
-- [Additional features](Docs/AdditionalFeatures.md)
-- [Connect project](Docs/ConnectProject.md)
+- [Optional arguments](Documentation/OptionalArguments.md)
+- [Optional arguments config](Documentation/OptionalArgumentsConfig.md)
+- [Custom converters](Documentation/CustomConverters.md)
+- [Subcommands](Documentation/Subcommands.md)
+- [Printing help](Documentation/PrintingHelp.md)
+- [Additional features](Documentation/AdditionalFeatures.md)
+- [Connect project](Documentation/ConnectProject.md)
