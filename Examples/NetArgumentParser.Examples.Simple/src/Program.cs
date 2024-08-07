@@ -39,7 +39,7 @@ parser.AddOptions(options);
 
 try
 {
-    parser.Parse(args);
+    _ = parser.Parse(args);
 }
 #pragma warning disable CA1031
 catch (Exception ex)
