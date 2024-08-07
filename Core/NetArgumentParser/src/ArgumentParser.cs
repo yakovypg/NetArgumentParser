@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NetArgumentParser.Generators;
+using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Utils;
 using NetArgumentParser.Options.Utils.Verifiers;
@@ -12,8 +13,6 @@ namespace NetArgumentParser;
 
 public class ArgumentParser : ParserQuantum
 {
-    private readonly ArgumentsVisitor _argumentsVisitor;
-
     private string _programName;
     private int _numberOfArgumentsToSkip;
 
@@ -24,7 +23,6 @@ public class ArgumentParser : ParserQuantum
     {
         _programName = string.Empty;
         _numberOfArgumentsToSkip = 0;
-        _argumentsVisitor = new ArgumentsVisitor(this, OptionSet);
 
         ProgramVersion = string.Empty;
         ProgramDescription = string.Empty;
@@ -85,27 +83,40 @@ public class ArgumentParser : ParserQuantum
         OutputWriter = outputWriter;
     }
 
-    public virtual void ParseKnownArguments(IEnumerable<string> arguments, out IList<string> extraArguments)
+    public virtual ParseArgumentsResult ParseKnownArguments(
+        IEnumerable<string> arguments,
+        out IList<string> extraArguments)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
         AddDefaultOptions();
         IEnumerable<string> adaptedArguments = AdaptArguments(arguments);
 
-        if (HandleFinalOptions(adaptedArguments))
+        if (HandleFinalOptions(adaptedArguments, out ParseArgumentsResult parseArgumentsResult))
         {
             extraArguments = [];
-            return;
+            return parseArgumentsResult;
         }
 
         var visitorExtraArguments = new List<string>();
+        var argumentsVisitor = new ArgumentsVisitor(this, OptionSet, RecognizeSlashOptions);
 
-        _argumentsVisitor.VisitArguments(
-            adaptedArguments,
-            RecognizeSlashOptions,
-            optionValue => optionValue.Option.Handle([.. optionValue.Value]),
-            visitorExtraArguments.Add);
+        var handledOptions = new List<ICommonOption>();
+        var handledSubcommands = new List<Subcommand>();
 
+        argumentsVisitor.SubcommandExtracted += (s, e) =>
+            handledSubcommands.Add(e.Subcommand);
+
+        argumentsVisitor.OptionExtracted += (s, e) =>
+        {
+            e.OptionValue.Option.Handle([.. e.OptionValue.Value]);
+            handledOptions.Add(e.OptionValue.Option);
+        };
+
+        argumentsVisitor.UndefinedContextItemExtracted += (s, e) =>
+            visitorExtraArguments.Add(e.ContextItem);
+
+        argumentsVisitor.VisitArguments(adaptedArguments);
         extraArguments = visitorExtraArguments;
 
         IList<ICommonOption> allOptions = GetAllOptions();
@@ -114,16 +125,21 @@ public class ArgumentParser : ParserQuantum
         ReuiredOptionVerifier.VerifyRequiredOptionsIsHandled(allOptions);
 
         ResetOptionsHandledState();
+
+        return new ParseArgumentsResult(handledOptions, handledSubcommands);
     }
 
-    public void Parse(IEnumerable<string> arguments)
+    public ParseArgumentsResult Parse(IEnumerable<string> arguments)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
-        ParseKnownArguments(arguments, out IList<string> extraArguments);
+        ParseArgumentsResult result = ParseKnownArguments(
+            arguments,
+            out IList<string> extraArguments);
 
-        if (extraArguments?.Count > 0)
-            throw new ArgumentsAreUnknownException(null, [.. extraArguments]);
+        return extraArguments.Count == 0
+            ? result
+            : throw new ArgumentsAreUnknownException(null, [.. extraArguments]);
     }
 
     protected override void AddDefaultOptions()
@@ -145,29 +161,47 @@ public class ArgumentParser : ParserQuantum
         AddOptions(versionOption);
     }
 
-    protected virtual bool HandleFinalOptions(IEnumerable<string> arguments)
+    protected virtual bool HandleFinalOptions(
+        IEnumerable<string> arguments,
+        out ParseArgumentsResult parseArgumentsResult)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
-        return HandleFinalOption<HelpOption>(arguments)
-            || HandleFinalOption<VersionOption>(arguments);
+        return HandleFinalOption<HelpOption>(arguments, out parseArgumentsResult)
+            || HandleFinalOption<VersionOption>(arguments, out parseArgumentsResult);
     }
 
-    protected virtual bool HandleFinalOption<T>(IEnumerable<string> arguments)
+    protected virtual bool HandleFinalOption<T>(
+        IEnumerable<string> arguments,
+        out ParseArgumentsResult parseArgumentsResult)
         where T : ICommonOption
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
         bool isFinalOptionHandled = false;
+        var argumentsVisitor = new ArgumentsVisitor(this, OptionSet, RecognizeSlashOptions);
 
-        _argumentsVisitor.VisitArguments(arguments, RecognizeSlashOptions, t =>
+        var handledOptions = new List<ICommonOption>();
+        var handledSubcommands = new List<Subcommand>();
+
+        argumentsVisitor.SubcommandExtracted += (s, e) =>
         {
-            if (t.Option is T)
+            if (!isFinalOptionHandled)
+                handledSubcommands.Add(e.Subcommand);
+        };
+
+        argumentsVisitor.OptionExtracted += (s, e) =>
+        {
+            if (!isFinalOptionHandled && e.OptionValue.Option is T)
             {
-                t.Option.Handle([.. t.Value]);
+                e.OptionValue.Option.Handle([.. e.OptionValue.Value]);
+                handledOptions.Add(e.OptionValue.Option);
                 isFinalOptionHandled = true;
             }
-        });
+        };
+
+        argumentsVisitor.VisitArguments(arguments);
+        parseArgumentsResult = new ParseArgumentsResult(handledOptions, handledSubcommands);
 
         return isFinalOptionHandled;
     }

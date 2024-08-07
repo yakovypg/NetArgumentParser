@@ -1,32 +1,36 @@
-namespace NetArgumentParser.Visitors;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using NetArgumentParser.Options;
 using NetArgumentParser.Subcommands;
 
+namespace NetArgumentParser.Visitors;
+
 public class ArgumentsVisitor
 {
     public ArgumentsVisitor(
         ParserQuantum rootParserQuantum,
-        IReadOnlyOptionSet<ICommonOption> rootOptions)
+        IReadOnlyOptionSet<ICommonOption> rootOptions,
+        bool recognizeSlashOptions = false)
     {
         ArgumentNullException.ThrowIfNull(rootParserQuantum, nameof(rootParserQuantum));
         ArgumentNullException.ThrowIfNull(rootOptions, nameof(rootOptions));
 
         RootParserQuantum = rootParserQuantum;
         RootOptions = rootOptions;
+        RecognizeSlashOptions = recognizeSlashOptions;
     }
+
+    public event EventHandler<SubcommandExtractedEventArgs>? SubcommandExtracted;
+    public event EventHandler<OptionExtractedEventArgs>? OptionExtracted;
+    public event EventHandler<UndefinedContextItemExtractedEventArgs>? UndefinedContextItemExtracted;
 
     public ParserQuantum RootParserQuantum { get; }
     public IReadOnlyOptionSet<ICommonOption> RootOptions { get; }
 
-    public void VisitArguments(
-        IEnumerable<string> arguments,
-        bool recognizeSlashOptions = false,
-        Action<OptionValue>? handleOptionValueAction = null,
-        Action<string>? handleUndefinedContextItemAction = null)
+    public bool RecognizeSlashOptions { get; }
+
+    public void VisitArguments(IEnumerable<string> arguments)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
@@ -38,7 +42,7 @@ public class ArgumentsVisitor
         while (context.Count > 0)
         {
             string contextItem = context.Dequeue();
-            var argument = new Argument(contextItem, recognizeSlashOptions);
+            var argument = new Argument(contextItem, RecognizeSlashOptions);
 
             Subcommand? subcommand = localParserQuantum.Subcommands
                 .FirstOrDefault(t => t.Name == contextItem);
@@ -47,6 +51,7 @@ public class ArgumentsVisitor
             {
                 localOptions = subcommand.OptionSet;
                 localParserQuantum = subcommand;
+                SubcommandExtracted?.Invoke(this, new SubcommandExtractedEventArgs(subcommand));
                 continue;
             }
 
@@ -59,13 +64,17 @@ public class ArgumentsVisitor
                 if (localOptions.HasOption(optionName))
                 {
                     OptionValue optionValue = argument.ExtractOptionValueFromContext(context, localOptions);
-                    handleOptionValueAction?.Invoke(optionValue);
+                    OptionExtracted?.Invoke(this, new OptionExtractedEventArgs(optionValue));
                     isContextItemHandled = true;
                 }
             }
 
             if (!isContextItemHandled)
-                handleUndefinedContextItemAction?.Invoke(contextItem);
+            {
+                UndefinedContextItemExtracted?.Invoke(
+                    null,
+                    new UndefinedContextItemExtractedEventArgs(contextItem));
+            }
         }
     }
 }
