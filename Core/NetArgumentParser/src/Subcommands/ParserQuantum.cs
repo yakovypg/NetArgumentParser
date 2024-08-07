@@ -13,9 +13,9 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
     private readonly OptionSet _optionSet;
     private readonly List<OptionGroup<ICommonOption>> _optionGroups;
     private readonly List<Subcommand> _subcommands;
+    private readonly SubcommandNameUniquenessVerifier _nameUniquenessVerifier;
 
     private ITextWriter? _outputWriter;
-    private readonly SubcommandNameUniquenessVerifier _nameUniquenessVerifier;
 
     public ParserQuantum()
     {
@@ -29,17 +29,11 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         UsageStartTerm = string.Empty;
     }
 
-    #region Public Properties
-
     public string UsageStartTerm { get; set; }
     public bool UseDefaultHelpOption { get; set; }
 
     public IDescriptionGenerator? DescriptionGenerator { get; set; }
     public Func<Subcommand, IDescriptionGenerator>? SubcommandDescriptionGeneratorCreator { get; set; }
-
-    #endregion
-
-    #region Public Read-only Properties
 
     public IReadOnlyList<ICommonOption> Options => _optionSet.Options;
     public IEnumerable<ICommonOption> HiddenOptions => Options.Where(t => t.IsHidden);
@@ -50,10 +44,6 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
 
     public IReadOnlyList<Subcommand> Subcommands => _subcommands;
     public IReadOnlyOptionSet<ICommonOption> OptionSet => _optionSet;
-
-    #endregion
-
-    #region Protected Properties
 
     protected virtual ITextWriter? OutputWriter
     {
@@ -68,10 +58,6 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
             }
         }
     }
-
-    #endregion
-
-    #region Option Set Organizer Methods
 
     public virtual void ResetOptionsHandledState()
     {
@@ -95,10 +81,10 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         Array.ForEach(converters, _optionSet.AddConverter);
     }
 
-    public virtual bool RemoveOption(ICommonOption option)
+    public virtual bool RemoveOption(ICommonOption commonOption)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
-        return _optionSet.RemoveOption(option);
+        ArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
+        return _optionSet.RemoveOption(commonOption);
     }
 
     public virtual bool RemoveConverter(IValueConverter converter)
@@ -115,22 +101,18 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         return group;
     }
 
-    public List<ICommonOption> GetAllOptions()
+    public IList<ICommonOption> GetAllOptions()
     {
         var options = new List<ICommonOption>(Options);
 
         foreach (Subcommand subcommand in _subcommands)
         {
-            List<ICommonOption> currOptions = subcommand.GetAllOptions();
+            IList<ICommonOption> currOptions = subcommand.GetAllOptions();
             options.AddRange(currOptions);
         }
 
         return options;
     }
-
-    #endregion
-
-    #region Subcommand Container Methods
 
     public Subcommand AddSubcommand(string name, string description)
     {
@@ -160,10 +142,6 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         return _subcommands.Remove(subcommand);
     }
 
-    #endregion
-
-    #region Default Option Interaction Methods
-
     protected virtual void AddDefaultOptions()
     {
         foreach (ParserQuantum quantum in _subcommands.Append(this))
@@ -184,6 +162,4 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
 
         AddOptions(helpOption);
     }
-
-    #endregion
 }

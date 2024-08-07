@@ -7,7 +7,7 @@ using NetArgumentParser.Options.Utils.Verifiers;
 
 namespace NetArgumentParser.Options;
 
-public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
+public abstract class CommonOption : ICommonOption
 {
     private readonly List<string> _aliases;
 
@@ -54,29 +54,6 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
 
     public IReadOnlyCollection<string> Aliases => _aliases;
 
-    public bool Equals(CommonOption? other)
-    {
-        return other is not null
-            && LongName == other.LongName
-            && ShortName == other.ShortName
-            && Description == other.Description
-            && IsRequired == other.IsRequired
-            && IsHidden == other.IsHidden
-            && EqualityComparer<IContextCapture>.Default.Equals(ContextCapture, other.ContextCapture)
-            && Aliases.Order().SequenceEqual(other.Aliases.Order());
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as CommonOption);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(LongName, ShortName, Description,
-            IsRequired, IsHidden, ContextCapture, Aliases);
-    }
-
     public override string ToString()
     {
         return GetPrefferedName();
@@ -116,7 +93,7 @@ public abstract class CommonOption : ICommonOption, IEquatable<CommonOption>
     {
         ArgumentNullException.ThrowIfNull(name, nameof(name));
 
-        if (name == string.Empty)
+        if (string.IsNullOrEmpty(name))
             return false;
 
         return LongName == name

@@ -27,8 +27,11 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
         AutomaticBuild = automaticBuild;
         CollectionChanged += (sender, e) => IsBuilt = false;
 
-        if (options is not null) AddOptions(options);
-        if (converters is not null) AddConverters(converters);
+        if (options is not null)
+            AddOptions(options);
+
+        if (converters is not null)
+            AddConverters(converters);
     }
 
     public event EventHandler<NotifyOptionSetChangedEventArgs>? CollectionChanged;
@@ -55,8 +58,10 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
 
         if (!IsBuilt)
         {
-            if (AutomaticBuild) Build();
-            else throw new OptionSetNotBuiltException();
+            if (AutomaticBuild)
+                Build();
+            else
+                throw new OptionSetNotBuiltException();
         }
 
         ICommonOption? foundOption = GetOptionByName(name);
@@ -123,16 +128,16 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
         }
     }
 
-    public void AddOption(ICommonOption option)
+    public void AddOption(ICommonOption item)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ArgumentNullException.ThrowIfNull(item, nameof(item));
 
-        _optionNameUniquenessVerifier.VerifyNamesIsUnique(option);
-        _options.Add(option);
+        _optionNameUniquenessVerifier.VerifyNamesIsUnique(item);
+        _options.Add(item);
 
         var e = new NotifyOptionSetChangedEventArgs(
             NotifyOptionSetChangedAction.AddOption,
-            new List<ICommonOption>() { option },
+            new List<ICommonOption>() { item },
             null);
 
         OnCollectionChanged(e);
@@ -153,18 +158,18 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
         OnCollectionChanged(e);
     }
 
-    public bool RemoveOption(ICommonOption option)
+    public bool RemoveOption(ICommonOption item)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ArgumentNullException.ThrowIfNull(item, nameof(item));
 
-        bool isRemoved = _options.Remove(option);
+        bool isRemoved = _options.Remove(item);
 
         if (isRemoved)
         {
             var e = new NotifyOptionSetChangedEventArgs(
                 NotifyOptionSetChangedAction.RemoveOption,
                 null,
-                new List<ICommonOption>() { option });
+                new List<ICommonOption>() { item });
 
             OnCollectionChanged(e);
         }

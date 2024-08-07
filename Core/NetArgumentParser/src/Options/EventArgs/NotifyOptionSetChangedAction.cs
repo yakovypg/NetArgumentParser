@@ -6,5 +6,5 @@ public enum NotifyOptionSetChangedAction
     AddOption,
     AddConverter,
     RemoveOption,
-    RemoveConverter,
+    RemoveConverter
 }

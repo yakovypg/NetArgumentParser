@@ -70,12 +70,12 @@ public class OptionSetTests
         var converters = new IValueConverter[]
         {
             new ValueConverter<Margin>(_ => new Margin(0, 0, 0, 0)),
-            new ValueConverter<Point>(_ => new Point()),
+            new ValueConverter<Point>(_ => default),
             new ValueConverter<int>(_ => 0),
             new ValueConverter<double>(_ => 0),
             new ValueConverter<string>(_ => string.Empty),
             new MultipleValueConverter<int>(_ => 0),
-            new EnumValueConverter<StringSplitOptions>(),
+            new EnumValueConverter<StringSplitOptions>()
         };
 
         var optionSet = new OptionSet(null, converters);
@@ -92,12 +92,12 @@ public class OptionSetTests
         var converters = new IValueConverter[]
         {
             new ValueConverter<Margin>(_ => new Margin(0, 0, 0, 0)),
-            new ValueConverter<Point>(_ => new Point()),
+            new ValueConverter<Point>(_ => default),
             new ValueConverter<int>(_ => 0),
             new ValueConverter<double>(_ => 0),
             new ValueConverter<string>(_ => string.Empty),
             new MultipleValueConverter<int>(_ => 0),
-            new EnumValueConverter<StringSplitOptions>(),
+            new EnumValueConverter<StringSplitOptions>()
         };
 
         var optionSet = new OptionSet(null, converters);
@@ -252,12 +252,12 @@ public class OptionSetTests
         var converters = new IValueConverter[]
         {
             new ValueConverter<Margin>(_ => new Margin(0, 0, 0, 0)),
-            new ValueConverter<Point>(_ => new Point()),
+            new ValueConverter<Point>(_ => default),
             new ValueConverter<int>(_ => 0),
             new ValueConverter<double>(_ => 0),
             new ValueConverter<string>(_ => string.Empty),
             new MultipleValueConverter<int>(_ => 0),
-            new EnumValueConverter<StringSplitOptions>(),
+            new EnumValueConverter<StringSplitOptions>()
         };
 
         var optionSet = new OptionSet(null, converters);
@@ -304,12 +304,12 @@ public class OptionSetTests
         var uniqueConverters = new IValueConverter[]
         {
             new ValueConverter<Margin>(_ => new Margin(0, 0, 0, 0)),
-            new ValueConverter<Point>(_ => new Point()),
+            new ValueConverter<Point>(_ => default),
             new ValueConverter<int>(_ => 0),
             new ValueConverter<double>(_ => 0),
             new ValueConverter<string>(_ => string.Empty),
             new MultipleValueConverter<int>(_ => 0),
-            new EnumValueConverter<StringSplitOptions>(),
+            new EnumValueConverter<StringSplitOptions>()
         };
 
         var optionSet = new OptionSet();
@@ -383,12 +383,12 @@ public class OptionSetTests
         var converters = new IValueConverter[]
         {
             new ValueConverter<Margin>(_ => new Margin(0, 0, 0, 0)),
-            new ValueConverter<Point>(_ => new Point()),
+            new ValueConverter<Point>(_ => default),
             new ValueConverter<int>(_ => 0),
             new ValueConverter<double>(_ => 0),
             new ValueConverter<string>(_ => string.Empty),
             new MultipleValueConverter<int>(_ => 0),
-            new EnumValueConverter<StringSplitOptions>(),
+            new EnumValueConverter<StringSplitOptions>()
         };
 
         var optionSet = new OptionSet(null, converters);
@@ -406,12 +406,12 @@ public class OptionSetTests
         var converters = new IValueConverter[]
         {
             new ValueConverter<Margin>(_ => new Margin(0, 0, 0, 0)),
-            new ValueConverter<Point>(_ => new Point()),
+            new ValueConverter<Point>(_ => default),
             new ValueConverter<int>(_ => 0),
             new ValueConverter<double>(_ => 0),
             new ValueConverter<string>(_ => string.Empty),
             new MultipleValueConverter<int>(_ => 0),
-            new EnumValueConverter<StringSplitOptions>(),
+            new EnumValueConverter<StringSplitOptions>()
         };
 
         var optionSet = new OptionSet(null, converters);
@@ -497,9 +497,9 @@ public class OptionSetTests
         var converters = new IValueConverter[]
         {
             new ValueConverter<Margin>(_ => new Margin(0, 0, 0, 0)),
-            new ValueConverter<Point>(_ => new Point()),
+            new ValueConverter<Point>(_ => default),
             new EnumValueConverter<BindMode>(),
-            new MultipleValueConverter<byte>(_ => 0),
+            new MultipleValueConverter<byte>(_ => 0)
         };
 
         var marginOption = new ValueOption<Margin>(string.Empty, "m");

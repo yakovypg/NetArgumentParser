@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NetArgumentParser.Options;
 
-public class CounterOption : FlagOption, IEquatable<FlagOption>
+public class CounterOption : FlagOption
 {
     public CounterOption(
         string longName,

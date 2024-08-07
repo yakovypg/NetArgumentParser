@@ -11,18 +11,24 @@ List<string> inputFiles = [];
 
 var options = new ICommonOption[]
 {
-    new MultipleValueOption<string>("input", "i",
+    new MultipleValueOption<string>(
+        "input",
+        "i",
         description: "images that need to be processed",
         isRequired: true,
         contextCapture: new OneOrMoreContextCapture(),
         afterValueParsingAction: t => inputFiles = new List<string>(t)),
 
-    new ValueOption<int>("angle", "a",
+    new ValueOption<int>(
+        "angle",
+        "a",
         description: "angle by which you want to rotate the image",
         isRequired: true,
         afterValueParsingAction: t => angle = t),
 
-    new EnumValueOption<FileMode>("file-mode", string.Empty,
+    new EnumValueOption<FileMode>(
+        "file-mode",
+        string.Empty,
         description: "specifies how the operatng system should open a file",
         defaultValue: new DefaultOptionValue<FileMode>(FileMode.OpenOrCreate),
         afterValueParsingAction: t => fileMode = t)
@@ -35,11 +41,13 @@ try
 {
     parser.Parse(args);
 }
+#pragma warning disable CA1031
 catch (Exception ex)
 {
     Console.WriteLine($"Error: {ex.Message}");
     return;
 }
+#pragma warning restore CA1031
 
 Console.WriteLine($"Angle: {angle}");
 Console.WriteLine($"File mode: {fileMode}");

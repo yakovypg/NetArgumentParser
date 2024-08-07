@@ -28,8 +28,6 @@ public class OptionAlreadyHandledException : Exception
         Option = option;
     }
 
-    public ICommonOption? Option { get; private set; }
-
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
     protected OptionAlreadyHandledException(SerializationInfo info, StreamingContext context)
@@ -38,6 +36,8 @@ public class OptionAlreadyHandledException : Exception
         ArgumentNullException.ThrowIfNull(info, nameof(info));
         Option = info.GetValue(nameof(Option), typeof(ICommonOption)) as ICommonOption;
     }
+
+    public ICommonOption? Option { get; private set; }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]

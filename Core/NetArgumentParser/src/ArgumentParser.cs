@@ -1,20 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetArgumentParser.Subcommands;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Utils;
 using NetArgumentParser.Options.Utils.Verifiers;
+using NetArgumentParser.Subcommands;
 using NetArgumentParser.Visitors;
 
 namespace NetArgumentParser;
 
 public class ArgumentParser : ParserQuantum
 {
+    private readonly ArgumentsVisitor _argumentsVisitor;
+
     private string _programName;
     private int _numberOfArgumentsToSkip;
-    private readonly ArgumentsVisitor _argumentsVisitor;
 
     public ArgumentParser(
         IDescriptionGenerator? descriptionGenerator = null,
@@ -40,8 +41,6 @@ public class ArgumentParser : ParserQuantum
         SubcommandDescriptionGeneratorCreator = subcommandDescriptionGeneratorCreator
             ?? (t => new SubcommandDescriptionGenerator(t));
     }
-
-    #region Public Properties
 
     public string ProgramName
     {
@@ -71,10 +70,6 @@ public class ArgumentParser : ParserQuantum
         }
     }
 
-    #endregion
-
-    #region String Representation Generation Methods
-
     public override string ToString()
     {
         return GenerateProgramDescription();
@@ -85,20 +80,12 @@ public class ArgumentParser : ParserQuantum
         return DescriptionGenerator?.GenerateDescription() ?? string.Empty;
     }
 
-    #endregion
-
-    #region Output Stream Interaction Methods
-
     public void ChangeOutputWriter(ITextWriter? outputWriter)
     {
         OutputWriter = outputWriter;
     }
 
-    #endregion
-
-    #region Parsing Methods
-
-    public virtual void ParseKnownArguments(IEnumerable<string> arguments, out List<string> extraArguments)
+    public virtual void ParseKnownArguments(IEnumerable<string> arguments, out IList<string> extraArguments)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
@@ -116,12 +103,12 @@ public class ArgumentParser : ParserQuantum
         _argumentsVisitor.VisitArguments(
             adaptedArguments,
             RecognizeSlashOptions,
-            optionValue => optionValue.Option.Handle(optionValue.Value),
+            optionValue => optionValue.Option.Handle([.. optionValue.Value]),
             visitorExtraArguments.Add);
 
         extraArguments = visitorExtraArguments;
 
-        List<ICommonOption> allOptions = GetAllOptions();
+        IList<ICommonOption> allOptions = GetAllOptions();
 
         DynamicOptionInteractor.HandleDefaultValueBySuitableOptions(allOptions);
         ReuiredOptionVerifier.VerifyRequiredOptionsIsHandled(allOptions);
@@ -133,15 +120,11 @@ public class ArgumentParser : ParserQuantum
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
-        ParseKnownArguments(arguments, out List<string> extraArguments);
+        ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         if (extraArguments?.Count > 0)
             throw new ArgumentsAreUnknownException(null, [.. extraArguments]);
     }
-
-    #endregion
-
-    #region Default Option Interaction Methods
 
     protected override void AddDefaultOptions()
     {
@@ -162,10 +145,6 @@ public class ArgumentParser : ParserQuantum
         AddOptions(versionOption);
     }
 
-    #endregion
-
-    #region Final Option Interaction Methods
-
     protected virtual bool HandleFinalOptions(IEnumerable<string> arguments)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
@@ -185,17 +164,13 @@ public class ArgumentParser : ParserQuantum
         {
             if (t.Option is T)
             {
-                t.Option.Handle(t.Value);
+                t.Option.Handle([.. t.Value]);
                 isFinalOptionHandled = true;
             }
         });
 
         return isFinalOptionHandled;
     }
-
-    #endregion
-
-    #region Argument Conversion Methods
 
     protected virtual IEnumerable<string> AdaptArguments(IEnumerable<string> arguments)
     {
@@ -208,6 +183,4 @@ public class ArgumentParser : ParserQuantum
             ? Argument.ExpandShortNamedOptions(consideredArguments)
             : consideredArguments;
     }
-
-    #endregion
 }

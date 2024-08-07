@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
@@ -7,6 +8,8 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class ArgumentsAreUnknownException : Exception
 {
+    private readonly string[]? _arguments;
+
     public ArgumentsAreUnknownException() { }
 
     public ArgumentsAreUnknownException(string? message)
@@ -25,10 +28,8 @@ public class ArgumentsAreUnknownException : Exception
         : base(message ?? GetDefaultMessage(arguments), innerException)
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
-        Arguments = arguments;
+        _arguments = arguments;
     }
-
-    public string[]? Arguments { get; private set; }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
@@ -36,8 +37,10 @@ public class ArgumentsAreUnknownException : Exception
         : base(info, context)
     {
         ArgumentNullException.ThrowIfNull(info, nameof(info));
-        Arguments = info.GetValue(nameof(Arguments), typeof(string[])) as string[];
+        _arguments = info.GetValue(nameof(_arguments), typeof(string[])) as string[];
     }
+
+    public IReadOnlyCollection<string> Arguments => _arguments ?? [];
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
@@ -46,7 +49,7 @@ public class ArgumentsAreUnknownException : Exception
         ArgumentNullException.ThrowIfNull(info, nameof(info));
         ArgumentNullException.ThrowIfNull(context, nameof(context));
 
-        info.AddValue(nameof(Arguments), Arguments, typeof(string[]));
+        info.AddValue(nameof(_arguments), _arguments, typeof(string[]));
         base.GetObjectData(info, context);
     }
 

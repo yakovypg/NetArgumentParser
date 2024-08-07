@@ -1,5 +1,5 @@
-using NetArgumentParser.Converters;
 using System.Collections.Generic;
+using NetArgumentParser.Converters;
 
 namespace NetArgumentParser.Options;
 

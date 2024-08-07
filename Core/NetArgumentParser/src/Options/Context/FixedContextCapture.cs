@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NetArgumentParser.Options.Context;
 
-public class FixedContextCapture : IContextCapture, IEquatable<FixedContextCapture>
+public class FixedContextCapture : IContextCapture
 {
     public FixedContextCapture(int numberOfItemsToCapture)
     {
@@ -12,35 +12,19 @@ public class FixedContextCapture : IContextCapture, IEquatable<FixedContextCaptu
             numberOfItemsToCapture,
             nameof(numberOfItemsToCapture));
 
-        NumberOfItemsToCapture = numberOfItemsToCapture;
+        RequiredNumberOfItemsToCapture = numberOfItemsToCapture;
     }
 
-    public int NumberOfItemsToCapture { get; }
+    public int RequiredNumberOfItemsToCapture { get; }
 
-    public int MinNumberOfItemsToCapture => NumberOfItemsToCapture;
-    public int? MaxNumberOfItemsToCapture => NumberOfItemsToCapture;
-
-    public bool Equals(FixedContextCapture? other)
-    {
-        return other is not null
-            && NumberOfItemsToCapture == other.NumberOfItemsToCapture;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as FixedContextCapture);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(NumberOfItemsToCapture);
-    }
+    public int MinNumberOfItemsToCapture => RequiredNumberOfItemsToCapture;
+    public int? MaxNumberOfItemsToCapture => RequiredNumberOfItemsToCapture;
 
     public string GetDescription(string metaVariable)
     {
         ArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
 
-        IEnumerable<string> data = Enumerable.Repeat(metaVariable, NumberOfItemsToCapture);
+        IEnumerable<string> data = Enumerable.Repeat(metaVariable, RequiredNumberOfItemsToCapture);
         return string.Join(' ', data);
     }
 
@@ -52,14 +36,14 @@ public class FixedContextCapture : IContextCapture, IEquatable<FixedContextCaptu
 
         int contextLength = context.Count();
 
-        if (NumberOfItemsToCapture > contextLength)
+        if (RequiredNumberOfItemsToCapture > contextLength)
         {
             throw new NotEnoughValuesInContextException(
                 null,
-                context.ToArray(),
-                NumberOfItemsToCapture);
+                [.. context],
+                RequiredNumberOfItemsToCapture);
         }
 
-        return NumberOfItemsToCapture;
+        return RequiredNumberOfItemsToCapture;
     }
 }

@@ -2,7 +2,7 @@ using System;
 
 namespace NetArgumentParser.Tests.Models;
 
-internal class Margin
+internal class Margin : IEquatable<Margin>
 {
     internal Margin(int left, int top, int right, int bottom)
     {
@@ -17,13 +17,18 @@ internal class Margin
     internal int Right { get; }
     internal int Bottom { get; }
 
-    public override bool Equals(object? obj)
+    public bool Equals(Margin? other)
     {
-        return obj is Margin other
+        return other is not null
             && Left == other.Left
             && Top == other.Top
             && Right == other.Right
             && Bottom == other.Bottom;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Margin other && Equals(other);
     }
 
     public override int GetHashCode()

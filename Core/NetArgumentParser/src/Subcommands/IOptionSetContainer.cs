@@ -13,8 +13,8 @@ public interface IOptionSetContainer
     void ResetOptionsHandledState();
     void AddOptions(params ICommonOption[] options);
     void AddConverters(params IValueConverter[] converters);
-    bool RemoveOption(ICommonOption option);
+    bool RemoveOption(ICommonOption commonOption);
     bool RemoveConverter(IValueConverter converter);
 
-    List<ICommonOption> GetAllOptions();
+    IList<ICommonOption> GetAllOptions();
 }

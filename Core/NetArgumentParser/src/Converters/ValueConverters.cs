@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetArgumentParser.Converters;
 
@@ -35,6 +36,7 @@ public static class ValueConverters
             : throw new DefaultConverterNotFoundException(null, typeof(T));
     }
 
+    [SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1501:StatementMustNotBeOnSingleLine", Justification = "Reviewed.")]
     public static object GetDefaultValueConverter<T>()
     {
         Type type = typeof(T);

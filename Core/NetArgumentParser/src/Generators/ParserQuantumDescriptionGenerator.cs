@@ -4,8 +4,6 @@ using NetArgumentParser.Subcommands;
 
 namespace NetArgumentParser.Generators;
 
-using OutOfRange = ArgumentOutOfRangeException;
-
 public abstract class ParserQuantumDescriptionGenerator : IDescriptionGenerator
 {
     private string? _usageHeader;
@@ -15,7 +13,7 @@ public abstract class ParserQuantumDescriptionGenerator : IDescriptionGenerator
     private int _windowWidth;
     private int _optionExampleCharsLimit;
 
-    public ParserQuantumDescriptionGenerator(
+    protected ParserQuantumDescriptionGenerator(
         ParserQuantum parserQuantum,
         string parserQuantumName,
         string parserQuantumDescription)
@@ -95,7 +93,7 @@ public abstract class ParserQuantumDescriptionGenerator : IDescriptionGenerator
         get => _windowWidth;
         set
         {
-            OutOfRange.ThrowIfNegativeOrZero(value, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
 
             _windowWidth = value;
             UsageDescriptionGenerator.WindowWidth = value;
@@ -108,7 +106,7 @@ public abstract class ParserQuantumDescriptionGenerator : IDescriptionGenerator
         get => _optionExampleCharsLimit;
         set
         {
-            OutOfRange.ThrowIfNegativeOrZero(value, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
 
             _optionExampleCharsLimit = value;
             OptionDescriptionGenerator.OptionExampleCharsLimit = value;

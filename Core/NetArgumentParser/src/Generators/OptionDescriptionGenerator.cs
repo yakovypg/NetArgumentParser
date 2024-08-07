@@ -7,8 +7,6 @@ using NetArgumentParser.Options;
 
 namespace NetArgumentParser.Generators;
 
-using OutOfRange = ArgumentOutOfRangeException;
-
 public class OptionDescriptionGenerator
 {
     private int _windowWidth;
@@ -39,7 +37,7 @@ public class OptionDescriptionGenerator
         get => _windowWidth;
         set
         {
-            OutOfRange.ThrowIfNegativeOrZero(value, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
             _windowWidth = value;
         }
     }
@@ -49,7 +47,7 @@ public class OptionDescriptionGenerator
         get => _optionExampleCharsLimit;
         set
         {
-            OutOfRange.ThrowIfNegativeOrZero(value, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
             _optionExampleCharsLimit = value;
         }
     }
@@ -85,14 +83,14 @@ public class OptionDescriptionGenerator
         return descriptionBuilder.ToString();
     }
 
-    protected virtual void AppendOptionExample(StringBuilder builder, ICommonOption option)
+    protected virtual void AppendOptionExample(StringBuilder builder, ICommonOption commonOption)
     {
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
 
         int maxExampleLength = GetMaxOptionExampleLength();
 
-        string example = GetOptionExample(option);
+        string example = GetOptionExample(commonOption);
         string exampleWithDelimiter = example + DelimiterAfterOptionExample;
 
         if (example.Length > maxExampleLength)
@@ -106,10 +104,10 @@ public class OptionDescriptionGenerator
         }
     }
 
-    protected virtual void AppendOptionDescription(StringBuilder builder, ICommonOption option)
+    protected virtual void AppendOptionDescription(StringBuilder builder, ICommonOption commonOption)
     {
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
 
         int maxExampleLength = GetMaxOptionExampleLength();
         int emptySpaceLength = GetEmptySpaceForOptionExample(maxExampleLength).Length;
@@ -117,7 +115,7 @@ public class OptionDescriptionGenerator
         int charsForDescriptionLine = WindowWidth - emptySpaceLength;
         int leftOffset = emptySpaceLength;
 
-        List<string> descriptionParts = [.. option.Description.Split()];
+        List<string> descriptionParts = [.. commonOption.Description.Split()];
 
         var longTextWriter = new LongTextWriter(
             builder,
@@ -129,7 +127,7 @@ public class OptionDescriptionGenerator
 
     protected string GetEmptySpaceForOptionExample(int maxOptionExampleLength)
     {
-        OutOfRange.ThrowIfNegative(
+        ArgumentOutOfRangeException.ThrowIfNegative(
             maxOptionExampleLength,
             nameof(maxOptionExampleLength));
 

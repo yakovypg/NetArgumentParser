@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using NetArgumentParser.Configuration;
 using NetArgumentParser.Converters;
@@ -7,7 +8,7 @@ using NetArgumentParser.Options.Context;
 
 namespace NetArgumentParser.Options;
 
-public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOption<T>>
+public class ValueOption<T> : CommonOption, IValueOption<T>
 {
     private readonly List<T> _choices;
 
@@ -109,27 +110,6 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
     public bool HasDefaultValue => DefaultValue is not null;
     public bool HasConverter => Converter is not null;
 
-    public bool Equals(ValueOption<T>? other)
-    {
-        return other is not null
-            && base.Equals(other)
-            && HasDefaultValue == other.HasDefaultValue
-            && DefaultValue == other.DefaultValue;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as ValueOption<T>);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(
-            base.GetHashCode(),
-            HasDefaultValue,
-            DefaultValue);
-    }
-
     public bool TrySetConverter(IValueConverter converter)
     {
         ArgumentNullException.ThrowIfNull(converter, nameof(converter));
@@ -149,7 +129,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
             throw new OptionAlreadyHandledException(null, this);
 
         if (DefaultValue is null)
-            throw new NullReferenceException("Default value is not specified.");
+            throw new DefaultValueNotSpecifiedException(null, this);
 
         IsHandled = true;
         OnValueParsed(new OptionValueEventArgs<T>(DefaultValue.Value));
@@ -212,7 +192,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>, IEquatable<ValueOpt
         string prefferedName = GetPrefferedName();
 
         char[] transformedName = prefferedName
-            .Select(t => char.IsLetter(t) ? char.ToUpper(t) : '_')
+            .Select(t => char.IsLetter(t) ? char.ToUpper(t, CultureInfo.CurrentCulture) : '_')
             .ToArray();
 
         return new string(transformedName);

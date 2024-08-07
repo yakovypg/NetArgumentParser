@@ -4,7 +4,7 @@ using NetArgumentParser.Options.Context;
 
 namespace NetArgumentParser.Options;
 
-public class FlagOption : CommonOption, IEquatable<FlagOption>
+public class FlagOption : CommonOption
 {
     public FlagOption(
         string longName,
@@ -33,20 +33,5 @@ public class FlagOption : CommonOption, IEquatable<FlagOption>
     protected override void HandleValue(params string[] value)
     {
         ArgumentNullException.ThrowIfNull(value, nameof(value));
-    }
-
-    public bool Equals(FlagOption? other)
-    {
-        return other is not null && base.Equals(other);
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as FlagOption);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(base.GetHashCode(), AfterHandlingAction);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NetArgumentParser.Options;
 
-public sealed class VersionOption : FlagOption, IEquatable<VersionOption>
+public sealed class VersionOption : FlagOption
 {
     public VersionOption(Action? afterHandlingAction = null)
         : this("version", string.Empty, "show version information", false, [], afterHandlingAction) { }
@@ -25,20 +25,5 @@ public sealed class VersionOption : FlagOption, IEquatable<VersionOption>
             aliases,
             afterHandlingAction)
     {
-    }
-
-    public bool Equals(VersionOption? other)
-    {
-        return other is not null && base.Equals(other);
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as VersionOption);
-    }
-
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
     }
 }

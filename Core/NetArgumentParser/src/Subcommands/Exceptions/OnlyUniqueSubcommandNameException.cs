@@ -28,8 +28,6 @@ public class OnlyUniqueSubcommandNameException : Exception
         SubcommandName = subcommandName;
     }
 
-    public string? SubcommandName { get; private set; }
-
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
     protected OnlyUniqueSubcommandNameException(SerializationInfo info, StreamingContext context)
@@ -38,6 +36,8 @@ public class OnlyUniqueSubcommandNameException : Exception
         ArgumentNullException.ThrowIfNull(info, nameof(info));
         SubcommandName = info.GetString(nameof(SubcommandName));
     }
+
+    public string? SubcommandName { get; private set; }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]

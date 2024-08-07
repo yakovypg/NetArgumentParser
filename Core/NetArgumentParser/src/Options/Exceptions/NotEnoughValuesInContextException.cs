@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
@@ -7,6 +8,8 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class NotEnoughValuesInContextException : Exception
 {
+    private readonly string[]? _context;
+
     public NotEnoughValuesInContextException() { }
 
     public NotEnoughValuesInContextException(string? message)
@@ -30,12 +33,9 @@ public class NotEnoughValuesInContextException : Exception
     {
         ArgumentNullException.ThrowIfNull(context, nameof(context));
 
-        Context = context;
+        _context = context;
         NumberOfNecessaryValues = numberOfNecessaryValues;
     }
-
-    public string[]? Context { get; private set; }
-    public int? NumberOfNecessaryValues { get; private set; }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
@@ -44,9 +44,12 @@ public class NotEnoughValuesInContextException : Exception
     {
         ArgumentNullException.ThrowIfNull(info, nameof(info));
 
-        Context = info.GetValue(nameof(Context), typeof(string[])) as string[];
+        _context = info.GetValue(nameof(_context), typeof(string[])) as string[];
         NumberOfNecessaryValues = info.GetInt32(nameof(NumberOfNecessaryValues));
     }
+
+    public int? NumberOfNecessaryValues { get; private set; }
+    public IReadOnlyCollection<string> Context => _context ?? [];
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
@@ -55,7 +58,7 @@ public class NotEnoughValuesInContextException : Exception
         ArgumentNullException.ThrowIfNull(info, nameof(info));
         ArgumentNullException.ThrowIfNull(context, nameof(context));
 
-        info.AddValue(nameof(Context), Context, typeof(string[]));
+        info.AddValue(nameof(_context), _context, typeof(string[]));
         info.AddValue(nameof(NumberOfNecessaryValues), NumberOfNecessaryValues);
 
         base.GetObjectData(info, context);

@@ -28,8 +28,6 @@ public class OnlyUniqueConversionTypeException : Exception
         ConversionType = conversionType;
     }
 
-    public Type? ConversionType { get; private set; }
-
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
     protected OnlyUniqueConversionTypeException(SerializationInfo info, StreamingContext context)
@@ -38,6 +36,8 @@ public class OnlyUniqueConversionTypeException : Exception
         ArgumentNullException.ThrowIfNull(info, nameof(info));
         ConversionType = info.GetValue(nameof(ConversionType), typeof(Type)) as Type;
     }
+
+    public Type? ConversionType { get; private set; }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]

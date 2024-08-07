@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
@@ -50,7 +51,7 @@ public class ArgumentParserSubcommandTests
             "--date", dateTimeValue,
             "-m", leftMargin, topMargin, rightMargin, bottomMargin,
             expectedExtraArguments[4],
-            "-a", angleValue.ToString(),
+            "-a", angleValue.ToString(CultureInfo.CurrentCulture),
             expectedExtraArguments[5]
         };
 
@@ -62,36 +63,52 @@ public class ArgumentParserSubcommandTests
 
         var options = new ICommonOption[]
         {
-            new FlagOption("save-log", "l",
+            new FlagOption(
+                "save-log",
+                "l",
                 afterHandlingAction: () => savaLog = true),
 
-            new EnumValueOption<StringSplitOptions>("split-option", "s",
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
                 afterValueParsingAction: t => splitOption = t)
         };
 
         var subcommand1Options = new ICommonOption[]
         {
-            new ValueOption<DateTime>("date", string.Empty,
+            new ValueOption<DateTime>(
+                "date",
+                string.Empty,
                 afterValueParsingAction: t => recievedDateTime = t),
 
-            new MultipleValueOption<int>(string.Empty, "m",
+            new MultipleValueOption<int>(
+                string.Empty,
+                "m",
                 contextCapture: new FixedContextCapture(4),
                 afterValueParsingAction: t => margin = new Margin(t[0], t[1], t[2], t[3])),
 
-            new ValueOption<int>("angle", "a",
+            new ValueOption<int>(
+                "angle",
+                "a",
                 afterValueParsingAction: t => angle = t)
         };
 
         var subcommand2Options = new ICommonOption[]
         {
-            new ValueOption<DateTime>("date", string.Empty,
+            new ValueOption<DateTime>(
+                "date",
+                string.Empty,
                 afterValueParsingAction: t => recievedDateTime = t),
 
-            new MultipleValueOption<int>(string.Empty, "m",
+            new MultipleValueOption<int>(
+                string.Empty,
+                "m",
                 contextCapture: new FixedContextCapture(4),
                 afterValueParsingAction: t => margin = new Margin(t[0], t[1], t[2], t[3])),
 
-            new ValueOption<int>("angle", "a",
+            new ValueOption<int>(
+                "angle",
+                "a",
                 afterValueParsingAction: t => angle = t + subcommand2AngleOffset)
         };
 
@@ -104,17 +121,17 @@ public class ArgumentParserSubcommandTests
         Subcommand subcommand2 = parser.AddSubcommand(subcommand2Name, string.Empty);
         subcommand2.AddOptions(subcommand2Options);
 
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         var expectedMargin = new Margin(
-            int.Parse(leftMargin),
-            int.Parse(topMargin),
-            int.Parse(rightMargin),
-            int.Parse(bottomMargin));
+            int.Parse(leftMargin, CultureInfo.CurrentCulture),
+            int.Parse(topMargin, CultureInfo.CurrentCulture),
+            int.Parse(rightMargin, CultureInfo.CurrentCulture),
+            int.Parse(bottomMargin, CultureInfo.CurrentCulture));
 
         Assert.True(savaLog);
         Assert.Equal(expectedSplitOptions, splitOption);
-        Assert.Equal(DateTime.Parse(dateTimeValue), recievedDateTime);
+        Assert.Equal(DateTime.Parse(dateTimeValue, CultureInfo.CurrentCulture), recievedDateTime);
         Assert.Equal(expectedMargin, margin);
         Assert.Equal(expectedAngle, angle);
 
@@ -156,14 +173,14 @@ public class ArgumentParserSubcommandTests
         {
             expectedExtraArguments[0],
             expectedExtraArguments[1],
-            "-A", angleValue.ToString(),
+            "-A", angleValue.ToString(CultureInfo.CurrentCulture),
             expectedExtraArguments[2],
             subcommand2Name,
             expectedExtraArguments[3],
-            "-W", widthValue.ToString(),
+            "-W", widthValue.ToString(CultureInfo.CurrentCulture),
             subsubcommand2Name,
             expectedExtraArguments[4],
-            "-H", heightValue.ToString(),
+            "-H", heightValue.ToString(CultureInfo.CurrentCulture),
             expectedExtraArguments[5]
         };
 
@@ -173,61 +190,91 @@ public class ArgumentParserSubcommandTests
 
         var options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t)
         };
 
         var subcommand1Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subcommand1Offset)
         };
 
         var subcommand2Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subcommand2Offset)
         };
 
         var subsubcommand1Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subsubcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subsubcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subsubcommand1Offset)
         };
 
         var subsubcommand2Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subsubcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subsubcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subsubcommand2Offset)
         };
 
@@ -246,7 +293,7 @@ public class ArgumentParserSubcommandTests
         Subcommand subsubcommand2 = subcommand2.AddSubcommand(subsubcommand2Name, string.Empty);
         subsubcommand2.AddOptions(subsubcommand2Options);
 
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.Equal(expectedAngle, angle);
         Assert.Equal(expectedWidth, width);
@@ -306,17 +353,17 @@ public class ArgumentParserSubcommandTests
         {
             expectedExtraArguments[0],
             expectedExtraArguments[1],
-            "-A", angleValue.ToString(),
+            "-A", angleValue.ToString(CultureInfo.CurrentCulture),
             expectedExtraArguments[2],
             subcommand2Name,
             expectedExtraArguments[3],
-            "-W", widthValue.ToString(),
+            "-W", widthValue.ToString(CultureInfo.CurrentCulture),
             subsubcommand3Name,
             expectedExtraArguments[4],
-            "-H", heightValue.ToString(),
+            "-H", heightValue.ToString(CultureInfo.CurrentCulture),
             expectedExtraArguments[5],
             subsubsubcommand1Name,
-            "-O", opacityValue.ToString(),
+            "-O", opacityValue.ToString(CultureInfo.CurrentCulture),
             expectedExtraArguments[6]
         };
 
@@ -327,181 +374,277 @@ public class ArgumentParserSubcommandTests
 
         var options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t)
         };
 
         var subcommand0Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t)
         };
 
         var subcommand1Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t + subcommand1Offset)
         };
 
         var subcommand2Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t + subcommand2Offset)
         };
 
         var subsubcommand1Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subsubcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subsubcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subsubcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t + subsubcommand1Offset)
         };
 
         var subsubcommand2Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subsubcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subsubcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subsubcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t + subsubcommand2Offset)
         };
 
         var subsubcommand3Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subsubcommand3Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subsubcommand3Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subsubcommand3Offset),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t + subsubcommand3Offset)
         };
 
         var subsubcommand4Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subsubcommand4Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subsubcommand4Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subsubcommand4Offset),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t + subsubcommand4Offset)
         };
 
         var subsubsubcommand1Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subsubsubcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subsubsubcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subsubsubcommand1Offset),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t + subsubsubcommand1Offset)
         };
 
         var subsubsubcommand2Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subsubsubcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subsubsubcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subsubsubcommand2Offset),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t + subsubsubcommand2Offset)
         };
 
         var subsubsubcommand3Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subsubsubcommand3Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subsubsubcommand3Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subsubsubcommand3Offset),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t + subsubsubcommand3Offset)
         };
 
         var subsubsubcommand4Options = new ICommonOption[]
         {
-            new ValueOption<int>(string.Empty, "A",
+            new ValueOption<int>(
+                string.Empty,
+                "A",
                 afterValueParsingAction: t => angle = t + subsubsubcommand4Offset),
 
-            new ValueOption<int>(string.Empty, "W",
+            new ValueOption<int>(
+                string.Empty,
+                "W",
                 afterValueParsingAction: t => width = t + subsubsubcommand4Offset),
 
-            new ValueOption<int>(string.Empty, "H",
+            new ValueOption<int>(
+                string.Empty,
+                "H",
                 afterValueParsingAction: t => height = t + subsubsubcommand4Offset),
 
-            new ValueOption<int>(string.Empty, "O",
+            new ValueOption<int>(
+                string.Empty,
+                "O",
                 afterValueParsingAction: t => opacity = t + subsubsubcommand4Offset)
         };
 
@@ -541,7 +684,7 @@ public class ArgumentParserSubcommandTests
         Subcommand subsubsubcommand4 = subsubcommand4.AddSubcommand(subsubsubcommand4Name, string.Empty);
         subsubsubcommand4.AddOptions(subsubsubcommand4Options);
 
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.Equal(expectedAngle, angle);
         Assert.Equal(expectedWidth, width);
@@ -576,20 +719,28 @@ public class ArgumentParserSubcommandTests
 
         var options = new ICommonOption[]
         {
-            new FlagOption("verbose", "v",
+            new FlagOption(
+                "verbose",
+                "v",
                 isRequired: true,
                 afterHandlingAction: () => verbose = true),
 
             new HelpOption("help", afterHandlingAction: () => help = true),
 
-            new ValueOption<double>("angle", "a",
+            new ValueOption<double>(
+                "angle",
+                "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
 
-            new EnumValueOption<StringSplitOptions>("split-option", "s",
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
                 afterValueParsingAction: t => splitOption = t),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 isRequired: true,
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
@@ -597,20 +748,28 @@ public class ArgumentParserSubcommandTests
 
         var subcommand1Options = new ICommonOption[]
         {
-            new FlagOption("verbose", "v",
+            new FlagOption(
+                "verbose",
+                "v",
                 isRequired: true,
                 afterHandlingAction: () => verbose = true),
 
             new HelpOption("help", afterHandlingAction: () => help = true),
 
-            new ValueOption<double>("angle", "a",
+            new ValueOption<double>(
+                "angle",
+                "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
 
-            new EnumValueOption<StringSplitOptions>("split-option", "s",
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
                 afterValueParsingAction: t => splitOption = t),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 isRequired: true,
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
@@ -618,20 +777,28 @@ public class ArgumentParserSubcommandTests
 
         var subcommand2Options = new ICommonOption[]
         {
-            new FlagOption("verbose", "v",
+            new FlagOption(
+                "verbose",
+                "v",
                 isRequired: true,
                 afterHandlingAction: () => verbose = true),
 
             new HelpOption("help", afterHandlingAction: () => help = true),
 
-            new ValueOption<double>("angle", "a",
+            new ValueOption<double>(
+                "angle",
+                "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
 
-            new EnumValueOption<StringSplitOptions>("split-option", "s",
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
                 afterValueParsingAction: t => splitOption = t),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 isRequired: true,
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
@@ -650,7 +817,7 @@ public class ArgumentParserSubcommandTests
         subcommand2.AddOptions(subcommand2Options);
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.True(help);
 
@@ -687,20 +854,28 @@ public class ArgumentParserSubcommandTests
 
         var options = new ICommonOption[]
         {
-            new FlagOption("verbose", "v",
+            new FlagOption(
+                "verbose",
+                "v",
                 isRequired: true,
                 afterHandlingAction: () => verbose = true),
 
             new VersionOption("version", afterHandlingAction: () => version = true),
 
-            new ValueOption<double>("angle", "a",
+            new ValueOption<double>(
+                "angle",
+                "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
 
-            new EnumValueOption<StringSplitOptions>("split-option", "s",
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
                 afterValueParsingAction: t => splitOption = t),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 isRequired: true,
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
@@ -708,20 +883,28 @@ public class ArgumentParserSubcommandTests
 
         var subcommand1Options = new ICommonOption[]
         {
-            new FlagOption("verbose", "v",
+            new FlagOption(
+                "verbose",
+                "v",
                 isRequired: true,
                 afterHandlingAction: () => verbose = true),
 
             new VersionOption("version", afterHandlingAction: () => version = true),
 
-            new ValueOption<double>("angle", "a",
+            new ValueOption<double>(
+                "angle",
+                "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
 
-            new EnumValueOption<StringSplitOptions>("split-option", "s",
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
                 afterValueParsingAction: t => splitOption = t),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 isRequired: true,
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
@@ -729,20 +912,28 @@ public class ArgumentParserSubcommandTests
 
         var subcommand2Options = new ICommonOption[]
         {
-            new FlagOption("verbose", "v",
+            new FlagOption(
+                "verbose",
+                "v",
                 isRequired: true,
                 afterHandlingAction: () => verbose = true),
 
             new VersionOption("version", afterHandlingAction: () => version = true),
 
-            new ValueOption<double>("angle", "a",
+            new ValueOption<double>(
+                "angle",
+                "a",
                 isRequired: true,
                 afterValueParsingAction: t => angle = t),
 
-            new EnumValueOption<StringSplitOptions>("split-option", "s",
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
                 afterValueParsingAction: t => splitOption = t),
 
-            new MultipleValueOption<string>("files", "f",
+            new MultipleValueOption<string>(
+                "files",
+                "f",
                 isRequired: true,
                 contextCapture: new ZeroOrMoreContextCapture(),
                 afterValueParsingAction: t => files = [..t])
@@ -761,7 +952,7 @@ public class ArgumentParserSubcommandTests
         subcommand2.AddOptions(subcommand2Options);
 
         parser.AddOptions(options);
-        parser.ParseKnownArguments(arguments, out List<string> extraArguments);
+        parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.True(version);
 

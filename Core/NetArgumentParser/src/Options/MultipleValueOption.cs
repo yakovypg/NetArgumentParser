@@ -7,7 +7,7 @@ using NetArgumentParser.Options.Context;
 
 namespace NetArgumentParser.Options;
 
-public class MultipleValueOption<T> : ValueOption<IList<T>>, IEquatable<MultipleValueOption<T>>
+public class MultipleValueOption<T> : ValueOption<IList<T>>
 {
     public MultipleValueOption(
         string longName,
@@ -37,11 +37,6 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>, IEquatable<Multiple
             afterValueParsingAction,
             contextCapture ?? new ZeroOrMoreContextCapture())
     {
-    }
-
-    public bool Equals(MultipleValueOption<T>? other)
-    {
-        return other is not null && base.Equals(other);
     }
 
     public override string GetShortExample()
