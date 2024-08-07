@@ -6,6 +6,7 @@ using System.Linq;
 using NetArgumentParser;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Generators;
+using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
 using NetArgumentParser.Subcommands;
@@ -181,11 +182,12 @@ Subcommand resizeSubcommand = parser.AddSubcommand("resize", "resize the image")
 resizeSubcommand.UseDefaultHelpOption = true;
 resizeSubcommand.AddOptions(resizeSubcommandOptions);
 
-IList<string> extraArguments = [];
+ParseArgumentsResult result;
+IList<string> extraArguments;
 
 try
 {
-    parser.ParseKnownArguments(args, out extraArguments);
+    result = parser.ParseKnownArguments(args, out extraArguments);
 }
 #pragma warning disable CA1031
 catch (Exception ex)
@@ -195,6 +197,13 @@ catch (Exception ex)
 }
 #pragma warning restore CA1031
 
+Console.WriteLine($"Handled options: {result.HandledOptions.Count}");
+Console.WriteLine($"Handled subcommands: {result.HandledSubcommands.Count}");
+
+if (result.TryGetLastHandledSubcommand(out Subcommand? subcommand))
+    Console.WriteLine($"Last handled subcommand: {subcommand?.Name}");
+
+Console.WriteLine();
 Console.WriteLine($"Extra arguments: {string.Join(' ', extraArguments)}");
 Console.WriteLine($"Verbose: {verbose}");
 Console.WriteLine($"Quick: {quick}");
