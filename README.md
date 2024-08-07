@@ -59,7 +59,7 @@ dotnet test
 ```
 
 ### Connect Project
-You can find instructions for connecting **NetArgumentParser** to your project [here](Docs/ConnectProject.md).
+You can find instructions for connecting **NetArgumentParser** to your project [here](Documentation/ConnectProject.md).
 
 ## Project Status And TODO List
 **NetArgumentParser** is currently under development. There are some features that need to be added to the project:
