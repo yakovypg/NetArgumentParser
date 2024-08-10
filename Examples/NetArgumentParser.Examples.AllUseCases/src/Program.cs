@@ -41,9 +41,12 @@ var nameOption = new ValueOption<string>("name", "n", afterValueParsingAction: t
     Converter = new ValueConverter<string>(t => t.ToUpper(CultureInfo.CurrentCulture))
 };
 
+var nickOption = new ValueOption<string>("nick", afterValueParsingAction: t => name = t);
+
 var options = new ICommonOption[]
 {
     nameOption,
+    nickOption,
 
     new HelpOption(
         longName: "help",
@@ -177,6 +180,9 @@ parser.AddConverters(converters);
 
 OptionGroup<ICommonOption> group = parser.AddOptionGroup("Additional options:");
 group.AddOptions(additionalOptions);
+
+MutuallyExclusiveOptionGroup<ICommonOption> mutuallyExclusiveOptionGroup =
+    parser.AddMutuallyExclusiveOptionGroup([nameOption, nickOption]);
 
 Subcommand resizeSubcommand = parser.AddSubcommand("resize", "resize the image");
 resizeSubcommand.UseDefaultHelpOption = true;
