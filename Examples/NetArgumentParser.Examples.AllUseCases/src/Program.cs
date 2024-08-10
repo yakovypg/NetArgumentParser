@@ -178,7 +178,7 @@ parser.ChangeOutputWriter(new ConsoleTextWriter());
 parser.AddOptions(options);
 parser.AddConverters(converters);
 
-OptionGroup<ICommonOption> group = parser.AddOptionGroup("Additional options:");
+OptionGroup<ICommonOption> group = parser.AddOptionGroup("Additional options:", "Description\n");
 group.AddOptions(additionalOptions);
 
 MutuallyExclusiveOptionGroup<ICommonOption> mutuallyExclusiveOptionGroup =
