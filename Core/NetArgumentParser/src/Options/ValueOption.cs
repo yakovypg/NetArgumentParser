@@ -19,6 +19,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         string metaVariable = "",
         bool isRequired = false,
         bool isHidden = false,
+        bool isFinal = false,
         IEnumerable<string>? aliases = null,
         IEnumerable<T>? choices = null,
         DefaultOptionValue<T>? defaultValue = null,
@@ -32,6 +33,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
             metaVariable,
             isRequired,
             isHidden,
+            isFinal,
             aliases,
             choices,
             defaultValue,
@@ -48,6 +50,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         string metaVariable = "",
         bool isRequired = false,
         bool isHidden = false,
+        bool isFinal = false,
         IEnumerable<string>? aliases = null,
         IEnumerable<T>? choices = null,
         DefaultOptionValue<T>? defaultValue = null,
@@ -61,6 +64,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
             description ?? throw new ArgumentNullException(nameof(description)),
             isRequired,
             isHidden,
+            isFinal,
             aliases,
             contextCapture ?? new FixedContextCapture(1))
     {

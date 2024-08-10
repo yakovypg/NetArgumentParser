@@ -17,6 +17,7 @@ public abstract class CommonOption : ICommonOption
         string description = "",
         bool isRequired = false,
         bool isHidden = false,
+        bool isFinal = false,
         IEnumerable<string>? aliases = null,
         IContextCapture? contextCapture = null)
     {
@@ -38,6 +39,7 @@ public abstract class CommonOption : ICommonOption
         Description = description;
         IsRequired = isRequired;
         IsHidden = isHidden;
+        IsFinal = isFinal;
         ContextCapture = contextCapture ?? new EmptyContextCapture();
     }
 
@@ -48,6 +50,7 @@ public abstract class CommonOption : ICommonOption
     public string Description { get; }
     public bool IsRequired { get; }
     public bool IsHidden { get; }
+    public bool IsFinal { get; }
     public IContextCapture ContextCapture { get; }
 
     public bool IsHandled { get; protected set; }

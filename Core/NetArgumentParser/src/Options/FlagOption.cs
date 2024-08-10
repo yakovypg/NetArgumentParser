@@ -12,6 +12,7 @@ public class FlagOption : CommonOption
         string description = "",
         bool isRequired = false,
         bool isHidden = false,
+        bool isFinal = false,
         IEnumerable<string>? aliases = null,
         Action? afterHandlingAction = null)
 
@@ -21,6 +22,7 @@ public class FlagOption : CommonOption
             description ?? throw new ArgumentNullException(nameof(description)),
             isRequired,
             isHidden,
+            isFinal,
             aliases,
             new EmptyContextCapture())
     {

@@ -220,17 +220,6 @@ public class ArgumentParser : ParserQuantum
     {
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
-        return HandleFinalOption<HelpOption>(arguments, out parseArgumentsResult)
-            || HandleFinalOption<VersionOption>(arguments, out parseArgumentsResult);
-    }
-
-    protected virtual bool HandleFinalOption<T>(
-        IEnumerable<string> arguments,
-        out ParseArgumentsResult parseArgumentsResult)
-        where T : ICommonOption
-    {
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
-
         bool isFinalOptionHandled = false;
         var argumentsVisitor = new ArgumentsVisitor(this, OptionSet, RecognizeSlashOptions);
 
@@ -245,7 +234,7 @@ public class ArgumentParser : ParserQuantum
 
         argumentsVisitor.OptionExtracted += (s, e) =>
         {
-            if (!isFinalOptionHandled && e.OptionValue.Option is T)
+            if (!isFinalOptionHandled && e.OptionValue.Option.IsFinal)
             {
                 e.OptionValue.Option.Handle([.. e.OptionValue.Value]);
                 handledOptions.Add(e.OptionValue.Option);
