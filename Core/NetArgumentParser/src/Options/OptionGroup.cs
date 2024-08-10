@@ -41,11 +41,11 @@ public sealed class OptionGroup<T>
         Array.ForEach(options, _options.Add);
     }
 
-    public void RemoveOptions(params T[] options)
+    public bool RemoveOption(T option)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ArgumentNullException.ThrowIfNull(option, nameof(option));
 
-        Array.ForEach(options, t => OptionSet.RemoveOption(t));
-        Array.ForEach(options, t => _options.Remove(t));
+        return OptionSet.RemoveOption(option)
+            && _options.Remove(option);
     }
 }

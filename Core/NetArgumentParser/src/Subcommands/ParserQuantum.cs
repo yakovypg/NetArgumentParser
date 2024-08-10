@@ -75,16 +75,16 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         DefaultGroup.AddOptions(options);
     }
 
-    public void AddConverters(params IValueConverter[] converters)
-    {
-        ArgumentNullException.ThrowIfNull(converters, nameof(converters));
-        Array.ForEach(converters, _optionSet.AddConverter);
-    }
-
     public virtual bool RemoveOption(ICommonOption commonOption)
     {
         ArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
         return _optionSet.RemoveOption(commonOption);
+    }
+
+    public void AddConverters(params IValueConverter[] converters)
+    {
+        ArgumentNullException.ThrowIfNull(converters, nameof(converters));
+        Array.ForEach(converters, _optionSet.AddConverter);
     }
 
     public virtual bool RemoveConverter(IValueConverter converter)
@@ -95,10 +95,18 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
 
     public OptionGroup<ICommonOption> AddOptionGroup(string name)
     {
+        ArgumentNullException.ThrowIfNull(name);
+
         var group = new OptionGroup<ICommonOption>(name, _optionSet);
         _optionGroups.Add(group);
 
         return group;
+    }
+
+    public bool RemoveOptionGroup(OptionGroup<ICommonOption> group)
+    {
+        ArgumentNullException.ThrowIfNull(group);
+        return _optionGroups.Remove(group);
     }
 
     public IList<ICommonOption> GetAllOptions()
