@@ -9,6 +9,7 @@ Let's consider **optional arguments**. Optional arguments start with `-`, `--` o
 *    [Value Options](#value-options)
      *    [Multiple Value Options](#multiple-value-options)
      *    [Enum Value Options](#enum-value-options)
+*    [Final Options](#final-options)
 *    [Custom Options](#custom-options)
 *    [Option Groups](#option-groups)
 *    [Mutual Exclusion](#mutual-exclusion)
@@ -187,6 +188,37 @@ parser.AddOptions(option);
 
 parser.Parse(new string[] { "--split-option", "TrimEntries" });
 // splitOption: StringSplitOptions.TrimEntries
+```
+
+## Final Options
+**Final options** are options that are handled before all others. After the final option is handled, the remaining options (including final ones) aren't handled. Examples of final options are help option and version option.
+
+Note that options of any type can be final. To make an option final, you need to set the corresponding value to the `isFinal` parameter of the option constructor.
+
+Here is an example of creating final option and using it in the parser:
+
+```cs
+int? angle = null;
+int? width = null;
+int? final = null;
+
+var angleOption = new ValueOption<int>("angle", "a",
+    afterValueParsingAction: t => angle = t);
+
+var widthOption = new ValueOption<int>("width", "w",
+    afterValueParsingAction: t => width = t);
+
+var finalOption = new ValueOption<int>("final", string.Empty,
+    isFinal: true,
+    afterValueParsingAction: t => final = t);
+
+var parser = new ArgumentParser();
+parser.AddOptions(angleOption, widthOption, finalOption);
+
+parser.Parse(new string[] { "-a", "40", "--final", "100", "-w", "1920" });
+// angle: null
+// width: null
+// final: 100
 ```
 
 ## Custom Options
