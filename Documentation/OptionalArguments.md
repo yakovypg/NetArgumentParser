@@ -11,6 +11,7 @@ Let's consider **optional arguments**. Optional arguments start with `-`, `--` o
      *    [Enum Value Options](#enum-value-options)
 *    [Custom Options](#custom-options)
 *    [Option Groups](#option-groups)
+*    [Mutual Exclusion](#mutual-exclusion)
 
 ## Flag Options
 **Flag options** are options without value. They make working with boolean values ​​easier.
@@ -221,4 +222,26 @@ Default group:
 
 Additional group:
   --verbose      be verbose
+```
+
+## Mutual Exclusion
+If you add options to the mutually exclusive group, **NetArgumentParser** will make sure that only one of the arguments in this group was present on the command line. Note that currently mutually exclusive groups don't have title and description (it will not be displayed in the help output). Moreover, you cannot add options to the option set using mutually exclusive group. This group is intended only to mark options that are already added.
+
+You can create mutually exclusive group using `AddMutuallyExclusiveOptionGroup()` method of the `ArgumentParser` class. Options can be added to this group by passing them to method `AddMutuallyExclusiveOptionGroup()` or by calling method `AddOptions()` of the created group.
+
+```cs
+string? name = default;
+
+var nameOption = new ValueOption<string>("name", afterValueParsingAction: t => name = t);
+var nickOption = new ValueOption<string>("nick", afterValueParsingAction: t => name = t);
+
+var parser = new ArgumentParser();
+parser.AddOptions(options);
+
+MutuallyExclusiveOptionGroup<ICommonOption> group =
+    parser.AddMutuallyExclusiveOptionGroup([nameOption, nickOption]);
+
+parser.Parse(new string[] { "--name", "John" }); // name: John
+parser.Parse(new string[] { "--nick", "mr.john" }); // nick: mr.john
+parser.Parse(new string[] { "--name", "John", "--nick", "mr.john" }); // Error
 ```
