@@ -64,6 +64,13 @@ public class OptionDescriptionGenerator
             string optionDescriptions = GenerateOptionDescriptions(group);
 
             _ = builder.AppendLine(group.Header);
+
+            if (!string.IsNullOrEmpty(group.Description))
+            {
+                string description = OptionExamplePrefix + group.Description;
+                _ = builder.AppendLine(description);
+            }
+
             _ = builder.AppendLine(optionDescriptions);
         }
     }

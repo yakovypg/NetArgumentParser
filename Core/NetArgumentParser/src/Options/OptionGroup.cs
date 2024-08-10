@@ -8,16 +8,19 @@ public sealed class OptionGroup<T>
     where T : IOption
 {
     private readonly List<T> _options;
-    private string _header = string.Empty;
+    private string _header;
+    private string _description;
 
-    internal OptionGroup(string header, IOptionSet<T> optionSet)
+    internal OptionGroup(string header, string description, IOptionSet<T> optionSet)
     {
         ArgumentNullException.ThrowIfNull(header, nameof(header));
+        ArgumentNullException.ThrowIfNull(description, nameof(description));
         ArgumentNullException.ThrowIfNull(optionSet, nameof(optionSet));
 
         _options = [];
+        _header = header;
+        _description = description;
 
-        Header = header;
         OptionSet = optionSet;
     }
 
@@ -29,6 +32,12 @@ public sealed class OptionGroup<T>
     {
         get => _header;
         set => _header = value ?? string.Empty;
+    }
+
+    public string Description
+    {
+        get => _description;
+        set => _description = value ?? string.Empty;
     }
 
     internal IOptionSet<T> OptionSet { get; }

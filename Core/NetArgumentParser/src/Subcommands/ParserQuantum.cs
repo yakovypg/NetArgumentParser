@@ -20,7 +20,7 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
     public ParserQuantum()
     {
         _optionSet = new OptionSet();
-        _optionGroups = [new OptionGroup<ICommonOption>("Options:", _optionSet)];
+        _optionGroups = [new OptionGroup<ICommonOption>("Options:", string.Empty, _optionSet)];
         _subcommands = [];
         _nameUniquenessVerifier = new SubcommandNameUniquenessVerifier(_subcommands);
 
@@ -92,11 +92,13 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         return _optionSet.RemoveConverter(converter);
     }
 
-    public OptionGroup<ICommonOption> AddOptionGroup(string name)
+    public OptionGroup<ICommonOption> AddOptionGroup(string name, string? description = null)
     {
         ArgumentNullException.ThrowIfNull(name, nameof(name));
 
-        var group = new OptionGroup<ICommonOption>(name, _optionSet);
+        description ??= string.Empty;
+
+        var group = new OptionGroup<ICommonOption>(name, description, _optionSet);
         _optionGroups.Add(group);
 
         return group;
