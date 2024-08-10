@@ -204,7 +204,7 @@ var additionalOption = new FlagOption("verbose");
 
 parser.AddOptions(option);
 
-OptionGroup<ICommonOption> group = parser.AddOptionGroup("Additional group:");
+OptionGroup<ICommonOption> group = parser.AddOptionGroup("Additional group:", "Description\n");
 group.AddOptions(additionalOption);
 
 parser.Parse(new string[] { "--help" });
