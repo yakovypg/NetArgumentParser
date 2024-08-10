@@ -7,4 +7,5 @@ public interface IOption
     string Description { get; }
     bool IsRequired { get; }
     bool IsHidden { get; }
+    bool IsFinal { get; }
 }

@@ -11,6 +11,7 @@ public class CounterOption : FlagOption
         string description = "",
         bool isRequired = false,
         bool isHidden = false,
+        bool isFinal = false,
         IEnumerable<string>? aliases = null,
         Action? increaseCounter = null)
 
@@ -20,6 +21,7 @@ public class CounterOption : FlagOption
             description ?? throw new ArgumentNullException(nameof(description)),
             isRequired,
             isHidden,
+            isFinal,
             aliases,
             increaseCounter)
     {

@@ -22,6 +22,7 @@ public sealed class VersionOption : FlagOption
             description ?? throw new ArgumentNullException(nameof(description)),
             false,
             isHidden,
+            true,
             aliases,
             afterHandlingAction)
     {

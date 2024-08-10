@@ -1542,6 +1542,77 @@ public class ArgumentParserTests
     }
 
     [Fact]
+    public void Parse_FinalOption_OtherArgumentsSkipped()
+    {
+        int finalOptionValue = default;
+        bool verbose = default;
+        double angle = default;
+        StringSplitOptions splitOption = default;
+        List<string>? files = default;
+
+        const int expectedFinalOptionValue = -900;
+
+        var arguments = new string[]
+        {
+            "-v",
+            "--angle", "100.5",
+            "--final", expectedFinalOptionValue.ToString(CultureInfo.CurrentCulture),
+            "-s", StringSplitOptions.TrimEntries.ToString(),
+            "-f", "file1", "file2", "file3"
+        };
+
+        var options = new ICommonOption[]
+        {
+            new FlagOption(
+                "verbose",
+                "v",
+                isRequired: true,
+                afterHandlingAction: () => verbose = true),
+
+            new ValueOption<int>(
+                "final",
+                isFinal: true,
+                afterValueParsingAction: t => finalOptionValue = t),
+
+            new ValueOption<double>(
+                "angle",
+                "a",
+                isRequired: true,
+                afterValueParsingAction: t => angle = t),
+
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
+                afterValueParsingAction: t => splitOption = t),
+
+            new MultipleValueOption<string>(
+                "files",
+                "f",
+                isRequired: true,
+                contextCapture: new ZeroOrMoreContextCapture(),
+                afterValueParsingAction: t => files = [..t])
+        };
+
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false,
+            RecognizeSlashOptions = true
+        };
+
+        parser.AddOptions(options);
+        _ = parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
+
+        Assert.Equal(expectedFinalOptionValue, finalOptionValue);
+
+        Assert.Equal(default, verbose);
+        Assert.Equal(default, angle);
+        Assert.Equal(default, splitOption);
+        Assert.Equal(default, files);
+
+        Assert.Empty(extraArguments);
+    }
+
+    [Fact]
     public void Parse_DuplicateArguments_ThrowsException()
     {
         var arguments = new string[]
