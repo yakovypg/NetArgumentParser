@@ -21,7 +21,6 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
     {
         _optionSet = new OptionSet();
         _optionGroups = [new OptionGroup<ICommonOption>("Options:", _optionSet)];
-
         _subcommands = [];
         _nameUniquenessVerifier = new SubcommandNameUniquenessVerifier(_subcommands);
 
@@ -95,7 +94,7 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
 
     public OptionGroup<ICommonOption> AddOptionGroup(string name)
     {
-        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(name, nameof(name));
 
         var group = new OptionGroup<ICommonOption>(name, _optionSet);
         _optionGroups.Add(group);
@@ -105,7 +104,7 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
 
     public bool RemoveOptionGroup(OptionGroup<ICommonOption> group)
     {
-        ArgumentNullException.ThrowIfNull(group);
+        ArgumentNullException.ThrowIfNull(group, nameof(group));
         return _optionGroups.Remove(group);
     }
 

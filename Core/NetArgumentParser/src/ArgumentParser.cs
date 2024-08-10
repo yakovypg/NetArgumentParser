@@ -13,6 +13,8 @@ namespace NetArgumentParser;
 
 public class ArgumentParser : ParserQuantum
 {
+    private readonly List<MutuallyExclusiveOptionGroup<ICommonOption>> _mutuallyExclusiveOptionGroups;
+
     private string _programName;
     private int _numberOfArgumentsToSkip;
 
@@ -21,6 +23,7 @@ public class ArgumentParser : ParserQuantum
         ITextWriter? outputWriter = null,
         Func<Subcommand, IDescriptionGenerator>? subcommandDescriptionGeneratorCreator = null)
     {
+        _mutuallyExclusiveOptionGroups = [];
         _programName = string.Empty;
         _numberOfArgumentsToSkip = 0;
 
@@ -68,6 +71,9 @@ public class ArgumentParser : ParserQuantum
         }
     }
 
+    public IReadOnlyList<MutuallyExclusiveOptionGroup<ICommonOption>> MutuallyExclusiveOptionGroups =>
+        _mutuallyExclusiveOptionGroups;
+
     public override string ToString()
     {
         return GenerateProgramDescription();
@@ -81,6 +87,22 @@ public class ArgumentParser : ParserQuantum
     public void ChangeOutputWriter(ITextWriter? outputWriter)
     {
         OutputWriter = outputWriter;
+    }
+
+    public MutuallyExclusiveOptionGroup<ICommonOption> AddMutuallyExclusiveOptionGroup(
+        IEnumerable<ICommonOption>? options = null)
+    {
+        var group = new MutuallyExclusiveOptionGroup<ICommonOption>(options);
+        _mutuallyExclusiveOptionGroups.Add(group);
+
+        return group;
+    }
+
+    public bool RemoveMutuallyExclusiveOptionGroup(
+        MutuallyExclusiveOptionGroup<ICommonOption> group)
+    {
+        ArgumentNullException.ThrowIfNull(group, nameof(group));
+        return _mutuallyExclusiveOptionGroups.Remove(group);
     }
 
     public virtual ParseArgumentsResult ParseKnownArguments(
@@ -109,6 +131,7 @@ public class ArgumentParser : ParserQuantum
 
         argumentsVisitor.OptionExtracted += (s, e) =>
         {
+            VerifyAbsenseOfConflicts(handledOptions, e.OptionValue.Option);
             e.OptionValue.Option.Handle([.. e.OptionValue.Value]);
             handledOptions.Add(e.OptionValue.Option);
         };
@@ -140,6 +163,36 @@ public class ArgumentParser : ParserQuantum
         return extraArguments.Count == 0
             ? result
             : throw new ArgumentsAreUnknownException(null, [.. extraArguments]);
+    }
+
+    protected virtual void VerifyAbsenseOfConflicts(
+        IEnumerable<ICommonOption> handledOptions,
+        ICommonOption commonOption)
+    {
+        ArgumentNullException.ThrowIfNull(handledOptions, nameof(handledOptions));
+        ArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
+
+        VerifyAbsenseOfMutuallyExclusiveOptions(handledOptions, commonOption);
+    }
+
+    protected virtual void VerifyAbsenseOfMutuallyExclusiveOptions(
+        IEnumerable<ICommonOption> handledOptions,
+        ICommonOption commonOption)
+    {
+        ArgumentNullException.ThrowIfNull(handledOptions, nameof(handledOptions));
+        ArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
+
+        MutuallyExclusiveOptionGroup<ICommonOption>? group = MutuallyExclusiveOptionGroups
+            .FirstOrDefault(t => t.Options.Contains(commonOption));
+
+        if (group is null)
+            return;
+
+        ICommonOption? conflictingOption = handledOptions
+            .FirstOrDefault(t => group.Options.Contains(t));
+
+        if (conflictingOption is not null)
+            throw new MutuallyExclusiveOptionsFoundException(null, commonOption, conflictingOption);
     }
 
     protected override void AddDefaultOptions()

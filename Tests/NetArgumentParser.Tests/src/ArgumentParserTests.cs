@@ -1571,6 +1571,68 @@ public class ArgumentParserTests
     }
 
     [Fact]
+    public void Parse_MutuallyExclusiveOptions_ThrowsException()
+    {
+        var arguments = new string[]
+        {
+            "--c0", "5",
+            "-b", "1920",
+            "--c2", "1080",
+            "-d", "10",
+            "--c1", "15"
+        };
+
+        var conflictingOptions = new List<ICommonOption>()
+        {
+            new ValueOption<int>("c0", string.Empty),
+            new ValueOption<double>("c1", string.Empty),
+            new ValueOption<int>("c2", string.Empty)
+        };
+
+        var options = new ICommonOption[]
+        {
+            conflictingOptions[0],
+            new ValueOption<double>(string.Empty, "b"),
+            conflictingOptions[1],
+            new ValueOption<int>(string.Empty, "d"),
+            conflictingOptions[2]
+        };
+
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
+
+        parser.AddOptions(options);
+
+        MutuallyExclusiveOptionGroup<ICommonOption> group =
+            parser.AddMutuallyExclusiveOptionGroup(conflictingOptions);
+
+        do
+        {
+            var exception = Assert.Throws<MutuallyExclusiveOptionsFoundException>(() =>
+            {
+                _ = parser.Parse(arguments);
+            });
+
+            ICommonOption existingOption = conflictingOptions[0];
+            ICommonOption newOption = conflictingOptions[^1];
+
+            Assert.Equal(existingOption, exception.ExistingOption);
+            Assert.Equal(newOption, exception.NewOption);
+
+            _ = group.RemoveOption(newOption);
+            _ = conflictingOptions.Remove(newOption);
+
+            parser.ResetOptionsHandledState();
+        }
+        while (conflictingOptions.Count > 1);
+
+        Exception? ex = Record.Exception(() => parser.Parse(arguments));
+        Assert.Null(ex);
+    }
+
+    [Fact]
     public void Parse_SeveralArguments_ArgumentsParseResultIsCorrect()
     {
         const int marginLeft = 15;
