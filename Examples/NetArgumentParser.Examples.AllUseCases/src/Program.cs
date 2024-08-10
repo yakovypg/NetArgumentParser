@@ -60,6 +60,16 @@ var options = new ICommonOption[]
         }),
 
     new FlagOption(
+        longName: "info",
+        description: "get application information",
+        isFinal: true,
+        afterHandlingAction: () =>
+        {
+            Console.WriteLine("Information");
+            Environment.Exit(0);
+        }),
+
+    new FlagOption(
         longName: "verbose",
         shortName: "v",
         description: "be verbose",
