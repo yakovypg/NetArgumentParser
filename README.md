@@ -7,13 +7,14 @@
   <a href="https://github.com/yakovypg/NetArgumentParser/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-GPLv3-darkyellow.svg" alt="license" />
   </a>
-  <img src="https://img.shields.io/badge/Version-1.0.0-red.svg" alt="version" />
+  <img src="https://img.shields.io/badge/Version-1.0.1-red.svg" alt="version" />
   <img src="https://img.shields.io/badge/C%23-.NET 8-blue" />
 </p>
 
 ## About
-**NetArgumentParser** is a cross-platform, free and open source library for parsing command-line options, arguments and subcommands.
+**NetArgumentParser** is a cross-platform, free and open source library for parsing command-line options, arguments and subcommands. This library contains the main features of popular argument parsers such as `argparse`, as well as many of its own.
 
+[![NuGet Badge](https://buildstats.info/nuget/NetArgumentParser)](https://www.nuget.org/packages/NetArgumentParser/)
 [![Contributors](https://img.shields.io/github/contributors/yakovypg/NetArgumentParser)](https://github.com/yakovypg/NetArgumentParser/graphs/contributors)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/yakovypg/NetArgumentParser/dotnet.yml?branch=main)](https://github.com/yakovypg/NetArgumentParser/actions/workflows/dotnet.yml?query=branch%3Amain)
 
@@ -23,7 +24,6 @@
      *    [Build Project](#build-project)
      *    [Test Project](#test-project)
      *    [Connect Project](#connect-project)
-*    [Project Status And TODO List](#project-status-and-todo-list)
 *    [Documentation](#documentation)
 *    [Development](#development)
 *    [Contributing](#contributing)
@@ -59,12 +59,7 @@ dotnet test
 ```
 
 ### Connect Project
-You can find instructions for connecting **NetArgumentParser** to your project [here](Documentation/ConnectProject.md).
-
-## Project Status And TODO List
-**NetArgumentParser** is currently under development. There are some features that need to be added to the project:
-- Add support of reflection-based configuring option set using special attributes.
-- Add NuGet package.
+The easiest way to get started with the **NetArgumentParser** is to include the project [package](https://www.nuget.org/packages/NetArgumentParser/) via the NuGet package manager. Another way is to clone the repository and then connect it. You can find instructions for connecting **NetArgumentParser** to your project [here](Documentation/ConnectProject.md).
 
 ## Documentation
 You can read our documentation in the [DOCUMENTATION.md](DOCUMENTATION.md).
