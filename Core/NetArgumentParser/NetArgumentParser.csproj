@@ -1,9 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>NetArgumentParser</PackageId>
+    <Version>1.0.1</Version>
+    <Product>NetArgumentParser</Product>
+    <Title>NetArgumentParser</Title>
+    <Authors>yakovypg</Authors>
+    <Company>yakovypg</Company>
+    <Copyright>Copyright © yakovypg 2024</Copyright>
+    <PackageTags>args;argument-parser;arguments;cli-args;argparse;command-line-arguments;command-line-arguments-parser;net-argument-parser;net-argparse;csharp-argparse;subcommand-parser</PackageTags>
+    <Description>NetArgumentParser is a cross-platform, free and open source library for parsing command-line options, arguments and subcommands.</Description>
+    <PackageProjectUrl>https://github.com/yakovypg/NetArgumentParser</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/yakovypg/NetArgumentParser</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<!--<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>-->
+    <RequireLicenseAcceptance>true</RequireLicenseAcceptance>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl> 
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../LICENSE" Pack="true" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
 </Project>
