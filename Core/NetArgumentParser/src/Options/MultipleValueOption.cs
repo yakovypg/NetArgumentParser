@@ -66,8 +66,8 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>
 
     protected override void ParseValue(IValueConverter<IList<T>> converter, params string[] value)
     {
-        ArgumentNullException.ThrowIfNull(converter, nameof(converter));
-        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        ExtendedArgumentNullException.ThrowIfNull(converter, nameof(converter));
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
 
         if (value.Length == 0)
             throw new OptionValueNotSpecifiedException(null, ToString());
@@ -105,7 +105,7 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>
 
     protected override bool IsValueSatisfyChoices(IList<T> value)
     {
-        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
         return Choices.Count == 0 || Choices.Any(t => t.SequenceEqual(value));
     }
 }

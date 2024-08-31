@@ -16,8 +16,8 @@ public class OptionDescriptionGenerator
         IEnumerable<ICommonOption> options,
         IEnumerable<OptionGroup<ICommonOption>> optionGroups)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
-        ArgumentNullException.ThrowIfNull(optionGroups, nameof(optionGroups));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(optionGroups, nameof(optionGroups));
 
         Options = options;
         OptionGroups = optionGroups;
@@ -37,7 +37,7 @@ public class OptionDescriptionGenerator
         get => _windowWidth;
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
+            DefaultExceptions.ThrowIfNegativeOrZero(value, nameof(value));
             _windowWidth = value;
         }
     }
@@ -47,7 +47,7 @@ public class OptionDescriptionGenerator
         get => _optionExampleCharsLimit;
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
+            DefaultExceptions.ThrowIfNegativeOrZero(value, nameof(value));
             _optionExampleCharsLimit = value;
         }
     }
@@ -57,7 +57,7 @@ public class OptionDescriptionGenerator
 
     public virtual void AddOptionDescriptions(StringBuilder builder)
     {
-        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
+        ExtendedArgumentNullException.ThrowIfNull(builder, nameof(builder));
 
         foreach (OptionGroup<ICommonOption> group in OptionGroups)
         {
@@ -77,7 +77,7 @@ public class OptionDescriptionGenerator
 
     public virtual string GenerateOptionDescriptions(OptionGroup<ICommonOption> optionGroup)
     {
-        ArgumentNullException.ThrowIfNull(optionGroup, nameof(optionGroup));
+        ExtendedArgumentNullException.ThrowIfNull(optionGroup, nameof(optionGroup));
 
         var descriptionBuilder = new StringBuilder();
 
@@ -92,8 +92,8 @@ public class OptionDescriptionGenerator
 
     protected virtual void AppendOptionExample(StringBuilder builder, ICommonOption commonOption)
     {
-        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
-        ArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
+        ExtendedArgumentNullException.ThrowIfNull(builder, nameof(builder));
+        ExtendedArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
 
         int maxExampleLength = GetMaxOptionExampleLength();
 
@@ -113,8 +113,8 @@ public class OptionDescriptionGenerator
 
     protected virtual void AppendOptionDescription(StringBuilder builder, ICommonOption commonOption)
     {
-        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
-        ArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
+        ExtendedArgumentNullException.ThrowIfNull(builder, nameof(builder));
+        ExtendedArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
 
         int maxExampleLength = GetMaxOptionExampleLength();
         int emptySpaceLength = GetEmptySpaceForOptionExample(maxExampleLength).Length;
@@ -134,7 +134,7 @@ public class OptionDescriptionGenerator
 
     protected string GetEmptySpaceForOptionExample(int maxOptionExampleLength)
     {
-        ArgumentOutOfRangeException.ThrowIfNegative(
+        DefaultExceptions.ThrowIfNegative(
             maxOptionExampleLength,
             nameof(maxOptionExampleLength));
 
@@ -144,7 +144,7 @@ public class OptionDescriptionGenerator
 
     protected string GetOptionExample(ICommonOption option)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
 
         int maxOptionExampleLength = GetMaxOptionExampleLength();
         string example = OptionExamplePrefix + option.GetLongExample();

@@ -10,7 +10,7 @@ internal static partial class CommandNameCorrectnessVerifier
 
     internal static void VerifyNameIsCorrect(string name)
     {
-        ArgumentNullException.ThrowIfNull(name, nameof(name));
+        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
 
         if (!string.IsNullOrEmpty(name)
             && !_reservedNames.Contains(name)

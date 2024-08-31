@@ -24,7 +24,7 @@ public class IncorrectOptionNameException : Exception
         Exception? innerException)
         : base(message ?? GetDefaultMessage(optionName), innerException)
     {
-        ArgumentNullException.ThrowIfNull(optionName, nameof(optionName));
+        ExtendedArgumentNullException.ThrowIfNull(optionName, nameof(optionName));
         OptionName = optionName;
     }
 
@@ -38,7 +38,7 @@ public class IncorrectOptionNameException : Exception
     protected IncorrectOptionNameException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
         OptionName = info.GetString(nameof(OptionName));
     }
 #pragma warning restore CS0809
@@ -54,8 +54,8 @@ public class IncorrectOptionNameException : Exception
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(OptionName), OptionName, typeof(string));
         base.GetObjectData(info, context);
@@ -64,7 +64,7 @@ public class IncorrectOptionNameException : Exception
 
     private static string GetDefaultMessage(string optionName)
     {
-        ArgumentNullException.ThrowIfNull(optionName, nameof(optionName));
+        ExtendedArgumentNullException.ThrowIfNull(optionName, nameof(optionName));
         return $"Option name '{optionName}' is not correct.";
     }
 }

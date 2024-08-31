@@ -7,7 +7,7 @@ public class OptionExtractedEventArgs : EventArgs
 {
     public OptionExtractedEventArgs(OptionValue optionValue)
     {
-        ArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
+        ExtendedArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
         OptionValue = optionValue;
     }
 

@@ -27,7 +27,7 @@ public class OptionValueNotSatisfyRestrictionException : Exception
         Exception? innerException)
         : base(message ?? GetDefaultMessage(optionValue), innerException)
     {
-        ArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
+        ExtendedArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
         _optionValue = optionValue;
     }
 
@@ -41,7 +41,7 @@ public class OptionValueNotSatisfyRestrictionException : Exception
     protected OptionValueNotSatisfyRestrictionException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
         _optionValue = info.GetValue(nameof(_optionValue), typeof(string[])) as string[];
     }
 #pragma warning restore CS0809
@@ -57,8 +57,8 @@ public class OptionValueNotSatisfyRestrictionException : Exception
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(_optionValue), _optionValue, typeof(string[]));
         base.GetObjectData(info, context);
@@ -67,7 +67,7 @@ public class OptionValueNotSatisfyRestrictionException : Exception
 
     private static string GetDefaultMessage(string[] optionValue)
     {
-        ArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
+        ExtendedArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
 
         string value = string.Join(' ', optionValue);
         return $"Option value '{value}' doesn't satisfy the restriction.";

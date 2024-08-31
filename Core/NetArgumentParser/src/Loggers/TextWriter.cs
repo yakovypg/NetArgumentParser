@@ -6,7 +6,7 @@ public class TextWriter : ITextWriter
 {
     public TextWriter(System.IO.TextWriter writer)
     {
-        ArgumentNullException.ThrowIfNull(writer, nameof(writer));
+        ExtendedArgumentNullException.ThrowIfNull(writer, nameof(writer));
         Writer = writer;
     }
 

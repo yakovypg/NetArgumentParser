@@ -9,7 +9,7 @@ public static class ContextInteractor
         IEnumerable<string> context,
         bool recognizeSlashAsOption = false)
     {
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         int numberOfSuitableValuesToCapture = 0;
 
@@ -30,9 +30,9 @@ public static class ContextInteractor
         Queue<string> context,
         int numberOfItemsToCapture)
     {
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
-        ArgumentOutOfRangeException.ThrowIfNegative(
+        DefaultExceptions.ThrowIfNegative(
             numberOfItemsToCapture,
             nameof(numberOfItemsToCapture));
 

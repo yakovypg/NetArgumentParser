@@ -19,13 +19,13 @@ public sealed class MutuallyExclusiveOptionGroup<T>
 
     public void AddOptions(params T[] options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
         Array.ForEach(options, _options.Add);
     }
 
     public bool RemoveOption(T option)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
         return _options.Remove(option);
     }
 }

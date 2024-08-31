@@ -11,9 +11,9 @@ public sealed class LongTextWriter
         int leftOffset,
         int charsInOneLine)
     {
-        ArgumentNullException.ThrowIfNull(textBuilder, nameof(textBuilder));
-        ArgumentOutOfRangeException.ThrowIfNegative(leftOffset, nameof(leftOffset));
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(charsInOneLine, nameof(charsInOneLine));
+        ExtendedArgumentNullException.ThrowIfNull(textBuilder, nameof(textBuilder));
+        DefaultExceptions.ThrowIfNegative(leftOffset, nameof(leftOffset));
+        DefaultExceptions.ThrowIfNegativeOrZero(charsInOneLine, nameof(charsInOneLine));
 
         TextBuilder = textBuilder;
         LeftOffset = leftOffset;
@@ -26,12 +26,13 @@ public sealed class LongTextWriter
 
     public static string GetEmptySpace(int length)
     {
-        ArgumentOutOfRangeException.ThrowIfNegative(length, nameof(length));
+        DefaultExceptions.ThrowIfNegative(length, nameof(length));
         return new(' ', length);
     }
 
     public void AppendParts(IList<string> parts)
     {
+        ExtendedArgumentNullException.ThrowIfNull(parts, nameof(parts));
         AppendParts(parts, CharsInOneLine, true);
     }
 
@@ -40,8 +41,8 @@ public sealed class LongTextWriter
         int remainingChars,
         bool isFirstPartInLine)
     {
-        ArgumentNullException.ThrowIfNull(parts, nameof(parts));
-        ArgumentOutOfRangeException.ThrowIfNegative(remainingChars, nameof(remainingChars));
+        ExtendedArgumentNullException.ThrowIfNull(parts, nameof(parts));
+        DefaultExceptions.ThrowIfNegative(remainingChars, nameof(remainingChars));
 
         if (parts.Count == 0)
         {
@@ -64,8 +65,8 @@ public sealed class LongTextWriter
         ref int remainingChars,
         ref bool isFirstPartInLine)
     {
-        ArgumentNullException.ThrowIfNull(parts, nameof(parts));
-        ArgumentOutOfRangeException.ThrowIfNegative(remainingChars, nameof(remainingChars));
+        ExtendedArgumentNullException.ThrowIfNull(parts, nameof(parts));
+        DefaultExceptions.ThrowIfNegative(remainingChars, nameof(remainingChars));
 
         if (parts.Count == 0)
             return;
@@ -85,8 +86,8 @@ public sealed class LongTextWriter
         ref int remainingChars,
         ref bool isFirstPartInLine)
     {
-        ArgumentNullException.ThrowIfNull(parts, nameof(parts));
-        ArgumentOutOfRangeException.ThrowIfNegative(remainingChars, nameof(remainingChars));
+        ExtendedArgumentNullException.ThrowIfNull(parts, nameof(parts));
+        DefaultExceptions.ThrowIfNegative(remainingChars, nameof(remainingChars));
 
         if (parts.Count == 0)
             return;
@@ -110,8 +111,8 @@ public sealed class LongTextWriter
         ref int remainingChars,
         ref bool isFirstPartInLine)
     {
-        ArgumentNullException.ThrowIfNull(parts, nameof(parts));
-        ArgumentOutOfRangeException.ThrowIfNegative(remainingChars, nameof(remainingChars));
+        ExtendedArgumentNullException.ThrowIfNull(parts, nameof(parts));
+        DefaultExceptions.ThrowIfNegative(remainingChars, nameof(remainingChars));
 
         if (parts.Count == 0)
             return;
@@ -129,7 +130,7 @@ public sealed class LongTextWriter
         ref int remainingChars,
         ref bool isFirstPartInLine)
     {
-        ArgumentOutOfRangeException.ThrowIfNegative(remainingChars, nameof(remainingChars));
+        DefaultExceptions.ThrowIfNegative(remainingChars, nameof(remainingChars));
 
         string emptySpace = GetEmptySpace(LeftOffset);
         _ = TextBuilder.AppendLine().Append(emptySpace);

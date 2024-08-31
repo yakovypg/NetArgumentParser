@@ -27,7 +27,7 @@ public class ArgumentsAreUnknownException : Exception
         Exception? innerException)
         : base(message ?? GetDefaultMessage(arguments), innerException)
     {
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+        ExtendedArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
         _arguments = arguments;
     }
 
@@ -41,7 +41,7 @@ public class ArgumentsAreUnknownException : Exception
     protected ArgumentsAreUnknownException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
         _arguments = info.GetValue(nameof(_arguments), typeof(string[])) as string[];
     }
 #pragma warning restore CS0809
@@ -57,8 +57,8 @@ public class ArgumentsAreUnknownException : Exception
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(_arguments), _arguments, typeof(string[]));
         base.GetObjectData(info, context);
@@ -67,7 +67,7 @@ public class ArgumentsAreUnknownException : Exception
 
     private static string GetDefaultMessage(string[] arguments)
     {
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+        ExtendedArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
         string argumentsPresenter = string.Join(' ', arguments);
         return $"Arguments {argumentsPresenter} are unknown.";

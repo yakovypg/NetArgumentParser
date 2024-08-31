@@ -21,9 +21,9 @@ public abstract class CommonOption : ICommonOption
         IEnumerable<string>? aliases = null,
         IContextCapture? contextCapture = null)
     {
-        ArgumentNullException.ThrowIfNull(longName, nameof(longName));
-        ArgumentNullException.ThrowIfNull(shortName, nameof(shortName));
-        ArgumentNullException.ThrowIfNull(description, nameof(description));
+        ExtendedArgumentNullException.ThrowIfNull(longName, nameof(longName));
+        ExtendedArgumentNullException.ThrowIfNull(shortName, nameof(shortName));
+        ExtendedArgumentNullException.ThrowIfNull(description, nameof(description));
 
         OptionNameCorrectnessVerifier.VerifyAtLeastOneNameIsDefined(longName, shortName);
         OptionNameCorrectnessVerifier.VerifyNameIsCorrect(longName);
@@ -94,7 +94,7 @@ public abstract class CommonOption : ICommonOption
 
     public bool HasName(string name)
     {
-        ArgumentNullException.ThrowIfNull(name, nameof(name));
+        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
 
         if (string.IsNullOrEmpty(name))
             return false;
@@ -111,7 +111,7 @@ public abstract class CommonOption : ICommonOption
 
     public virtual void Handle(params string[] value)
     {
-        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
 
         if (IsHandled)
             throw new OptionAlreadyHandledException(null, this);

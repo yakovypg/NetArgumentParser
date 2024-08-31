@@ -54,7 +54,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
 
     public virtual ICommonOption GetOption(string name)
     {
-        ArgumentNullException.ThrowIfNull(name, nameof(name));
+        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
 
         if (!IsBuilt)
         {
@@ -83,13 +83,13 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
 
     public bool HasOption(string name)
     {
-        ArgumentNullException.ThrowIfNull(name, nameof(name));
+        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
         return GetOptionByName(name) is not null;
     }
 
     public bool HasConverter(Type conversionType)
     {
-        ArgumentNullException.ThrowIfNull(conversionType, nameof(conversionType));
+        ExtendedArgumentNullException.ThrowIfNull(conversionType, nameof(conversionType));
         return GetConverterByConversionType(conversionType) is not null;
     }
 
@@ -110,7 +110,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
 
     public void AddOptions(IEnumerable<ICommonOption> options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
 
         foreach (ICommonOption option in options)
         {
@@ -120,7 +120,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
 
     public void AddConverters(IEnumerable<IValueConverter> converters)
     {
-        ArgumentNullException.ThrowIfNull(converters, nameof(converters));
+        ExtendedArgumentNullException.ThrowIfNull(converters, nameof(converters));
 
         foreach (IValueConverter converter in converters)
         {
@@ -130,7 +130,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
 
     public void AddOption(ICommonOption item)
     {
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        ExtendedArgumentNullException.ThrowIfNull(item, nameof(item));
 
         _optionNameUniquenessVerifier.VerifyNamesIsUnique(item);
         _options.Add(item);
@@ -145,7 +145,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
 
     public void AddConverter(IValueConverter converter)
     {
-        ArgumentNullException.ThrowIfNull(converter, nameof(converter));
+        ExtendedArgumentNullException.ThrowIfNull(converter, nameof(converter));
 
         _conversionTypeUniquenessVerifier.VerifyConversionTypeIsUnique(converter);
         _converters.Add(converter);
@@ -160,7 +160,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
 
     public bool RemoveOption(ICommonOption item)
     {
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        ExtendedArgumentNullException.ThrowIfNull(item, nameof(item));
 
         bool isRemoved = _options.Remove(item);
 
@@ -179,7 +179,7 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
 
     public bool RemoveConverter(IValueConverter converter)
     {
-        ArgumentNullException.ThrowIfNull(converter, nameof(converter));
+        ExtendedArgumentNullException.ThrowIfNull(converter, nameof(converter));
 
         bool isRemoved = _converters.Remove(converter);
 
@@ -198,19 +198,19 @@ public class OptionSet : IBuildableOptionSet<ICommonOption>
 
     protected ICommonOption? GetOptionByName(string name)
     {
-        ArgumentNullException.ThrowIfNull(name, nameof(name));
+        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
         return _options.FirstOrDefault(t => t.HasName(name));
     }
 
     protected IValueConverter? GetConverterByConversionType(Type conversionType)
     {
-        ArgumentNullException.ThrowIfNull(conversionType, nameof(conversionType));
+        ExtendedArgumentNullException.ThrowIfNull(conversionType, nameof(conversionType));
         return _converters.FirstOrDefault(t => t.ConversionType == conversionType);
     }
 
     protected virtual void OnCollectionChanged(NotifyOptionSetChangedEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e, nameof(e));
+        ExtendedArgumentNullException.ThrowIfNull(e, nameof(e));
         CollectionChanged?.Invoke(this, e);
     }
 }

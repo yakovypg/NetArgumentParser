@@ -32,8 +32,8 @@ public class OptionValueNotSatisfyChoicesException : Exception
         Exception? innerException)
         : base(message ?? GetDefaultMessage(optionValue, allowedValues), innerException)
     {
-        ArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
-        ArgumentNullException.ThrowIfNull(allowedValues, nameof(allowedValues));
+        ExtendedArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
+        ExtendedArgumentNullException.ThrowIfNull(allowedValues, nameof(allowedValues));
 
         _optionValue = optionValue;
         _allowedValues = allowedValues;
@@ -49,7 +49,7 @@ public class OptionValueNotSatisfyChoicesException : Exception
     protected OptionValueNotSatisfyChoicesException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
 
         _optionValue = info.GetValue(nameof(_optionValue), typeof(string[])) as string[];
         _allowedValues = info.GetValue(nameof(_allowedValues), typeof(string[])) as string[];
@@ -68,8 +68,8 @@ public class OptionValueNotSatisfyChoicesException : Exception
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(_optionValue), _optionValue, typeof(string[]));
         info.AddValue(nameof(_allowedValues), _allowedValues, typeof(string[]));
@@ -80,8 +80,8 @@ public class OptionValueNotSatisfyChoicesException : Exception
 
     private static string GetDefaultMessage(string[] optionValue, string[] allowedValues)
     {
-        ArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
-        ArgumentNullException.ThrowIfNull(allowedValues, nameof(allowedValues));
+        ExtendedArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
+        ExtendedArgumentNullException.ThrowIfNull(allowedValues, nameof(allowedValues));
 
         string optionValuePresenter = string.Join(", ", optionValue);
         string allowedValuesPresenter = string.Join(", ", allowedValues);

@@ -28,8 +28,8 @@ public class MutuallyExclusiveOptionsFoundException : Exception
         Exception? innerException)
         : base(message ?? GetDefaultMessage(newOption, existingOption), innerException)
     {
-        ArgumentNullException.ThrowIfNull(newOption, nameof(newOption));
-        ArgumentNullException.ThrowIfNull(existingOption, nameof(existingOption));
+        ExtendedArgumentNullException.ThrowIfNull(newOption, nameof(newOption));
+        ExtendedArgumentNullException.ThrowIfNull(existingOption, nameof(existingOption));
 
         NewOption = newOption;
         ExistingOption = existingOption;
@@ -45,7 +45,7 @@ public class MutuallyExclusiveOptionsFoundException : Exception
     protected MutuallyExclusiveOptionsFoundException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
 
         NewOption = info.GetValue(nameof(NewOption), typeof(ICommonOption)) as ICommonOption;
         ExistingOption = info.GetValue(nameof(ExistingOption), typeof(ICommonOption)) as ICommonOption;
@@ -64,8 +64,8 @@ public class MutuallyExclusiveOptionsFoundException : Exception
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(NewOption), NewOption, typeof(ICommonOption));
         info.AddValue(nameof(ExistingOption), ExistingOption, typeof(ICommonOption));
@@ -75,8 +75,8 @@ public class MutuallyExclusiveOptionsFoundException : Exception
 
     private static string GetDefaultMessage(ICommonOption newOption, ICommonOption existingOption)
     {
-        ArgumentNullException.ThrowIfNull(newOption, nameof(newOption));
-        ArgumentNullException.ThrowIfNull(existingOption, nameof(existingOption));
+        ExtendedArgumentNullException.ThrowIfNull(newOption, nameof(newOption));
+        ExtendedArgumentNullException.ThrowIfNull(existingOption, nameof(existingOption));
 
         return $"Option '{newOption}' not allowed with option '{existingOption}'.";
     }

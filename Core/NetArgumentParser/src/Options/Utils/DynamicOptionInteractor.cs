@@ -15,7 +15,7 @@ internal static class DynamicOptionInteractor
 
     internal static void HandleDefaultValueBySuitableOptions(IEnumerable<ICommonOption> options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
 
         IEnumerable<ICommonOption> unhandledOptions = options
             .Where(t => !t.IsHandled);
@@ -36,8 +36,8 @@ internal static class DynamicOptionInteractor
         IEnumerable<ICommonOption> options,
         IValueConverter converter)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
-        ArgumentNullException.ThrowIfNull(converter, nameof(converter));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(converter, nameof(converter));
 
         Type converterType = converter.GetType();
 
@@ -57,8 +57,8 @@ internal static class DynamicOptionInteractor
         IEnumerable<ICommonOption> options,
         Type converterType)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
-        ArgumentNullException.ThrowIfNull(converterType, nameof(converterType));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(converterType, nameof(converterType));
 
         return options
             .Where(t => CheckOptionHasAbilityToSetConverter(t, converterType))
@@ -67,8 +67,8 @@ internal static class DynamicOptionInteractor
 
     private static bool CheckOptionHasAbilityToSetConverter(ICommonOption option, Type converterType)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
-        ArgumentNullException.ThrowIfNull(converterType, nameof(converterType));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(converterType, nameof(converterType));
 
         return CheckOptionHasConverterSetMethod(option, converterType)
             && CheckOptionHasConverterProperty(option, converterType);
@@ -76,8 +76,8 @@ internal static class DynamicOptionInteractor
 
     private static bool CheckOptionHasConverterSetMethod(ICommonOption option, Type converterType)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
-        ArgumentNullException.ThrowIfNull(converterType, nameof(converterType));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(converterType, nameof(converterType));
 
         Type optionType = option.GetType();
         MethodInfo? setterMethod = optionType.GetMethod(_setConverterMethodName);
@@ -97,8 +97,8 @@ internal static class DynamicOptionInteractor
 
     private static bool CheckOptionHasConverterProperty(ICommonOption option, Type converterType)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
-        ArgumentNullException.ThrowIfNull(converterType, nameof(converterType));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(converterType, nameof(converterType));
 
         Type optionType = option.GetType();
         PropertyInfo? property = optionType.GetProperty(_converterPropertyName);
@@ -116,7 +116,7 @@ internal static class DynamicOptionInteractor
     private static IEnumerable<dynamic> GetOptionsWithAbilityToHandleDefaultValue(
         IEnumerable<ICommonOption> options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
 
         return options
             .Where(CheckOptionHasAbilityToHandleDefaultValue)
@@ -125,7 +125,7 @@ internal static class DynamicOptionInteractor
 
     private static bool CheckOptionHasAbilityToHandleDefaultValue(ICommonOption option)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
 
         return CheckOptionHasDefaultValueHandler(option)
             && CheckOptionHasDefaultValueCheckerProperty(option);
@@ -133,7 +133,7 @@ internal static class DynamicOptionInteractor
 
     private static bool CheckOptionHasDefaultValueHandler(ICommonOption option)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
 
         Type optionType = option.GetType();
         MethodInfo? handleMethod = optionType.GetMethod(_handleDefaultValueMethodName);
@@ -144,7 +144,7 @@ internal static class DynamicOptionInteractor
 
     private static bool CheckOptionHasDefaultValueCheckerProperty(ICommonOption option)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
 
         Type optionType = option.GetType();
         PropertyInfo? property = optionType.GetProperty(_hasDefaultValuePropertyName);

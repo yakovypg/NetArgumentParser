@@ -34,6 +34,6 @@ public class FlagOption : CommonOption
 
     protected override void HandleValue(params string[] value)
     {
-        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
     }
 }

@@ -24,7 +24,7 @@ public class OnlyUniqueConversionTypeException : Exception
         Exception? innerException)
         : base(message ?? GetDefaultMessage(conversionType), innerException)
     {
-        ArgumentNullException.ThrowIfNull(conversionType, nameof(conversionType));
+        ExtendedArgumentNullException.ThrowIfNull(conversionType, nameof(conversionType));
         ConversionType = conversionType;
     }
 
@@ -38,7 +38,7 @@ public class OnlyUniqueConversionTypeException : Exception
     protected OnlyUniqueConversionTypeException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
         ConversionType = info.GetValue(nameof(ConversionType), typeof(Type)) as Type;
     }
 #pragma warning restore CS0809
@@ -54,8 +54,8 @@ public class OnlyUniqueConversionTypeException : Exception
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(ConversionType), ConversionType, typeof(Type));
         base.GetObjectData(info, context);
@@ -64,7 +64,7 @@ public class OnlyUniqueConversionTypeException : Exception
 
     private static string GetDefaultMessage(Type conversionType)
     {
-        ArgumentNullException.ThrowIfNull(conversionType, nameof(conversionType));
+        ExtendedArgumentNullException.ThrowIfNull(conversionType, nameof(conversionType));
         return $"Conversion type '{conversionType.Name}' is already in use.";
     }
 }

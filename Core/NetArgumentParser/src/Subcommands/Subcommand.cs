@@ -6,8 +6,8 @@ public class Subcommand : ParserQuantum
 {
     internal Subcommand(string name, string description)
     {
-        ArgumentNullException.ThrowIfNull(name, nameof(name));
-        ArgumentNullException.ThrowIfNull(description, nameof(description));
+        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
+        ExtendedArgumentNullException.ThrowIfNull(description, nameof(description));
 
         Name = name;
         Description = description;

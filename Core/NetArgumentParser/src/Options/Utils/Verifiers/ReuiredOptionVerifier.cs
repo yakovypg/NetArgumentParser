@@ -7,7 +7,7 @@ internal static class ReuiredOptionVerifier
 {
     internal static void VerifyRequiredOptionIsHandled(ICommonOption option)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
 
         if (option.IsRequired && !option.IsHandled)
             throw new RequiredOptionNotSpecifiedException(null, option);
@@ -15,7 +15,7 @@ internal static class ReuiredOptionVerifier
 
     internal static void VerifyRequiredOptionsIsHandled(IEnumerable<ICommonOption> options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
 
         foreach (ICommonOption option in options)
         {

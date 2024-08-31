@@ -24,7 +24,7 @@ public class RequiredOptionNotSpecifiedException : Exception
         Exception? innerException)
         : base(message ?? GetDefaultMessage(option), innerException)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
         Option = option;
     }
 
@@ -38,7 +38,7 @@ public class RequiredOptionNotSpecifiedException : Exception
     protected RequiredOptionNotSpecifiedException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
         Option = info.GetValue(nameof(Option), typeof(ICommonOption)) as ICommonOption;
     }
 #pragma warning restore CS0809
@@ -54,8 +54,8 @@ public class RequiredOptionNotSpecifiedException : Exception
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(Option), Option, typeof(ICommonOption));
         base.GetObjectData(info, context);
@@ -64,7 +64,7 @@ public class RequiredOptionNotSpecifiedException : Exception
 
     private static string GetDefaultMessage(ICommonOption option)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
         return $"Required option '{option}' not specified.";
     }
 }

@@ -13,7 +13,7 @@ public class OneOrMoreContextCapture : IContextCapture
 
     public string GetDescription(string metaVariable)
     {
-        ArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
+        ExtendedArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
         return $"{metaVariable} [{metaVariable} ...]";
     }
 
@@ -21,7 +21,7 @@ public class OneOrMoreContextCapture : IContextCapture
         IEnumerable<string> context,
         bool recognizeSlashAsOption = false)
     {
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         int numberOfSuitableValuesToCapture = ContextInteractor.GetNumberOfSuitableValuesToCapture(
             context,

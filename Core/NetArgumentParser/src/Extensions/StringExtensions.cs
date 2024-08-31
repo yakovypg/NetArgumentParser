@@ -6,13 +6,13 @@ internal static class StringExtensions
 {
     internal static string RemoveLineBreakFromEnd(this string text)
     {
-        ArgumentNullException.ThrowIfNull(text, nameof(text));
+        ExtendedArgumentNullException.ThrowIfNull(text, nameof(text));
         return RemoveLineBreakFromEnd(text, Environment.NewLine);
     }
 
     internal static string RemoveLineBreakFromEnd(this string text, string lineBreak)
     {
-        ArgumentNullException.ThrowIfNull(text, nameof(text));
+        ExtendedArgumentNullException.ThrowIfNull(text, nameof(text));
 
         while (text.EndsWith(lineBreak, StringComparison.CurrentCulture))
         {
@@ -25,7 +25,7 @@ internal static class StringExtensions
 
     internal static string AddEmptyPostfix(this string text, int requiredLength)
     {
-        ArgumentNullException.ThrowIfNull(text, nameof(text));
+        ExtendedArgumentNullException.ThrowIfNull(text, nameof(text));
 
         if (text.Length < requiredLength)
         {

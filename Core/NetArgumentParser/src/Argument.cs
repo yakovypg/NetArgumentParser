@@ -13,7 +13,7 @@ public class Argument
 
     public Argument(string argument, bool recognizeSlashAsOption = false)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(argument, nameof(argument));
+        ExtendedArgumentException.ThrowIfNullOrWhiteSpace(argument, nameof(argument));
 
         Data = argument;
         RecognizeSlashAsOption = recognizeSlashAsOption;
@@ -41,7 +41,7 @@ public class Argument
 
     public static IList<string> ExpandShortNamedOptions(IEnumerable<string> arguments)
     {
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+        ExtendedArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
         var newOptions = new List<string>();
 
@@ -118,8 +118,8 @@ public class Argument
 
     public string[] ExtractOptionValueFromContext(Queue<string> context, ICommonOption option)
     {
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
 
         if (!IsOption)
             throw new InvalidOperationException("Argument is not option.");
@@ -154,8 +154,8 @@ public class Argument
         Queue<string> context,
         IReadOnlyOptionSet<ICommonOption> options)
     {
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
 
         if (!IsOption)
             throw new InvalidOperationException("Argument is not option.");

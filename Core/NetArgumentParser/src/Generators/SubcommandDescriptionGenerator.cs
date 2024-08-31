@@ -25,7 +25,7 @@ public class SubcommandDescriptionGenerator : ParserQuantumDescriptionGenerator
         string? namePrefix = null,
         string? delimiterAfterName = null)
     {
-        ArgumentNullException.ThrowIfNull(subcommands, nameof(subcommands));
+        ExtendedArgumentNullException.ThrowIfNull(subcommands, nameof(subcommands));
 
         int maxNameLength = subcommands.Max(t => t.Name.Length);
         int nameAreaLength = maxNameLength + (namePrefix?.Length ?? 0);
@@ -42,12 +42,12 @@ public class SubcommandDescriptionGenerator : ParserQuantumDescriptionGenerator
         string? namePrefix = null,
         string? delimiterAfterName = null)
     {
-        ArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
+        ExtendedArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
 
         namePrefix ??= string.Empty;
         delimiterAfterName ??= string.Empty;
 
-        ArgumentOutOfRangeException.ThrowIfLessThan(
+        DefaultExceptions.ThrowIfLessThan(
             nameAreaLength,
             subcommand.Name.Length + namePrefix.Length,
             nameof(nameAreaLength));
