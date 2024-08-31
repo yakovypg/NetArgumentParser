@@ -24,7 +24,7 @@ public class ArgumentValueNotSpecifiedException : Exception
         Exception? innerException)
         : base(message ?? GetDefaultMessage(argument), innerException)
     {
-        ArgumentNullException.ThrowIfNull(argument, nameof(argument));
+        ExtendedArgumentNullException.ThrowIfNull(argument, nameof(argument));
         Argument = argument;
     }
 
@@ -38,7 +38,7 @@ public class ArgumentValueNotSpecifiedException : Exception
     protected ArgumentValueNotSpecifiedException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
         Argument = info.GetString(nameof(Argument));
     }
 #pragma warning restore CS0809
@@ -54,8 +54,8 @@ public class ArgumentValueNotSpecifiedException : Exception
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(Argument), Argument, typeof(string));
         base.GetObjectData(info, context);
@@ -64,7 +64,7 @@ public class ArgumentValueNotSpecifiedException : Exception
 
     private static string GetDefaultMessage(string argument)
     {
-        ArgumentNullException.ThrowIfNull(argument, nameof(argument));
+        ExtendedArgumentNullException.ThrowIfNull(argument, nameof(argument));
         return $"Argument {argument} does not have value.";
     }
 }

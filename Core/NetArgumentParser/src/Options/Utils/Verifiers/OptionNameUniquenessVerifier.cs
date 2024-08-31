@@ -10,13 +10,13 @@ internal sealed class OptionNameUniquenessVerifier
 
     internal OptionNameUniquenessVerifier(IEnumerable<ICommonOption> options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
         _options = options;
     }
 
     internal static void VerifyInternalNamesIsUnique(ICommonOption option)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
 
         if (option.LongName == option.ShortName)
             throw new OnlyUniqueOptionNameException(null, option.LongName);
@@ -30,7 +30,7 @@ internal sealed class OptionNameUniquenessVerifier
 
     internal void VerifyNamesIsUnique(ICommonOption option)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
 
         VerifyInternalNamesIsUnique(option);
 

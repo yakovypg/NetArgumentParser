@@ -12,7 +12,7 @@ public class ZeroOrOneContextCapture : IContextCapture
 
     public string GetDescription(string metaVariable)
     {
-        ArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
+        ExtendedArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
         return $"[{metaVariable}]";
     }
 

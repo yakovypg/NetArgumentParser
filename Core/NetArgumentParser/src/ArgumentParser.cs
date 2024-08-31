@@ -66,7 +66,7 @@ public class ArgumentParser : ParserQuantum
         get => _numberOfArgumentsToSkip;
         init
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
+            DefaultExceptions.ThrowIfNegative(value, nameof(value));
             _numberOfArgumentsToSkip = value;
         }
     }
@@ -101,7 +101,7 @@ public class ArgumentParser : ParserQuantum
     public bool RemoveMutuallyExclusiveOptionGroup(
         MutuallyExclusiveOptionGroup<ICommonOption> group)
     {
-        ArgumentNullException.ThrowIfNull(group, nameof(group));
+        ExtendedArgumentNullException.ThrowIfNull(group, nameof(group));
         return _mutuallyExclusiveOptionGroups.Remove(group);
     }
 
@@ -109,7 +109,7 @@ public class ArgumentParser : ParserQuantum
         IEnumerable<string> arguments,
         out IList<string> extraArguments)
     {
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+        ExtendedArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
         AddDefaultOptions();
         IEnumerable<string> adaptedArguments = AdaptArguments(arguments);
@@ -154,7 +154,7 @@ public class ArgumentParser : ParserQuantum
 
     public ParseArgumentsResult Parse(IEnumerable<string> arguments)
     {
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+        ExtendedArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
         ParseArgumentsResult result = ParseKnownArguments(
             arguments,
@@ -169,8 +169,8 @@ public class ArgumentParser : ParserQuantum
         IEnumerable<ICommonOption> handledOptions,
         ICommonOption commonOption)
     {
-        ArgumentNullException.ThrowIfNull(handledOptions, nameof(handledOptions));
-        ArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
+        ExtendedArgumentNullException.ThrowIfNull(handledOptions, nameof(handledOptions));
+        ExtendedArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
 
         VerifyAbsenseOfMutuallyExclusiveOptions(handledOptions, commonOption);
     }
@@ -179,8 +179,8 @@ public class ArgumentParser : ParserQuantum
         IEnumerable<ICommonOption> handledOptions,
         ICommonOption commonOption)
     {
-        ArgumentNullException.ThrowIfNull(handledOptions, nameof(handledOptions));
-        ArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
+        ExtendedArgumentNullException.ThrowIfNull(handledOptions, nameof(handledOptions));
+        ExtendedArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
 
         MutuallyExclusiveOptionGroup<ICommonOption>? group = MutuallyExclusiveOptionGroups
             .FirstOrDefault(t => t.Options.Contains(commonOption));
@@ -218,7 +218,7 @@ public class ArgumentParser : ParserQuantum
         IEnumerable<string> arguments,
         out ParseArgumentsResult parseArgumentsResult)
     {
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+        ExtendedArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
         bool isFinalOptionHandled = false;
         var argumentsVisitor = new ArgumentsVisitor(this, OptionSet, RecognizeSlashOptions);
@@ -250,7 +250,7 @@ public class ArgumentParser : ParserQuantum
 
     protected virtual IEnumerable<string> AdaptArguments(IEnumerable<string> arguments)
     {
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+        ExtendedArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
         IEnumerable<string> consideredArguments = arguments
             .Skip(NumberOfArgumentsToSkip);

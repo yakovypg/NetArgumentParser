@@ -12,7 +12,7 @@ public class UsageDescriptionGenerator
 
     public UsageDescriptionGenerator(IEnumerable<ICommonOption> options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
 
         Options = options;
 
@@ -29,7 +29,7 @@ public class UsageDescriptionGenerator
         get => _windowWidth;
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
+            DefaultExceptions.ThrowIfNegativeOrZero(value, nameof(value));
             _windowWidth = value;
         }
     }
@@ -38,7 +38,7 @@ public class UsageDescriptionGenerator
 
     public virtual void AddUsage(StringBuilder builder)
     {
-        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
+        ExtendedArgumentNullException.ThrowIfNull(builder, nameof(builder));
 
         string usage = GenerateUsage();
         _ = builder.AppendLine(usage);

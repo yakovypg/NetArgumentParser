@@ -70,31 +70,31 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
 
     public void AddOptions(params ICommonOption[] options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
         DefaultGroup.AddOptions(options);
     }
 
     public virtual bool RemoveOption(ICommonOption commonOption)
     {
-        ArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
+        ExtendedArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
         return _optionSet.RemoveOption(commonOption);
     }
 
     public void AddConverters(params IValueConverter[] converters)
     {
-        ArgumentNullException.ThrowIfNull(converters, nameof(converters));
+        ExtendedArgumentNullException.ThrowIfNull(converters, nameof(converters));
         Array.ForEach(converters, _optionSet.AddConverter);
     }
 
     public virtual bool RemoveConverter(IValueConverter converter)
     {
-        ArgumentNullException.ThrowIfNull(converter, nameof(converter));
+        ExtendedArgumentNullException.ThrowIfNull(converter, nameof(converter));
         return _optionSet.RemoveConverter(converter);
     }
 
     public OptionGroup<ICommonOption> AddOptionGroup(string name, string? description = null)
     {
-        ArgumentNullException.ThrowIfNull(name, nameof(name));
+        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
 
         description ??= string.Empty;
 
@@ -106,7 +106,7 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
 
     public bool RemoveOptionGroup(OptionGroup<ICommonOption> group)
     {
-        ArgumentNullException.ThrowIfNull(group, nameof(group));
+        ExtendedArgumentNullException.ThrowIfNull(group, nameof(group));
         return _optionGroups.Remove(group);
     }
 
@@ -125,8 +125,8 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
 
     public Subcommand AddSubcommand(string name, string description)
     {
-        ArgumentNullException.ThrowIfNull(name, nameof(name));
-        ArgumentNullException.ThrowIfNull(description, nameof(description));
+        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
+        ExtendedArgumentNullException.ThrowIfNull(description, nameof(description));
 
         var subcommand = new Subcommand(name, description)
         {
@@ -147,7 +147,7 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
 
     public virtual bool RemoveSubcommand(Subcommand subcommand)
     {
-        ArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
+        ExtendedArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
         return _subcommands.Remove(subcommand);
     }
 

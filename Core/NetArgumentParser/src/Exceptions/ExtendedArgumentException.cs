@@ -1,0 +1,100 @@
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.Serialization;
+
+namespace NetArgumentParser;
+
+[Serializable]
+public class ExtendedArgumentException : ArgumentException
+{
+    public ExtendedArgumentException() { }
+
+    public ExtendedArgumentException(string? message)
+        : base(message) { }
+
+    public ExtendedArgumentException(string? message, Exception? innerException)
+        : base(message, innerException) { }
+
+    public ExtendedArgumentException(string? message, string? paramName)
+        : base(message, paramName) { }
+
+    public ExtendedArgumentException(
+        string? message,
+        string? paramName,
+        Exception? innerException)
+        : base(message, paramName, innerException) { }
+
+#pragma warning disable CS0809
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#if NET5_0_OR_GREATER
+    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#else
+    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.")]
+#endif
+    protected ExtendedArgumentException(SerializationInfo info, StreamingContext context)
+        : base(info, context) { }
+#pragma warning restore CS0809
+
+    public static void ThrowIfNullOrEmpty<T>(T? argument, string? paramName = null)
+    {
+        if (argument is null)
+            throw new ArgumentNullException(paramName);
+
+        if (argument is string str && string.IsNullOrEmpty(str))
+        {
+            string message = $"{paramName} cannot be an empty string.";
+            throw new ArgumentException(message, paramName);
+        }
+
+        if (argument is IEnumerable enumerable && !enumerable.Cast<object>().Any())
+        {
+            string message = $"{paramName} cannot be an empty collection.";
+            throw new ArgumentException(message, paramName);
+        }
+    }
+
+    public static void ThrowIfContainsNullOrEmptyItem(
+        IEnumerable argument,
+        string? paramName = null)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(argument, nameof(argument));
+
+        int index = 0;
+
+        foreach (object? item in argument)
+        {
+            ThrowIfNullOrEmpty(item, $"{paramName}[{index++}]");
+        }
+    }
+
+    public static void ThrowIfNullOrWhiteSpace<T>(T? argument, string? paramName = null)
+    {
+        if (argument is null)
+            throw new ArgumentNullException(paramName);
+
+        if (argument is not string str)
+            throw new NotSupportedException($"Type {typeof(T)} isn't supported.");
+
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            string message = $"{paramName} cannot be an empty string.";
+            throw new ArgumentException(message, paramName);
+        }
+    }
+
+#pragma warning disable CS0809
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#if NET5_0_OR_GREATER
+    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#else
+    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.")]
+#endif
+    public override void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        base.GetObjectData(info, context);
+    }
+#pragma warning restore CS0809
+}

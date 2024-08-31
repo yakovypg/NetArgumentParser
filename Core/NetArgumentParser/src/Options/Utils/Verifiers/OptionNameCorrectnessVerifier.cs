@@ -10,8 +10,8 @@ internal static partial class OptionNameCorrectnessVerifier
 
     internal static void VerifyAtLeastOneNameIsDefined(string longName, string shortName)
     {
-        ArgumentNullException.ThrowIfNull(longName, nameof(longName));
-        ArgumentNullException.ThrowIfNull(shortName, nameof(shortName));
+        ExtendedArgumentNullException.ThrowIfNull(longName, nameof(longName));
+        ExtendedArgumentNullException.ThrowIfNull(shortName, nameof(shortName));
 
         bool isLongNameEmpty = string.IsNullOrEmpty(longName);
         bool isShortNameEmpty = string.IsNullOrEmpty(shortName);
@@ -22,7 +22,7 @@ internal static partial class OptionNameCorrectnessVerifier
 
     internal static void VerifyNameIsCorrect(string name)
     {
-        ArgumentNullException.ThrowIfNull(name, nameof(name));
+        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
 
         if (!string.IsNullOrEmpty(name)
             && !_reservedNames.Contains(name)
@@ -34,7 +34,7 @@ internal static partial class OptionNameCorrectnessVerifier
 
     internal static void VerifyAliasesIsCorrect(IEnumerable<string> aliases)
     {
-        ArgumentNullException.ThrowIfNull(aliases, nameof(aliases));
+        ExtendedArgumentNullException.ThrowIfNull(aliases, nameof(aliases));
 
         foreach (string alias in aliases)
         {

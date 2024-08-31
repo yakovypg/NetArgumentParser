@@ -24,7 +24,7 @@ public class DefaultConverterNotFoundException : Exception
         Exception? innerException)
         : base(message ?? GetDefaultMessage(outputType), innerException)
     {
-        ArgumentNullException.ThrowIfNull(outputType, nameof(outputType));
+        ExtendedArgumentNullException.ThrowIfNull(outputType, nameof(outputType));
         OutputType = outputType;
     }
 
@@ -38,7 +38,7 @@ public class DefaultConverterNotFoundException : Exception
     protected DefaultConverterNotFoundException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
         OutputType = info.GetValue(nameof(OutputType), typeof(Type)) as Type;
     }
 #pragma warning restore CS0809
@@ -54,8 +54,8 @@ public class DefaultConverterNotFoundException : Exception
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(OutputType), OutputType, typeof(Type));
         base.GetObjectData(info, context);
@@ -64,7 +64,7 @@ public class DefaultConverterNotFoundException : Exception
 
     private static string GetDefaultMessage(Type outputType)
     {
-        ArgumentNullException.ThrowIfNull(outputType, nameof(outputType));
+        ExtendedArgumentNullException.ThrowIfNull(outputType, nameof(outputType));
         return $"Default converter for type '{outputType.Name}' not found.";
     }
 }

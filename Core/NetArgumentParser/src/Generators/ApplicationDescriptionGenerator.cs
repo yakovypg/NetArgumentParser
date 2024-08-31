@@ -47,7 +47,7 @@ public class ApplicationDescriptionGenerator : ParserQuantumDescriptionGenerator
 
     protected virtual void AddProgramEpilog(StringBuilder builder)
     {
-        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
+        ExtendedArgumentNullException.ThrowIfNull(builder, nameof(builder));
 
         if (!string.IsNullOrEmpty(Parser.ProgramEpilog))
             _ = builder.AppendLine(Parser.ProgramEpilog);

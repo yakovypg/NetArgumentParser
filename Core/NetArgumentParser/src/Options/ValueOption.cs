@@ -68,7 +68,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
             aliases,
             contextCapture ?? new FixedContextCapture(1))
     {
-        ArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
+        ExtendedArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
 
         _choices = new List<T>(choices ?? []);
 
@@ -116,7 +116,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
 
     public bool TrySetConverter(IValueConverter converter)
     {
-        ArgumentNullException.ThrowIfNull(converter, nameof(converter));
+        ExtendedArgumentNullException.ThrowIfNull(converter, nameof(converter));
 
         if (converter is IValueConverter<T> valueConverter)
         {
@@ -162,7 +162,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
 
     protected override void HandleValue(params string[] value)
     {
-        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
 
         IValueConverter<T> converter = Converter ?? GetDefaultConverter();
         ParseValue(converter, value);
@@ -170,8 +170,8 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
 
     protected virtual void ParseValue(IValueConverter<T> converter, params string[] value)
     {
-        ArgumentNullException.ThrowIfNull(converter, nameof(converter));
-        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        ExtendedArgumentNullException.ThrowIfNull(converter, nameof(converter));
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
 
         if (value.Length == 0)
             throw new OptionValueNotSpecifiedException(null, ToString());
@@ -211,26 +211,26 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
 
     protected virtual bool IsValueSatisfyChoices(T value)
     {
-        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
         return _choices.Count == 0 || _choices.Contains(value);
     }
 
     protected virtual bool IsValueSatisfyRestriction(T value)
     {
-        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
         return ValueRestriction is null || ValueRestriction.IsValueAllowed(value);
     }
 
     protected virtual void OnValueParsed(OptionValueEventArgs<T> e)
     {
-        ArgumentNullException.ThrowIfNull(e, nameof(e));
+        ExtendedArgumentNullException.ThrowIfNull(e, nameof(e));
         ValueParsed?.Invoke(this, e);
     }
 
     protected void VerifyValueIsAllowed(T value, string[] valueSource)
     {
-        ArgumentNullException.ThrowIfNull(value, nameof(value));
-        ArgumentNullException.ThrowIfNull(valueSource, nameof(valueSource));
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
+        ExtendedArgumentNullException.ThrowIfNull(valueSource, nameof(valueSource));
 
         if (!IsValueSatisfyRestriction(value))
             throw new OptionValueNotSatisfyRestrictionException(null, valueSource);

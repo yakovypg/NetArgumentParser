@@ -10,13 +10,13 @@ internal sealed class SubcommandNameUniquenessVerifier
 
     internal SubcommandNameUniquenessVerifier(IEnumerable<Subcommand> subcommands)
     {
-        ArgumentNullException.ThrowIfNull(subcommands, nameof(subcommands));
+        ExtendedArgumentNullException.ThrowIfNull(subcommands, nameof(subcommands));
         _subcommands = subcommands;
     }
 
     public void VerifyNameIsUnique(Subcommand subcommand)
     {
-        ArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
+        ExtendedArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
 
         if (_subcommands.Any(t => t.Name == subcommand.Name))
             throw new OnlyUniqueSubcommandNameException(null, subcommand.Name);

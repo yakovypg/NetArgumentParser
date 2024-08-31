@@ -13,8 +13,8 @@ public class ArgumentsVisitor
         IReadOnlyOptionSet<ICommonOption> rootOptions,
         bool recognizeSlashOptions = false)
     {
-        ArgumentNullException.ThrowIfNull(rootParserQuantum, nameof(rootParserQuantum));
-        ArgumentNullException.ThrowIfNull(rootOptions, nameof(rootOptions));
+        ExtendedArgumentNullException.ThrowIfNull(rootParserQuantum, nameof(rootParserQuantum));
+        ExtendedArgumentNullException.ThrowIfNull(rootOptions, nameof(rootOptions));
 
         RootParserQuantum = rootParserQuantum;
         RootOptions = rootOptions;
@@ -32,7 +32,7 @@ public class ArgumentsVisitor
 
     public void VisitArguments(IEnumerable<string> arguments)
     {
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+        ExtendedArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
         Queue<string> context = new(arguments);
 

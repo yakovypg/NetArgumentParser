@@ -13,9 +13,9 @@ public sealed class OptionGroup<T>
 
     internal OptionGroup(string header, string description, IOptionSet<T> optionSet)
     {
-        ArgumentNullException.ThrowIfNull(header, nameof(header));
-        ArgumentNullException.ThrowIfNull(description, nameof(description));
-        ArgumentNullException.ThrowIfNull(optionSet, nameof(optionSet));
+        ExtendedArgumentNullException.ThrowIfNull(header, nameof(header));
+        ExtendedArgumentNullException.ThrowIfNull(description, nameof(description));
+        ExtendedArgumentNullException.ThrowIfNull(optionSet, nameof(optionSet));
 
         _options = [];
         _header = header;
@@ -44,7 +44,7 @@ public sealed class OptionGroup<T>
 
     public void AddOptions(params T[] options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
 
         Array.ForEach(options, OptionSet.AddOption);
         Array.ForEach(options, _options.Add);
@@ -52,7 +52,7 @@ public sealed class OptionGroup<T>
 
     public bool RemoveOption(T option)
     {
-        ArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
 
         return OptionSet.RemoveOption(option)
             && _options.Remove(option);

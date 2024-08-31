@@ -6,7 +6,7 @@ public class SubcommandExtractedEventArgs : EventArgs
 {
     public SubcommandExtractedEventArgs(Subcommand subcommand)
     {
-        ArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
+        ExtendedArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
         Subcommand = subcommand;
     }
 

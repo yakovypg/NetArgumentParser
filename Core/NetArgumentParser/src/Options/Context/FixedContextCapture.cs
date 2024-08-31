@@ -8,7 +8,7 @@ public class FixedContextCapture : IContextCapture
 {
     public FixedContextCapture(int numberOfItemsToCapture)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(
+        DefaultExceptions.ThrowIfNegativeOrZero(
             numberOfItemsToCapture,
             nameof(numberOfItemsToCapture));
 
@@ -22,7 +22,7 @@ public class FixedContextCapture : IContextCapture
 
     public string GetDescription(string metaVariable)
     {
-        ArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
+        ExtendedArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
 
         IEnumerable<string> data = Enumerable.Repeat(metaVariable, RequiredNumberOfItemsToCapture);
         return string.Join(' ', data);
@@ -32,7 +32,7 @@ public class FixedContextCapture : IContextCapture
         IEnumerable<string> context,
         bool recognizeSlashAsOption = false)
     {
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         int contextLength = context.Count();
 

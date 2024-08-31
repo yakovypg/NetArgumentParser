@@ -11,13 +11,13 @@ internal sealed class ConversionTypeUniquenessVerifier
 
     internal ConversionTypeUniquenessVerifier(IEnumerable<IValueConverter> converters)
     {
-        ArgumentNullException.ThrowIfNull(converters, nameof(converters));
+        ExtendedArgumentNullException.ThrowIfNull(converters, nameof(converters));
         _converters = converters;
     }
 
     internal void VerifyConversionTypeIsUnique(IValueConverter converter)
     {
-        ArgumentNullException.ThrowIfNull(converter, nameof(converter));
+        ExtendedArgumentNullException.ThrowIfNull(converter, nameof(converter));
 
         if (_converters.Any(t => t.ConversionType == converter.ConversionType))
             throw new OnlyUniqueConversionTypeException(null, converter.ConversionType);

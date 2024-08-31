@@ -24,7 +24,7 @@ public class IncorrectSubcommandNameException : Exception
         Exception? innerException)
         : base(message ?? GetDefaultMessage(subcommandName), innerException)
     {
-        ArgumentNullException.ThrowIfNull(subcommandName, nameof(subcommandName));
+        ExtendedArgumentNullException.ThrowIfNull(subcommandName, nameof(subcommandName));
         SubcommandName = subcommandName;
     }
 
@@ -38,7 +38,7 @@ public class IncorrectSubcommandNameException : Exception
     protected IncorrectSubcommandNameException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
         SubcommandName = info.GetString(nameof(SubcommandName));
     }
 #pragma warning restore CS0809
@@ -54,8 +54,8 @@ public class IncorrectSubcommandNameException : Exception
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(SubcommandName), SubcommandName, typeof(string));
         base.GetObjectData(info, context);
@@ -64,7 +64,7 @@ public class IncorrectSubcommandNameException : Exception
 
     private static string GetDefaultMessage(string subcommandName)
     {
-        ArgumentNullException.ThrowIfNull(subcommandName, nameof(subcommandName));
+        ExtendedArgumentNullException.ThrowIfNull(subcommandName, nameof(subcommandName));
         return $"Subcommand name '{subcommandName}' is not correct.";
     }
 }

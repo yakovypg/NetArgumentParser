@@ -10,7 +10,7 @@ public class NotifyOptionSetChangedEventArgs : EventArgs
         IList? newItems = null,
         IList? oldItems = null)
     {
-        ArgumentNullException.ThrowIfNull(action, nameof(action));
+        ExtendedArgumentNullException.ThrowIfNull(action, nameof(action));
 
         Action = action;
         NewItems = newItems is null ? newItems : ArrayList.ReadOnly(newItems);

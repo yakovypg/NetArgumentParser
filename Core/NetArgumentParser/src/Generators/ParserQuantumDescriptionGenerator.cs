@@ -18,9 +18,9 @@ public abstract class ParserQuantumDescriptionGenerator : IDescriptionGenerator
         string parserQuantumName,
         string parserQuantumDescription)
     {
-        ArgumentNullException.ThrowIfNull(parserQuantum, nameof(parserQuantum));
-        ArgumentNullException.ThrowIfNull(parserQuantumName, nameof(parserQuantumName));
-        ArgumentNullException.ThrowIfNull(parserQuantumDescription, nameof(parserQuantumDescription));
+        ExtendedArgumentNullException.ThrowIfNull(parserQuantum, nameof(parserQuantum));
+        ExtendedArgumentNullException.ThrowIfNull(parserQuantumName, nameof(parserQuantumName));
+        ExtendedArgumentNullException.ThrowIfNull(parserQuantumDescription, nameof(parserQuantumDescription));
 
         _usageHeader = "Usage: ";
         _optionExamplePrefix = new string(' ', 2);
@@ -93,7 +93,7 @@ public abstract class ParserQuantumDescriptionGenerator : IDescriptionGenerator
         get => _windowWidth;
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
+            DefaultExceptions.ThrowIfNegativeOrZero(value, nameof(value));
 
             _windowWidth = value;
             UsageDescriptionGenerator.WindowWidth = value;
@@ -106,7 +106,7 @@ public abstract class ParserQuantumDescriptionGenerator : IDescriptionGenerator
         get => _optionExampleCharsLimit;
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
+            DefaultExceptions.ThrowIfNegativeOrZero(value, nameof(value));
 
             _optionExampleCharsLimit = value;
             OptionDescriptionGenerator.OptionExampleCharsLimit = value;
@@ -124,7 +124,7 @@ public abstract class ParserQuantumDescriptionGenerator : IDescriptionGenerator
 
     protected virtual void AddParserQuantumDescription(StringBuilder builder)
     {
-        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
+        ExtendedArgumentNullException.ThrowIfNull(builder, nameof(builder));
 
         if (!string.IsNullOrEmpty(ParserQuantumDescription))
             _ = builder.AppendLine(ParserQuantumDescription);
@@ -132,7 +132,7 @@ public abstract class ParserQuantumDescriptionGenerator : IDescriptionGenerator
 
     protected virtual void AddSubcommandDescriptions(StringBuilder builder)
     {
-        ArgumentNullException.ThrowIfNull(builder, nameof(builder));
+        ExtendedArgumentNullException.ThrowIfNull(builder, nameof(builder));
 
         if (ParserQuantum.Subcommands.Count == 0)
             return;

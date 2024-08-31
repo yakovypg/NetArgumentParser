@@ -6,7 +6,7 @@ public class OptionValueEventArgs<T> : EventArgs
 {
     public OptionValueEventArgs(T value)
     {
-        ArgumentNullException.ThrowIfNull(value, nameof(value));
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
         Value = value;
     }
 

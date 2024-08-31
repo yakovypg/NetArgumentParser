@@ -2064,8 +2064,8 @@ public class ArgumentParserTests
         IEnumerable<string> expected,
         IEnumerable<string> actual)
     {
-        ArgumentNullException.ThrowIfNull(actual, nameof(expected));
-        ArgumentNullException.ThrowIfNull(actual, nameof(actual));
+        ExtendedArgumentNullException.ThrowIfNull(actual, nameof(expected));
+        ExtendedArgumentNullException.ThrowIfNull(actual, nameof(actual));
 
         expected = expected.Order();
         actual = actual.Order();

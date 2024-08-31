@@ -12,8 +12,8 @@ public class ParseArgumentsResult
         IReadOnlyCollection<ICommonOption> handledOptions,
         IReadOnlyCollection<Subcommand> handledSubcommands)
     {
-        ArgumentNullException.ThrowIfNull(handledOptions, nameof(handledOptions));
-        ArgumentNullException.ThrowIfNull(handledSubcommands, nameof(handledSubcommands));
+        ExtendedArgumentNullException.ThrowIfNull(handledOptions, nameof(handledOptions));
+        ExtendedArgumentNullException.ThrowIfNull(handledSubcommands, nameof(handledSubcommands));
 
         HandledOptions = handledOptions;
         HandledSubcommands = handledSubcommands;

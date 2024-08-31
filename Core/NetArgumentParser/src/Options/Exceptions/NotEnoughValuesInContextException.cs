@@ -31,7 +31,7 @@ public class NotEnoughValuesInContextException : Exception
         Exception? innerException)
         : base(message ?? GetDefaultMessage(), innerException)
     {
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         _context = context;
         NumberOfNecessaryValues = numberOfNecessaryValues;
@@ -47,7 +47,7 @@ public class NotEnoughValuesInContextException : Exception
     protected NotEnoughValuesInContextException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
 
         _context = info.GetValue(nameof(_context), typeof(string[])) as string[];
         NumberOfNecessaryValues = info.GetInt32(nameof(NumberOfNecessaryValues));
@@ -65,8 +65,8 @@ public class NotEnoughValuesInContextException : Exception
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-        ArgumentNullException.ThrowIfNull(info, nameof(info));
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(_context), _context, typeof(string[]));
         info.AddValue(nameof(NumberOfNecessaryValues), NumberOfNecessaryValues);
