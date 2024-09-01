@@ -12,9 +12,9 @@ internal static partial class CommandNameCorrectnessVerifier
     {
         ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
 
-#pragma warning disable SYSLIB1045
+#pragma warning disable SYSLIB1045 // Use GeneratedRegexAttribute to generate the regular expression implementation at compile time
         var correctNameRegex = new Regex(@"^[a-zA-Z]+([a-zA-Z0-9_\-]*[a-zA-Z0-9]+)*$");
-#pragma warning restore SYSLIB1045
+#pragma warning restore SYSLIB1045 // Use GeneratedRegexAttribute to generate the regular expression implementation at compile time
 
         if (!string.IsNullOrEmpty(name)
             && !_reservedNames.Contains(name)

@@ -41,13 +41,13 @@ try
 {
     _ = parser.Parse(args);
 }
-#pragma warning disable CA1031
+#pragma warning disable CA1031 // Do not catch general exception types
 catch (Exception ex)
 {
     Console.WriteLine($"Error: {ex.Message}");
     return;
 }
-#pragma warning restore CA1031
+#pragma warning restore CA1031 // Do not catch general exception types
 
 Console.WriteLine($"Angle: {angle}");
 Console.WriteLine($"File mode: {fileMode}");
