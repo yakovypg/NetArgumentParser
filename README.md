@@ -66,9 +66,6 @@ The easiest way to get started with the **NetArgumentParser** is to include the 
 ## Documentation
 You can read our documentation in the [DOCUMENTATION.md](DOCUMENTATION.md).
 
-## Development
-The project is developed on the .NET 8.0 platform. To continue development you will need the .NET SDK and .NET Runtime of the appropriate version.
-
 ## Contributing
 Contributions are welcome, have a look at the [CONTRIBUTING.md](CONTRIBUTING.md) document for more information.
 
