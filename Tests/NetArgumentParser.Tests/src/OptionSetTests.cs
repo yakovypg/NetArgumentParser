@@ -137,7 +137,7 @@ public class OptionSetTests
 
         saveLogOption.Handle();
         autoRotateOption.Handle();
-        splitOptionsOption.Handle(StringSplitOptions.TrimEntries.ToString());
+        splitOptionsOption.Handle(StringSplitOptions.RemoveEmptyEntries.ToString());
         widthOption.Handle("100");
         angleOption.Handle("-15.4");
         marginOption.Handle("10", "20", "30", "-40");

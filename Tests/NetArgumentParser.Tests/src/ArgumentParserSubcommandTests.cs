@@ -714,7 +714,7 @@ public class ArgumentParserSubcommandTests
             "--angle", "100.5",
             subcommand2Name,
             "--help",
-            "-s", StringSplitOptions.TrimEntries.ToString(),
+            "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
 
@@ -849,7 +849,7 @@ public class ArgumentParserSubcommandTests
             "--angle", "100.5",
             subcommand2Name,
             "--version",
-            "-s", StringSplitOptions.TrimEntries.ToString(),
+            "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
 
@@ -986,7 +986,7 @@ public class ArgumentParserSubcommandTests
             "--angle", "100.5",
             subcommand2Name,
             "--final", expectedfinalOptionValue.ToString(CultureInfo.CurrentCulture),
-            "-s", StringSplitOptions.TrimEntries.ToString(),
+            "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
 
@@ -1255,7 +1255,7 @@ public class ArgumentParserSubcommandTests
             "--angle", "100.5",
             subcommand2Name,
             "--help",
-            "-s", StringSplitOptions.TrimEntries.ToString(),
+            "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             subcommand3Name,
             "--help",
             "-f", "file1", "file2", "file3"
@@ -1422,7 +1422,7 @@ public class ArgumentParserSubcommandTests
             "--angle", "100.5",
             subcommand2Name,
             "--version",
-            "-s", StringSplitOptions.TrimEntries.ToString(),
+            "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             subcommand3Name,
             "--version",
             "-f", "file1", "file2", "file3"
@@ -1591,7 +1591,7 @@ public class ArgumentParserSubcommandTests
             "--angle", "100.5",
             subcommand2Name,
             "--final", expectedFinalOptionValue.ToString(CultureInfo.CurrentCulture),
-            "-s", StringSplitOptions.TrimEntries.ToString(),
+            "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             subcommand3Name,
             "--final", "123",
             "-f", "file1", "file2", "file3"
@@ -1943,8 +1943,8 @@ public class ArgumentParserSubcommandTests
         ExtendedArgumentNullException.ThrowIfNull(actual, nameof(expected));
         ExtendedArgumentNullException.ThrowIfNull(actual, nameof(actual));
 
-        expected = expected.Order();
-        actual = actual.Order();
+        expected = expected.OrderBy(t => t);
+        actual = actual.OrderBy(t => t);
 
         Assert.True(expected.SequenceEqual(actual));
     }
