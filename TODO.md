@@ -3,4 +3,3 @@ This is the TODO file where you can find some features and content that need to 
 
 ## Features
 - [ ] Add support of reflection-based configuring option set using special attributes.
-- [ ] Add support of old .NET versions.
