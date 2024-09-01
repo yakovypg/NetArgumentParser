@@ -26,16 +26,12 @@ public class ExtendedArgumentException : ArgumentException
         Exception? innerException)
         : base(message, paramName, innerException) { }
 
-#pragma warning disable CS0809
+#if NET8_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
-#if NET5_0_OR_GREATER
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
-#else
-    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.")]
 #endif
     protected ExtendedArgumentException(SerializationInfo info, StreamingContext context)
         : base(info, context) { }
-#pragma warning restore CS0809
 
     public static void ThrowIfNullOrEmpty<T>(T? argument, string? paramName = null)
     {
@@ -84,17 +80,13 @@ public class ExtendedArgumentException : ArgumentException
         }
     }
 
-#pragma warning disable CS0809
+#if NET8_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
-#if NET5_0_OR_GREATER
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
-#else
-    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.")]
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
         base.GetObjectData(info, context);
     }
-#pragma warning restore CS0809
 }

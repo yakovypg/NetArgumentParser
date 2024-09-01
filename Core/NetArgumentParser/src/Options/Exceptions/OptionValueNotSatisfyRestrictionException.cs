@@ -31,12 +31,9 @@ public class OptionValueNotSatisfyRestrictionException : Exception
         _optionValue = optionValue;
     }
 
-#pragma warning disable CS0809
+#if NET8_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
-#if NET5_0_OR_GREATER
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
-#else
-    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.")]
 #endif
     protected OptionValueNotSatisfyRestrictionException(SerializationInfo info, StreamingContext context)
         : base(info, context)
@@ -44,16 +41,12 @@ public class OptionValueNotSatisfyRestrictionException : Exception
         ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
         _optionValue = info.GetValue(nameof(_optionValue), typeof(string[])) as string[];
     }
-#pragma warning restore CS0809
 
     public IReadOnlyCollection<string> OptionValue => _optionValue ?? [];
 
-#pragma warning disable CS0809
+#if NET8_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
-#if NET5_0_OR_GREATER
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
-#else
-    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.")]
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
@@ -63,7 +56,6 @@ public class OptionValueNotSatisfyRestrictionException : Exception
         info.AddValue(nameof(_optionValue), _optionValue, typeof(string[]));
         base.GetObjectData(info, context);
     }
-#pragma warning restore CS0809
 
     private static string GetDefaultMessage(string[] optionValue)
     {

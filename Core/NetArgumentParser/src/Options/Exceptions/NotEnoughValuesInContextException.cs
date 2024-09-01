@@ -37,12 +37,9 @@ public class NotEnoughValuesInContextException : Exception
         NumberOfNecessaryValues = numberOfNecessaryValues;
     }
 
-#pragma warning disable CS0809
+#if NET8_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
-#if NET5_0_OR_GREATER
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
-#else
-    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.")]
 #endif
     protected NotEnoughValuesInContextException(SerializationInfo info, StreamingContext context)
         : base(info, context)
@@ -56,12 +53,9 @@ public class NotEnoughValuesInContextException : Exception
     public int NumberOfNecessaryValues { get; private set; }
     public IReadOnlyCollection<string> Context => _context ?? [];
 
-#pragma warning disable CS0809
+#if NET8_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
-#if NET5_0_OR_GREATER
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
-#else
-    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.")]
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
@@ -73,7 +67,6 @@ public class NotEnoughValuesInContextException : Exception
 
         base.GetObjectData(info, context);
     }
-#pragma warning restore CS0809
 
     private static string GetDefaultMessage()
     {

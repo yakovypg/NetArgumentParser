@@ -35,12 +35,9 @@ public class MutuallyExclusiveOptionsFoundException : Exception
         ExistingOption = existingOption;
     }
 
-#pragma warning disable CS0809
+#if NET8_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
-#if NET5_0_OR_GREATER
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
-#else
-    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.")]
 #endif
     protected MutuallyExclusiveOptionsFoundException(SerializationInfo info, StreamingContext context)
         : base(info, context)
@@ -50,17 +47,13 @@ public class MutuallyExclusiveOptionsFoundException : Exception
         NewOption = info.GetValue(nameof(NewOption), typeof(ICommonOption)) as ICommonOption;
         ExistingOption = info.GetValue(nameof(ExistingOption), typeof(ICommonOption)) as ICommonOption;
     }
-#pragma warning restore CS0809
 
     public ICommonOption? NewOption { get; private set; }
     public ICommonOption? ExistingOption { get; private set; }
 
-#pragma warning disable CS0809
+#if NET8_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
-#if NET5_0_OR_GREATER
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
-#else
-    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.")]
 #endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
@@ -71,7 +64,6 @@ public class MutuallyExclusiveOptionsFoundException : Exception
         info.AddValue(nameof(ExistingOption), ExistingOption, typeof(ICommonOption));
         base.GetObjectData(info, context);
     }
-#pragma warning restore CS0809
 
     private static string GetDefaultMessage(ICommonOption newOption, ICommonOption existingOption)
     {
