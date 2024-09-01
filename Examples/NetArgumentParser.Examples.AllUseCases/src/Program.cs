@@ -219,14 +219,14 @@ if (result.TryGetLastHandledSubcommand(out Subcommand? subcommand))
     Console.WriteLine($"Last handled subcommand: {subcommand?.Name}");
 
 Console.WriteLine();
-Console.WriteLine($"Extra arguments: {string.Join(' ', extraArguments)}");
+Console.WriteLine($"Extra arguments: {string.Join(" ", extraArguments)}");
 Console.WriteLine($"Verbose: {verbose}");
 Console.WriteLine($"Quick: {quick}");
 Console.WriteLine($"Verbosity level: {verbosityLevel}");
 Console.WriteLine($"Angle: {angle}");
 Console.WriteLine($"Time: {time}");
 Console.WriteLine($"File mode: {fileMode}");
-Console.WriteLine($"Input files: {string.Join(' ', inputFiles)}");
+Console.WriteLine($"Input files: {string.Join(" ", inputFiles)}");
 Console.WriteLine($"Date: {date?.ToLongDateString()}");
 Console.WriteLine($"Name: {name}");
 Console.WriteLine($"Width: {width}");

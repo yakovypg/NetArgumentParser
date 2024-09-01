@@ -25,7 +25,7 @@ public class FixedContextCapture : IContextCapture
         ExtendedArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
 
         IEnumerable<string> data = Enumerable.Repeat(metaVariable, RequiredNumberOfItemsToCapture);
-        return string.Join(' ', data);
+        return string.Join(" ", data);
     }
 
     public int GetNumberOfItemsToCapture(

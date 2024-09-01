@@ -242,7 +242,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
     protected string GetExtendedMetavariable()
     {
         return Choices.Count > 0
-            ? "{" + string.Join(',', GetAllowedValues()) + "}"
+            ? "{" + string.Join(",", GetAllowedValues()) + "}"
             : MetaVariable;
     }
 }
