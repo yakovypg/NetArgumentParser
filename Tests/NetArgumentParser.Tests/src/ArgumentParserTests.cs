@@ -700,7 +700,7 @@ public class ArgumentParserTests
         {
             "-a", BindMode.OneWay.ToString(),
             "-c", BindMode.OneWay.ToString(),
-            "-b", StringSplitOptions.RemoveEmptyEntries.ToString(),
+            "-b", StringSplitOptions.None.ToString(),
             "-d", StringSplitOptions.RemoveEmptyEntries.ToString()
         };
 
@@ -714,7 +714,7 @@ public class ArgumentParserTests
             new EnumValueOption<StringSplitOptions>(
                 string.Empty,
                 "b",
-                choices: [StringSplitOptions.TrimEntries])
+                choices: [StringSplitOptions.RemoveEmptyEntries])
         };
 
         var optionsWithCorrectChoice = new ICommonOption[]
@@ -991,7 +991,7 @@ public class ArgumentParserTests
     [Fact]
     public void Parse_SlashBasedOptionsDisabled_SlashBasedOptionsNotRecognized()
     {
-        const StringSplitOptions expectedSplitOption = StringSplitOptions.TrimEntries;
+        const StringSplitOptions expectedSplitOption = StringSplitOptions.RemoveEmptyEntries;
 
         const string file1 = "./file1";
         const string file2 = "/file2";
@@ -1304,7 +1304,7 @@ public class ArgumentParserTests
         const double expectedAngle = -5.5;
         const int expectedWidth = 1920;
         const int expectedHeight = 1080;
-        const StringSplitOptions expectedSplitOption = StringSplitOptions.TrimEntries;
+        const StringSplitOptions expectedSplitOption = StringSplitOptions.RemoveEmptyEntries;
 
         double angle = default;
         int width = default;
@@ -1423,7 +1423,7 @@ public class ArgumentParserTests
             "-v",
             "--angle", "100.5",
             "--help",
-            "-s", StringSplitOptions.TrimEntries.ToString(),
+            "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
 
@@ -1489,7 +1489,7 @@ public class ArgumentParserTests
             "-v",
             "--angle", "100.5",
             "--version",
-            "-s", StringSplitOptions.TrimEntries.ToString(),
+            "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
 
@@ -1557,7 +1557,7 @@ public class ArgumentParserTests
             "-v",
             "--angle", "100.5",
             "--final", expectedFinalOptionValue.ToString(CultureInfo.CurrentCulture),
-            "-s", StringSplitOptions.TrimEntries.ToString(),
+            "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
 
@@ -2067,8 +2067,8 @@ public class ArgumentParserTests
         ExtendedArgumentNullException.ThrowIfNull(actual, nameof(expected));
         ExtendedArgumentNullException.ThrowIfNull(actual, nameof(actual));
 
-        expected = expected.Order();
-        actual = actual.Order();
+        expected = expected.OrderBy(t => t);
+        actual = actual.OrderBy(t => t);
 
         Assert.True(expected.SequenceEqual(actual));
     }
