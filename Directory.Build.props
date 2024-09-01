@@ -28,7 +28,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CSharp" />
+    <PackageReference
+        Include="Microsoft.CSharp"
+        Condition="$(TargetFramework.StartsWith('net4')) OR $(TargetFramework.StartsWith('netstandard2'))" />
   </ItemGroup>
 
   <!-- Make project internals visible to test projects with same name
