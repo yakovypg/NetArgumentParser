@@ -51,4 +51,4 @@ catch (Exception ex)
 
 Console.WriteLine($"Angle: {angle}");
 Console.WriteLine($"File mode: {fileMode}");
-Console.WriteLine($"Input files: {string.Join(' ', inputFiles)}");
+Console.WriteLine($"Input files: {string.Join(" ", inputFiles)}");

@@ -94,7 +94,7 @@ public sealed class LongTextWriter
 
         string firstPart = parts[0];
         string appended = firstPart.Remove(remainingChars);
-        string remaining = firstPart[remainingChars..];
+        string remaining = firstPart.Substring(remainingChars);
 
         string emptySpace = GetEmptySpace(LeftOffset);
         _ = TextBuilder.AppendLine(appended).Append(emptySpace);

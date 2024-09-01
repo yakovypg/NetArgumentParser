@@ -69,7 +69,7 @@ public class ArgumentsAreUnknownException : Exception
     {
         ExtendedArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
 
-        string argumentsPresenter = string.Join(' ', arguments);
+        string argumentsPresenter = string.Join(" ", arguments);
         return $"Arguments {argumentsPresenter} are unknown.";
     }
 }

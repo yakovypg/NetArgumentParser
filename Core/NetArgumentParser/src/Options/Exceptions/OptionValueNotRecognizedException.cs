@@ -69,7 +69,7 @@ public class OptionValueNotRecognizedException : Exception
     {
         ExtendedArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
 
-        string value = string.Join(' ', optionValue);
+        string value = string.Join(" ", optionValue);
         return $"Option value '{value}' not recognized.";
     }
 }

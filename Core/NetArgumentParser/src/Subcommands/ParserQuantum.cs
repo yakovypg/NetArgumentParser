@@ -153,7 +153,7 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
 
     protected virtual void AddDefaultOptions()
     {
-        foreach (ParserQuantum quantum in _subcommands.Append(this))
+        foreach (ParserQuantum quantum in _subcommands.Concat([this]))
         {
             if (quantum.UseDefaultHelpOption && !quantum.OptionSet.HasHelpOption())
                 quantum.AddDefaultHelpOption();

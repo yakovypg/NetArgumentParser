@@ -99,7 +99,7 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>
     protected override string[] GetAllowedValues()
     {
         return Choices
-            .Select(t => $"[{string.Join(',', t)}]")
+            .Select(t => $"[{string.Join(",", t)}]")
             .ToArray();
     }
 

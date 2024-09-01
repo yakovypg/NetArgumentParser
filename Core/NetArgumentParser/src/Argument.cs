@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NetArgumentParser.Configuration;
+using NetArgumentParser.Extensions;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
 
@@ -113,7 +114,7 @@ public class Argument
             SpecialCharacters.AssignmentCharacter,
             _defaultStringComparison);
 
-        return Data[(equationIndex + 1)..];
+        return Data.Substring(equationIndex + 1);
     }
 
     public string[] ExtractOptionValueFromContext(Queue<string> context, ICommonOption option)
