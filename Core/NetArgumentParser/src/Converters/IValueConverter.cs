@@ -2,7 +2,7 @@ using System;
 
 namespace NetArgumentParser.Converters;
 
-#pragma warning disable SA1402
+#pragma warning disable SA1402 // FileMayOnlyContainASingleType
 
 public interface IValueConverter
 {
@@ -15,4 +15,4 @@ public interface IValueConverter<T> : IValueConverter
     T Convert(string value);
 }
 
-#pragma warning restore SA1402
+#pragma warning restore SA1402 // FileMayOnlyContainASingleType

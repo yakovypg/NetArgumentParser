@@ -204,13 +204,13 @@ try
 {
     result = parser.ParseKnownArguments(args, out extraArguments);
 }
-#pragma warning disable CA1031
+#pragma warning disable CA1031 // Do not catch general exception types
 catch (Exception ex)
 {
     Console.WriteLine($"Error: {ex.Message}");
     return;
 }
-#pragma warning restore CA1031
+#pragma warning restore CA1031 // Do not catch general exception types
 
 Console.WriteLine($"Handled options: {result.HandledOptions.Count}");
 Console.WriteLine($"Handled subcommands: {result.HandledSubcommands.Count}");

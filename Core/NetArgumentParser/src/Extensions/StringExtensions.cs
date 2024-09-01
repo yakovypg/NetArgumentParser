@@ -9,7 +9,7 @@ internal static class StringExtensions
 #if !NET5_0_OR_GREATER && !NETCOREAPP3_0_OR_GREATER && !NETSTANDARD2_1_OR_GREATER
     private const StringComparison _defaultComparisonType = StringComparison.CurrentCulture;
 
-#pragma warning disable IDE0060
+#pragma warning disable IDE0060 // Remove unused parameter
     internal static bool Contains(
         this string text,
         char value,
@@ -18,7 +18,7 @@ internal static class StringExtensions
         ExtendedArgumentNullException.ThrowIfNull(text, nameof(text));
         return text.Contains($"{value}");
     }
-#pragma warning restore IDE0060
+#pragma warning restore IDE0060 // Remove unused parameter
 
     internal static bool StartsWith(
         this string text,
