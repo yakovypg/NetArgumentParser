@@ -8,8 +8,8 @@
     <Authors>yakovypg</Authors>
     <Company>yakovypg</Company>
     <Copyright>Copyright © yakovypg 2024</Copyright>
-    <PackageTags>args;argument-parser;arguments;cli-args;argparse;command-line-arguments;command-line-arguments-parser;net-argument-parser;net-argparse;csharp-argparse;subcommand-parser</PackageTags>
-    <Description>NetArgumentParser is a cross-platform, free and open source library for parsing command-line options, arguments and subcommands.</Description>
+    <PackageTags>cli;options;args;command-line;argument-parser;arguments;cli-args;argument-parsing;subcommands;argparse;command-line-parser;flags;cli-parser;command-line-arguments;cli-arguments;net-argparse;csharp-argparse;subcommand-parser</PackageTags>
+    <Description>NetArgumentParser is a cross-platform, free and open source library for parsing command-line options, arguments and subcommands. It contains the main features of popular argument parsers such as argparse, as well as many of its own.</Description>
     <PackageProjectUrl>https://github.com/yakovypg/NetArgumentParser</PackageProjectUrl>
     <RepositoryUrl>https://github.com/yakovypg/NetArgumentParser</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
