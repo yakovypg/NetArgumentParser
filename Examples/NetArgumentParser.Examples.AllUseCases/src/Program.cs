@@ -163,7 +163,6 @@ var converters = new IValueConverter[]
             3 => new TimeSpan(data[0], data[1], data[2]),
             4 => new TimeSpan(data[0], data[1], data[2], data[3]),
             5 => new TimeSpan(data[0], data[1], data[2], data[3], data[4]),
-            6 => new TimeSpan(data[0], data[1], data[2], data[3], data[4], data[5]),
 
             _ => throw new FormatException()
         };
