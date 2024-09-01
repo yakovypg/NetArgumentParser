@@ -7,12 +7,14 @@
   <a href="https://github.com/yakovypg/NetArgumentParser/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-GPLv3-darkyellow.svg" alt="license" />
   </a>
-  <img src="https://img.shields.io/badge/Version-1.0.1-red.svg" alt="version" />
+  <img src="https://img.shields.io/badge/Version-1.0.2-red.svg" alt="version" />
   <img src="https://img.shields.io/badge/C%23-.NET 8-blue" />
 </p>
 
 ## About
 **NetArgumentParser** is a cross-platform, free and open source library for parsing command-line options, arguments and subcommands. This library contains the main features of popular argument parsers such as `argparse`, as well as many of its own.
+
+**NetArgumentParser** supports many frameworks, so you can use it in most of your projects. Moreover, you can find clear examples of using this library [here](Examples).
 
 [![NuGet Badge](https://buildstats.info/nuget/NetArgumentParser)](https://www.nuget.org/packages/NetArgumentParser/)
 [![Contributors](https://img.shields.io/github/contributors/yakovypg/NetArgumentParser)](https://github.com/yakovypg/NetArgumentParser/graphs/contributors)
@@ -41,7 +43,7 @@ This library supports the following main features:
 - Support custom options and converters.
 - Configure command-line help generation and output stream.
 
-Many other features you can find in [documentation](#documentation).
+Many other features with examples you can find in [documentation](#documentation).
 
 ## Quick Start
 To start working with the library you need to [connect](#connect-project) it to your project. If you are going to connect a library cloned from a repository, you may want to [build](#build-project) and [test](#test-project) it before doing so.
