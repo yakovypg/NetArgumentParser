@@ -58,7 +58,6 @@ public class MutuallyExclusiveOptionsFoundException : Exception
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
-        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(NewOption), NewOption, typeof(ICommonOption));
         info.AddValue(nameof(ExistingOption), ExistingOption, typeof(ICommonOption));
