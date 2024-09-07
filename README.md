@@ -8,7 +8,7 @@
     <img src="https://img.shields.io/badge/License-GPLv3-darkyellow.svg" alt="license" />
   </a>
   <img src="https://img.shields.io/badge/Version-1.0.2-red.svg" alt="version" />
-  <img src="https://img.shields.io/badge/C%23-.NET 8-blue" />
+  <img src="https://img.shields.io/badge/C%23-12.0-blue" alt="csharp" />
 </p>
 
 ## About
@@ -16,7 +16,7 @@
 
 **NetArgumentParser** supports many frameworks, so you can use it in most of your projects. Moreover, you can find clear examples of using this library [here](Examples).
 
-[![NuGet Badge](https://buildstats.info/nuget/NetArgumentParser)](https://www.nuget.org/packages/NetArgumentParser/)
+[![NuGet Badge](https://img.shields.io/nuget/v/NetArgumentParser)](https://www.nuget.org/packages/NetArgumentParser/)
 [![Contributors](https://img.shields.io/github/contributors/yakovypg/NetArgumentParser)](https://github.com/yakovypg/NetArgumentParser/graphs/contributors)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/yakovypg/NetArgumentParser/dotnet.yml?branch=main)](https://github.com/yakovypg/NetArgumentParser/actions/workflows/dotnet.yml?query=branch%3Amain)
 
