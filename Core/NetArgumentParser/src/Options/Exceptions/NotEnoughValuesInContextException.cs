@@ -60,7 +60,6 @@ public class NotEnoughValuesInContextException : Exception
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
-        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(_context), _context, typeof(string[]));
         info.AddValue(nameof(NumberOfNecessaryValues), NumberOfNecessaryValues);

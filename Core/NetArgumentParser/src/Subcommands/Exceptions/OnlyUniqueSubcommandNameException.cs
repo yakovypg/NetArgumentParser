@@ -48,7 +48,6 @@ public class OnlyUniqueSubcommandNameException : Exception
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
-        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(SubcommandName), SubcommandName, typeof(string));
         base.GetObjectData(info, context);

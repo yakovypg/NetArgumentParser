@@ -48,7 +48,6 @@ public class OptionNotFoundException : Exception
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
-        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(OptionName), OptionName, typeof(string));
         base.GetObjectData(info, context);

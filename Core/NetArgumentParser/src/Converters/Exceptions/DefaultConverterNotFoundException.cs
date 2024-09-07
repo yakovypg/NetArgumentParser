@@ -48,7 +48,6 @@ public class DefaultConverterNotFoundException : Exception
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
-        ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
         info.AddValue(nameof(OutputType), OutputType, typeof(Type));
         base.GetObjectData(info, context);
