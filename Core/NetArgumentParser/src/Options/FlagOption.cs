@@ -30,8 +30,6 @@ public class FlagOption : CommonOption
             OptionHandled += (sender, e) => afterHandlingAction.Invoke();
     }
 
-    protected Action? AfterHandlingAction { get; }
-
     protected override void HandleValue(params string[] value)
     {
         ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
