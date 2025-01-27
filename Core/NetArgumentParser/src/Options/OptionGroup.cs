@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NetArgumentParser.Options;
 
-public sealed class OptionGroup<T>
+public sealed class OptionGroup<T> : IOptionGroup<T>
     where T : IOption
 {
     private readonly List<T> _options;
@@ -50,11 +50,11 @@ public sealed class OptionGroup<T>
         Array.ForEach(options, _options.Add);
     }
 
-    public bool RemoveOption(T option)
+    public bool RemoveOption(T item)
     {
-        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(item, nameof(item));
 
-        return OptionSet.RemoveOption(option)
-            && _options.Remove(option);
+        return OptionSet.RemoveOption(item)
+            && _options.Remove(item);
     }
 }
