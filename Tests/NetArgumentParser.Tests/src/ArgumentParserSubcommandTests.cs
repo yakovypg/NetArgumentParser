@@ -1160,6 +1160,52 @@ public class ArgumentParserSubcommandTests
     }
 
     [Fact]
+    public void Parse_MutuallyExclusiveOptionGroupWithOneOption_NotThrowsException()
+    {
+        const string subcommandName = "subcommand1";
+
+        var arguments = new string[]
+        {
+            "-a", "5",
+            "-b", "1920",
+            subcommandName,
+            "-c", "10",
+            "-d", "15"
+        };
+
+        var options = new ICommonOption[]
+        {
+            new ValueOption<int>(string.Empty, "a"),
+            new ValueOption<int>(string.Empty, "b")
+        };
+
+        var subcommandOptions = new ICommonOption[]
+        {
+            new ValueOption<int>(string.Empty, "c"),
+            new ValueOption<int>(string.Empty, "d")
+        };
+
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
+
+        parser.AddOptions(options);
+
+        Subcommand subcommand = parser.AddSubcommand(subcommandName, string.Empty);
+        subcommand.AddOptions(subcommandOptions);
+
+        MutuallyExclusiveOptionGroup<ICommonOption> group =
+            parser.AddMutuallyExclusiveOptionGroup("group", null, [options[0]]);
+
+        MutuallyExclusiveOptionGroup<ICommonOption> subcommandGroup =
+            parser.AddMutuallyExclusiveOptionGroup("subcommandGroup", null, [subcommandOptions[1]]);
+
+        Exception? ex = Record.Exception(() => parser.Parse(arguments));
+        Assert.Null(ex);
+    }
+
+    [Fact]
     public void Parse_MutuallyExclusiveOptions_ThrowsException()
     {
         const string subcommandName = "subcommand1";
