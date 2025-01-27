@@ -30,6 +30,10 @@ dotnet_diagnostic.CA1031.severity = none
 [*.cs]
 dotnet_diagnostic.CA1510.severity = none
 
+# CA1515: Consider making public types internal
+[*.cs]
+dotnet_diagnostic.CA1515.severity = none
+
 # CA1707: Identifiers should not contain underscores
 [Tests/**/*.cs]
 dotnet_diagnostic.CA1707.severity = none
