@@ -188,17 +188,20 @@ public class ArgumentParser : ParserQuantum
         ExtendedArgumentNullException.ThrowIfNull(handledOptions, nameof(handledOptions));
         ExtendedArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
 
-        MutuallyExclusiveOptionGroup<ICommonOption>? group = MutuallyExclusiveOptionGroups
-            .FirstOrDefault(t => t.Options.Contains(commonOption));
+        IEnumerable<MutuallyExclusiveOptionGroup<ICommonOption>> groups =
+            MutuallyExclusiveOptionGroups.Where(t => t.Options.Contains(commonOption));
 
-        if (group is null)
-            return;
+        foreach (MutuallyExclusiveOptionGroup<ICommonOption> group in groups)
+        {
+            IEnumerable<ICommonOption> conflictCandidates = group.Options
+                .Except([commonOption]);
 
-        ICommonOption? conflictingOption = handledOptions
-            .FirstOrDefault(t => group.Options.Contains(t));
+            ICommonOption? conflictingOption = handledOptions
+                .FirstOrDefault(t => conflictCandidates.Contains(t));
 
-        if (conflictingOption is not null)
-            throw new MutuallyExclusiveOptionsFoundException(null, commonOption, conflictingOption);
+            if (conflictingOption is not null)
+                throw new MutuallyExclusiveOptionsFoundException(null, commonOption, conflictingOption);
+        }
     }
 
     protected override void AddDefaultOptions()
