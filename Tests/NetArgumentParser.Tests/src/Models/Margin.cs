@@ -35,4 +35,9 @@ internal class Margin : IEquatable<Margin>
     {
         return HashCode.Combine(Left, Top, Right, Bottom);
     }
+
+    public override string ToString()
+    {
+        return $"{Left},{Top},{Right},{Bottom}";
+    }
 }
