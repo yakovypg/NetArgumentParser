@@ -1210,7 +1210,7 @@ public class ArgumentParserSubcommandTests
         subcommand.AddOptions(subcommandOptions);
 
         MutuallyExclusiveOptionGroup<ICommonOption> group =
-            parser.AddMutuallyExclusiveOptionGroup(conflictingOptions);
+            parser.AddMutuallyExclusiveOptionGroup("group", null, conflictingOptions);
 
         do
         {

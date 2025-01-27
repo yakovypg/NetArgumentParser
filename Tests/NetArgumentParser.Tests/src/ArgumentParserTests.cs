@@ -1677,7 +1677,7 @@ public class ArgumentParserTests
         parser.AddOptions(options);
 
         MutuallyExclusiveOptionGroup<ICommonOption> group =
-            parser.AddMutuallyExclusiveOptionGroup(conflictingOptions);
+            parser.AddMutuallyExclusiveOptionGroup("group", null, conflictingOptions);
 
         do
         {
