@@ -9,6 +9,7 @@ public class ZeroOrMoreContextCapture : IContextCapture
 
     public int MinNumberOfItemsToCapture => 0;
     public int? MaxNumberOfItemsToCapture => null;
+    public ContextCaptureType ContextCaptureType => ContextCaptureType.ZeroOrMore;
 
     public string GetDescription(string metaVariable)
     {

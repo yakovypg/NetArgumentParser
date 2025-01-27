@@ -19,6 +19,7 @@ public class FixedContextCapture : IContextCapture
 
     public int MinNumberOfItemsToCapture => RequiredNumberOfItemsToCapture;
     public int? MaxNumberOfItemsToCapture => RequiredNumberOfItemsToCapture;
+    public ContextCaptureType ContextCaptureType => ContextCaptureType.Fixed;
 
     public string GetDescription(string metaVariable)
     {

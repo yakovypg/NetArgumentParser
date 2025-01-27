@@ -10,6 +10,7 @@ public class OneOrMoreContextCapture : IContextCapture
 
     public int MinNumberOfItemsToCapture => 1;
     public int? MaxNumberOfItemsToCapture => null;
+    public ContextCaptureType ContextCaptureType => ContextCaptureType.OneOrMore;
 
     public string GetDescription(string metaVariable)
     {
