@@ -59,7 +59,7 @@ public class ArgumentParser : ParserQuantum
 
     public bool RecognizeCompoundOptions { get; init; }
     public bool RecognizeSlashOptions { get; init; }
-    public bool UseDefaultVersionOption { get; set; }
+    public bool UseDefaultVersionOption { get; init; }
 
     public int NumberOfArgumentsToSkip
     {
