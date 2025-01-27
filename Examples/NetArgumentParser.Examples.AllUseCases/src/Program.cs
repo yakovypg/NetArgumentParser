@@ -191,7 +191,7 @@ OptionGroup<ICommonOption> group = parser.AddOptionGroup("Additional options:", 
 group.AddOptions(additionalOptions);
 
 MutuallyExclusiveOptionGroup<ICommonOption> mutuallyExclusiveOptionGroup =
-    parser.AddMutuallyExclusiveOptionGroup([nameOption, nickOption]);
+    parser.AddMutuallyExclusiveOptionGroup("group", null, [nameOption, nickOption]);
 
 Subcommand resizeSubcommand = parser.AddSubcommand("resize", "resize the image");
 resizeSubcommand.UseDefaultHelpOption = true;
@@ -204,13 +204,11 @@ try
 {
     result = parser.ParseKnownArguments(args, out extraArguments);
 }
-#pragma warning disable CA1031 // Do not catch general exception types
 catch (Exception ex)
 {
     Console.WriteLine($"Error: {ex.Message}");
     return;
 }
-#pragma warning restore CA1031 // Do not catch general exception types
 
 Console.WriteLine($"Handled options: {result.HandledOptions.Count}");
 Console.WriteLine($"Handled subcommands: {result.HandledSubcommands.Count}");

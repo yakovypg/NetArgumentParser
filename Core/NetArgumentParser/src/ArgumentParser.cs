@@ -90,9 +90,15 @@ public class ArgumentParser : ParserQuantum
     }
 
     public MutuallyExclusiveOptionGroup<ICommonOption> AddMutuallyExclusiveOptionGroup(
+        string name,
+        string? description = null,
         IEnumerable<ICommonOption>? options = null)
     {
-        var group = new MutuallyExclusiveOptionGroup<ICommonOption>(options);
+        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
+
+        description ??= string.Empty;
+
+        var group = new MutuallyExclusiveOptionGroup<ICommonOption>(name, description, options);
         _mutuallyExclusiveOptionGroups.Add(group);
 
         return group;
