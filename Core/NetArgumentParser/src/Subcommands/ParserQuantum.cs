@@ -68,7 +68,7 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         }
     }
 
-    public void AddOptions(params ICommonOption[] options)
+    public virtual void AddOptions(params ICommonOption[] options)
     {
         ExtendedArgumentNullException.ThrowIfNull(options, nameof(options));
         DefaultGroup.AddOptions(options);
@@ -80,7 +80,7 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         return _optionSet.RemoveOption(commonOption);
     }
 
-    public void AddConverters(params IValueConverter[] converters)
+    public virtual void AddConverters(params IValueConverter[] converters)
     {
         ExtendedArgumentNullException.ThrowIfNull(converters, nameof(converters));
         Array.ForEach(converters, _optionSet.AddConverter);
@@ -90,6 +90,21 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
     {
         ExtendedArgumentNullException.ThrowIfNull(converter, nameof(converter));
         return _optionSet.RemoveConverter(converter);
+    }
+
+    public virtual void AddConverters(bool includeAllSubcommands, params IValueConverter[] converters)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(converters, nameof(converters));
+
+        AddConverters(converters);
+
+        if (includeAllSubcommands)
+        {
+            foreach (Subcommand subcommand in Subcommands)
+            {
+                subcommand.AddConverters(includeAllSubcommands, converters);
+            }
+        }
     }
 
     public OptionGroup<ICommonOption> AddOptionGroup(string name, string? description = null)
@@ -121,6 +136,19 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         }
 
         return options;
+    }
+
+    public IList<Subcommand> GetAllSubcommands()
+    {
+        var subcommands = new List<Subcommand>(Subcommands);
+
+        foreach (Subcommand subcommand in _subcommands)
+        {
+            IList<Subcommand> currSubcommands = subcommand.GetAllSubcommands();
+            subcommands.AddRange(currSubcommands);
+        }
+
+        return subcommands;
     }
 
     public Subcommand AddSubcommand(string name, string description)
