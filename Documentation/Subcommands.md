@@ -35,7 +35,7 @@ Subcommand subcommand = parser.AddSubcommand("name", "description");
 subcommand.AddOptions(new FlagOption("verbose", afterHandlingAction: () => verbose = true));
 subcommand.AddConverters(new ValueConverter<int>(Convert.ToInt32));
 
-OptionGroup<ICommonOption> subcommandGroup = subcommand.AddOptionGroup("group", string.Empty);
+OptionGroup<ICommonOption> subcommandGroup = subcommand.AddOptionGroup("group", "description");
 subcommandGroup.AddOptions(new FlagOption("debug", afterHandlingAction: () => debug = true));
 ```
 

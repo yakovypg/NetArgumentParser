@@ -257,7 +257,7 @@ Additional group:
 ```
 
 ## Mutual Exclusion
-If you add options to the mutually exclusive group, **NetArgumentParser** will make sure that only one of the arguments in this group was present on the command line. Note that currently mutually exclusive groups don't have title and description (it will not be displayed in the help output). Moreover, you cannot add options to the option set using mutually exclusive group. This group is intended only to mark options that are already added.
+If you add options to the mutually exclusive group, **NetArgumentParser** will make sure that only one of the arguments in this group was present on the command line. Note that title and description of mutually exclusive group will not be displayed in the help output. Moreover, you cannot add options to the option set using mutually exclusive group. This group is intended only to mark options that are already added.
 
 You can create mutually exclusive group using `AddMutuallyExclusiveOptionGroup()` method of the `ArgumentParser` class. Options can be added to this group by passing them to method `AddMutuallyExclusiveOptionGroup()` or by calling method `AddOptions()` of the created group.
 
@@ -270,8 +270,10 @@ var nickOption = new ValueOption<string>("nick", afterValueParsingAction: t => n
 var parser = new ArgumentParser();
 parser.AddOptions(options);
 
-MutuallyExclusiveOptionGroup<ICommonOption> group =
-    parser.AddMutuallyExclusiveOptionGroup([nameOption, nickOption]);
+MutuallyExclusiveOptionGroup<ICommonOption> group = parser.AddMutuallyExclusiveOptionGroup(
+    "group",
+    "description",
+    [nameOption, nickOption]);
 
 parser.Parse(new string[] { "--name", "John" }); // name: John
 parser.Parse(new string[] { "--nick", "mr.john" }); // nick: mr.john
