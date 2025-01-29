@@ -175,6 +175,54 @@ public class ParserGeneratorTests
     }
 
     [Fact]
+    public void ConfigureParser_OptionGroupWithoutDuplicateInfo_CreatedGroupWithCorrectParameters()
+    {
+        var generator = new ArgumentParserGenerator();
+        var argumentParser = new ArgumentParser();
+        var config = new OptionGroupWithoutDuplicateInfoParserGeneratorConfig();
+
+        generator.ConfigureParser(argumentParser, config);
+
+        Assert.Equal(2, argumentParser.OptionGroups.Count);
+
+        OptionGroup<ICommonOption>? group = argumentParser.OptionGroups
+            .FirstOrDefault(t => t != argumentParser.DefaultGroup);
+
+        Assert.NotNull(group);
+
+        Assert.Equal(
+            OptionGroupWithoutDuplicateInfoParserGeneratorConfig.GroupHeader,
+            group.Header);
+
+        Assert.Equal(
+            OptionGroupWithoutDuplicateInfoParserGeneratorConfig.GroupDescription,
+            group.Description);
+    }
+
+    [Fact]
+    public void ConfigureParser_MutuallyExclusiveOptionGroup_CreatedGroupWithCorrectParameters()
+    {
+        var generator = new ArgumentParserGenerator();
+        var argumentParser = new ArgumentParser();
+        var config = new MutuallyExclusiveOptionGroupWithoutDuplicateInfoParserGeneratorConfig();
+
+        generator.ConfigureParser(argumentParser, config);
+
+        Assert.Equal(1, argumentParser.MutuallyExclusiveOptionGroups.Count);
+
+        MutuallyExclusiveOptionGroup<ICommonOption> group =
+            argumentParser.MutuallyExclusiveOptionGroups[0];
+
+        Assert.Equal(
+            MutuallyExclusiveOptionGroupWithoutDuplicateInfoParserGeneratorConfig.GroupHeader,
+            group.Header);
+
+        Assert.Equal(
+            MutuallyExclusiveOptionGroupWithoutDuplicateInfoParserGeneratorConfig.GroupDescription,
+            group.Description);
+    }
+
+    [Fact]
     public void ConfigureParser_NotValidConfig_ThrowsExceptionIfSpecifiedDuplicateOptionName()
     {
         var generator = new ArgumentParserGenerator();
