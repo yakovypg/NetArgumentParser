@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using NetArgumentParser.Options;
@@ -6,22 +7,29 @@ namespace NetArgumentParser.Attributes.Extensions;
 
 internal static class PropertyInfoExtensions
 {
+    internal static bool HasAttribute<T>(this PropertyInfo propertyInfo)
+        where T : Attribute
+    {
+        ExtendedArgumentNullException.ThrowIfNull(propertyInfo, nameof(propertyInfo));
+        return propertyInfo.GetCustomAttribute<T>() is not null;
+    }
+
     internal static bool HasOptionAttribute(this PropertyInfo propertyInfo)
     {
         ExtendedArgumentNullException.ThrowIfNull(propertyInfo, nameof(propertyInfo));
-        return propertyInfo.GetCustomAttribute<CommonOptionAttribute>() is not null;
+        return propertyInfo.HasAttribute<CommonOptionAttribute>();
     }
 
     internal static bool HasOptionGroupAttribute(this PropertyInfo propertyInfo)
     {
         ExtendedArgumentNullException.ThrowIfNull(propertyInfo, nameof(propertyInfo));
-        return propertyInfo.GetCustomAttribute<OptionGroupAttribute>() is not null;
+        return propertyInfo.HasAttribute<OptionGroupAttribute>();
     }
 
     internal static bool HasMutuallyExclusiveOptionGroupAttribute(this PropertyInfo propertyInfo)
     {
         ExtendedArgumentNullException.ThrowIfNull(propertyInfo, nameof(propertyInfo));
-        return propertyInfo.GetCustomAttribute<MutuallyExclusiveOptionGroupAttribute>() is not null;
+        return propertyInfo.HasAttribute<MutuallyExclusiveOptionGroupAttribute>();
     }
 
     internal static bool HasSubcommandAttribute(this PropertyInfo propertyInfo)
