@@ -179,6 +179,21 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         return _subcommands.Remove(subcommand);
     }
 
+    public IEnumerable<ICommonOption> FindOptions(
+        Predicate<ICommonOption> predicate,
+        bool recursive = true)
+    {
+        IEnumerable<ICommonOption> foundOptions = Options.Where(t => predicate(t));
+
+        if (!recursive)
+            return foundOptions;
+
+        IEnumerable<ICommonOption> recursiveFoundOptions = Subcommands
+            .SelectMany(t => t.FindOptions(predicate, recursive));
+
+        return foundOptions.Concat(recursiveFoundOptions);
+    }
+
     protected virtual void AddDefaultOptions()
     {
         foreach (ParserQuantum quantum in _subcommands.Concat([this]))
