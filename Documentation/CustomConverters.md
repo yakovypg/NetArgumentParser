@@ -25,10 +25,80 @@ var firstNameOption = new ValueOption<string>("name",
 var converter = new ValueConverter<string>(t => t.ToUpper());
 
 var parser = new ArgumentParser();
+
+parser.AddOptions(firstNameOption);
 parser.AddConverters(converter);
 
 parser.Parse(new string[] { "--name", "name" });
 // name: NAME
+```
+
+Note that this use case will only add the converter to one visibility level. This means that subcommands will not receive this converter. Here is an example showing this.
+
+```cs
+string firstName = string.Empty;
+string secondName = string.Empty;
+
+var firstNameOption = new ValueOption<string>("first",
+    afterValueParsingAction: t => firstName = t);
+
+var secondNameOption = new ValueOption<string>("second",
+    afterValueParsingAction: t => secondName = t);
+
+var converter = new ValueConverter<string>(t => t.ToUpper());
+var parser = new ArgumentParser();
+
+parser.AddOptions(firstNameOption);
+parser.AddConverters(converter);
+
+Subcommand subcommand = parser.AddSubcommand("subcommand", "description");
+subcommand.AddOptions(secondNameOption);
+
+parser.Parse(new string[] { "--first", "name", "subcommand", "--second", "name" });
+// firstName: NAME
+// secondName: name
+```
+
+You can add the same converter to a subcommand. In this case, the variable `secondName` will have the value "NAME".
+
+```cs
+// ...
+// Same code here
+
+Subcommand subcommand = parser.AddSubcommand("subcommand", "description");
+
+subcommand.AddOptions(secondNameOption);
+subcommand.AddConverters(converter);
+
+parser.Parse(new string[] { "--first", "name", "subcommand", "--second", "name" });
+// firstName: NAME
+// secondName: NAME
+```
+
+If you want a converter to be added to all visibility levels (starting from the current one), use the `AddConverters()` method overload as shown below. This call will add coverter to all subcommands (including nested subcommands) present at the time of the call, which are at all levels, starting from the current one. Accordingly, it is best to call it right before parsing arguments.
+
+```cs
+string firstName = string.Empty;
+string secondName = string.Empty;
+
+var firstNameOption = new ValueOption<string>("first",
+    afterValueParsingAction: t => firstName = t);
+
+var secondNameOption = new ValueOption<string>("second",
+    afterValueParsingAction: t => secondName = t);
+
+var converter = new ValueConverter<string>(t => t.ToUpper());
+var parser = new ArgumentParser();
+
+parser.AddOptions(firstNameOption);
+
+Subcommand subcommand = parser.AddSubcommand("subcommand", "description");
+subcommand.AddOptions(secondNameOption);
+
+parser.AddConverters(true, converter);
+parser.Parse(new string[] { "--first", "name", "subcommand", "--second", "name" });
+// firstName: NAME
+// secondName: NAME
 ```
 
 ## Converter Set
