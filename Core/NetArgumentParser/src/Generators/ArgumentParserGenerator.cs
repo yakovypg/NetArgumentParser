@@ -66,6 +66,12 @@ public class ArgumentParserGenerator
         {
             OptionGroupAttribute? attribute = attributeGroup.Key;
 
+            if (attribute is not null)
+            {
+                attribute = optionMap.Keys
+                    .FindOptionGroupAttributeWithBestParameters<OptionGroupAttribute>(attribute.Id);
+            }
+
             OptionGroup<ICommonOption>? optionGroup = attribute is not null
                 ? parserQuantum.AddOptionGroup(attribute.Header, attribute.Description)
                 : null;
@@ -103,6 +109,14 @@ public class ArgumentParserGenerator
 
             if (attribute is null)
                 continue;
+
+            MutuallyExclusiveOptionGroupAttribute? attributeWithBestParameters = rootQuantum.Options
+                .Select(t => t.Key)
+                .FindOptionGroupAttributeWithBestParameters<MutuallyExclusiveOptionGroupAttribute>(
+                    attribute.Id);
+
+            if (attributeWithBestParameters is not null)
+                attribute = attributeWithBestParameters;
 
             IEnumerable<ICommonOption> groupOptions = group.Select(t => t.Value);
 
