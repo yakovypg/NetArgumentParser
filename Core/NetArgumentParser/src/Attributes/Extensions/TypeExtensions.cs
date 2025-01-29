@@ -6,11 +6,14 @@ internal static class TypeExtensions
 {
     internal static Type RemoveNullable(this Type type)
     {
+        ExtendedArgumentNullException.ThrowIfNull(type, nameof(type));
         return Nullable.GetUnderlyingType(type) ?? type;
     }
 
     internal static object? GetDefaultValue(this Type type)
     {
+        ExtendedArgumentNullException.ThrowIfNull(type, nameof(type));
+
         return type.IsValueType
             ? Activator.CreateInstance(type)
             : null;
@@ -18,6 +21,8 @@ internal static class TypeExtensions
 
     internal static object GetValueTypeDefaultValue(this Type type)
     {
+        ExtendedArgumentNullException.ThrowIfNull(type, nameof(type));
+
         if (!type.IsValueType)
             throw new ArgumentException($"{type.FullName} is not value type.", nameof(type));
 
