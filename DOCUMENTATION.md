@@ -7,5 +7,6 @@ There are the following topics:
 - [Custom converters](Documentation/CustomConverters.md)
 - [Subcommands](Documentation/Subcommands.md)
 - [Printing help](Documentation/PrintingHelp.md)
+- [Parser generation using attributes](Documentation/ParserGenerationUsingAttributes.md)
 - [Additional features](Documentation/AdditionalFeatures.md)
 - [Connect project](Documentation/ConnectProject.md)
