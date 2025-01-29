@@ -10,7 +10,7 @@ namespace NetArgumentParser.Options;
 
 public class ValueOption<T> : CommonOption, IValueOption<T>
 {
-    private readonly List<T> _choices;
+    private List<T> _choices;
 
     public ValueOption(
         string longName,
@@ -106,13 +106,18 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
 
     public string MetaVariable { get; }
 
-    public DefaultOptionValue<T>? DefaultValue { get; }
-    public OptionValueRestriction<T>? ValueRestriction { get; }
+    public DefaultOptionValue<T>? DefaultValue { get; set; }
+    public OptionValueRestriction<T>? ValueRestriction { get; set; }
     public IValueConverter<T>? Converter { get; set; }
 
     public IReadOnlyCollection<T> Choices => _choices;
     public bool HasDefaultValue => DefaultValue is not null;
     public bool HasConverter => Converter is not null;
+
+    public void ChangeChoices(IEnumerable<T>? choices)
+    {
+        _choices = new List<T>(choices ?? []);
+    }
 
     public bool TrySetConverter(IValueConverter converter)
     {
@@ -241,7 +246,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
 
     protected string GetExtendedMetavariable()
     {
-        return Choices.Count > 0
+        return _choices.Count > 0
             ? "{" + string.Join(",", GetAllowedValues()) + "}"
             : MetaVariable;
     }
