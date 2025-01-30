@@ -7,7 +7,7 @@
   <a href="https://github.com/yakovypg/NetArgumentParser/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-GPLv3-darkyellow.svg" alt="license" />
   </a>
-  <img src="https://img.shields.io/badge/Version-1.0.2-red.svg" alt="version" />
+  <img src="https://img.shields.io/badge/Version-1.0.3-red.svg" alt="version" />
   <img src="https://img.shields.io/badge/C%23-12.0-blue" alt="csharp" />
 </p>
 
@@ -42,6 +42,7 @@ This library supports the following main features:
 - Provide a lot of default option types.
 - Support custom options and converters.
 - Configure command-line help generation and output stream.
+- Generation of argument parser using attributes.
 
 Many other features with examples you can find in [documentation](#documentation).
 
