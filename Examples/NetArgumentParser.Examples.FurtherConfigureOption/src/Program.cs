@@ -27,7 +27,7 @@ if (foundOption is ValueOption<DateTime> birthDateOption)
 }
 
 parser.Parse(["--date", "01.01.2025"]);
-Console.WriteLine(config.BirthDate);
+Console.WriteLine(config.BirthDate); // 1/1/0001 12:00:00AM
 
 #pragma warning disable
 [ParserConfig]
