@@ -23,12 +23,20 @@ internal static class DynamicOptionInteractor
         IEnumerable<dynamic> optionsWithAbilityToHandleDefaultValue =
             GetOptionsWithAbilityToHandleDefaultValue(unhandledOptions);
 
-        IEnumerable<dynamic> suitableOptions = optionsWithAbilityToHandleDefaultValue
-            .Where(t => t.HasDefaultValue);
+        IEnumerable<dynamic> suitableOptions = optionsWithAbilityToHandleDefaultValue.Where(t =>
+        {
+            return t.GetType()
+                .GetProperty(_hasDefaultValuePropertyName)
+                .GetValue(t);
+        });
 
         foreach (dynamic option in suitableOptions)
         {
-            option.HandleDefaultValue();
+            object[] arguments = [];
+
+            option.GetType()
+                .GetMethod(_handleDefaultValueMethodName)
+                .Invoke(option, arguments);
         }
     }
 
@@ -44,12 +52,22 @@ internal static class DynamicOptionInteractor
         IEnumerable<dynamic> optionsWithAbilityToSetConverter =
             GetOptionsWithAbilityToSetConverter(options, converterType);
 
-        IEnumerable<dynamic> suitableOptions = optionsWithAbilityToSetConverter
-            .Where(t => t.Converter is null);
+        IEnumerable<dynamic> suitableOptions = optionsWithAbilityToSetConverter.Where(t =>
+        {
+            var optionValue = t.GetType()
+                .GetProperty(_converterPropertyName)
+                .GetValue(t);
+
+            return optionValue is null;
+        });
 
         foreach (dynamic option in suitableOptions)
         {
-            option.TrySetConverter(converter);
+            object[] arguments = [converter];
+
+            option.GetType()
+                .GetMethod(_setConverterMethodName)
+                .Invoke(option, arguments);
         }
     }
 
