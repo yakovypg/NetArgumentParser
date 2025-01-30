@@ -11,18 +11,7 @@ using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
 using NetArgumentParser.Subcommands;
 
-bool verbose = false;
-bool quick = false;
-int? angle = default;
-int verbosityLevel = default;
-TimeSpan? time = default;
-FileMode? fileMode = default;
-List<string> inputFiles = [];
-DateTime? date = default;
-string? name = default;
-
-int? width = default;
-int? height = default;
+var resultValues = new ResultValues();
 
 var parser = new ArgumentParser()
 {
@@ -36,12 +25,12 @@ var parser = new ArgumentParser()
     SubcommandDescriptionGeneratorCreator = t => new SubcommandDescriptionGenerator(t)
 };
 
-var nameOption = new ValueOption<string>("name", "n", afterValueParsingAction: t => name = t)
+var nameOption = new ValueOption<string>("name", "n", afterValueParsingAction: t => resultValues.Name = t)
 {
     Converter = new ValueConverter<string>(t => t.ToUpper(CultureInfo.CurrentCulture))
 };
 
-var nickOption = new ValueOption<string>("nick", afterValueParsingAction: t => name = t);
+var nickOption = new ValueOption<string>("nick", afterValueParsingAction: t => resultValues.Name = t);
 
 var options = new ICommonOption[]
 {
@@ -73,21 +62,21 @@ var options = new ICommonOption[]
         longName: "verbose",
         shortName: "v",
         description: "be verbose",
-        afterHandlingAction: () => verbose = true),
+        afterHandlingAction: () => resultValues.Verbose = true),
 
     new FlagOption(
         longName: "legacy-verbose",
         shortName: string.Empty,
         description: "be verbose",
         isHidden: true,
-        afterHandlingAction: () => verbose = true),
+        afterHandlingAction: () => resultValues.Verbose = true),
 
     new FlagOption(
         longName: string.Empty,
         shortName: "q",
         description: "use fast algorithm",
         aliases: ["quick", "fast"],
-        afterHandlingAction: () => quick = true),
+        afterHandlingAction: () => resultValues.Quick = true),
 
     new MultipleValueOption<string>(
         longName: "input",
@@ -96,7 +85,7 @@ var options = new ICommonOption[]
         isRequired: true,
         valueRestriction: new OptionValueRestriction<IList<string>>(t => t.All(p => File.Exists(p))),
         contextCapture: new OneOrMoreContextCapture(),
-        afterValueParsingAction: t => inputFiles = new List<string>(t)),
+        afterValueParsingAction: t => resultValues.InputFiles = new List<string>(t)),
 
     new ValueOption<int>(
         longName: "angle",
@@ -104,13 +93,13 @@ var options = new ICommonOption[]
         description: "angle by which you want to rotate the image",
         isRequired: true,
         choices: [0, 45, 90, 180],
-        afterValueParsingAction: t => angle = t),
+        afterValueParsingAction: t => resultValues.Angle = t),
 
     new CounterOption(
         longName: string.Empty,
         shortName: "V",
         description: "increase verbosity level",
-        increaseCounter: () => verbosityLevel++)
+        increaseCounter: () => resultValues.VerbosityLevel++)
 };
 
 var additionalOptions = new ICommonOption[]
@@ -119,21 +108,21 @@ var additionalOptions = new ICommonOption[]
         longName: "time",
         shortName: "t",
         description: "maximum algorithm execution time",
-        afterValueParsingAction: t => time = t),
+        afterValueParsingAction: t => resultValues.Time = t),
 
     new EnumValueOption<FileMode>(
         longName: "file-mode",
         shortName: string.Empty,
         description: "specifies how the operatng system should open a file",
         defaultValue: new DefaultOptionValue<FileMode>(FileMode.OpenOrCreate),
-        afterValueParsingAction: t => fileMode = t),
+        afterValueParsingAction: t => resultValues.FileMode = t),
 
     new MultipleValueOption<int>(
         longName: "date",
         description: "next date the program update notification will be displayed",
         metaVariable: "D",
         contextCapture: new FixedContextCapture(3),
-        afterValueParsingAction: t => date = new DateTime(t[0], t[1], t[2]))
+        afterValueParsingAction: t => resultValues.Date = new DateTime(t[0], t[1], t[2]))
 };
 
 var resizeSubcommandOptions = new ICommonOption[]
@@ -142,13 +131,13 @@ var resizeSubcommandOptions = new ICommonOption[]
         longName: "width",
         shortName: "w",
         description: "new width of the image",
-        afterValueParsingAction: t => width = t),
+        afterValueParsingAction: t => resultValues.Width = t),
 
     new ValueOption<int>(
         longName: "height",
         shortName: "H",
         description: "new height of the image",
-        afterValueParsingAction: t => height = t)
+        afterValueParsingAction: t => resultValues.Height = t)
 };
 
 var converters = new IValueConverter[]
@@ -218,14 +207,31 @@ if (result.TryGetLastHandledSubcommand(out Subcommand? subcommand))
 
 Console.WriteLine();
 Console.WriteLine($"Extra arguments: {string.Join(" ", extraArguments)}");
-Console.WriteLine($"Verbose: {verbose}");
-Console.WriteLine($"Quick: {quick}");
-Console.WriteLine($"Verbosity level: {verbosityLevel}");
-Console.WriteLine($"Angle: {angle}");
-Console.WriteLine($"Time: {time}");
-Console.WriteLine($"File mode: {fileMode}");
-Console.WriteLine($"Input files: {string.Join(" ", inputFiles)}");
-Console.WriteLine($"Date: {date?.ToLongDateString()}");
-Console.WriteLine($"Name: {name}");
-Console.WriteLine($"Width: {width}");
-Console.WriteLine($"Height: {height}");
+Console.WriteLine($"Verbose: {resultValues.Verbose}");
+Console.WriteLine($"Quick: {resultValues.Quick}");
+Console.WriteLine($"Verbosity level: {resultValues.VerbosityLevel}");
+Console.WriteLine($"Angle: {resultValues.Angle}");
+Console.WriteLine($"Time: {resultValues.Time}");
+Console.WriteLine($"File mode: {resultValues.FileMode}");
+Console.WriteLine($"Input files: {string.Join(" ", resultValues.InputFiles)}");
+Console.WriteLine($"Date: {resultValues.Date?.ToLongDateString()}");
+Console.WriteLine($"Name: {resultValues.Name}");
+Console.WriteLine($"Width: {resultValues.Width}");
+Console.WriteLine($"Height: {resultValues.Height}");
+
+#pragma warning disable
+internal sealed class ResultValues
+{
+    public bool Verbose { get; set; }
+    public bool Quick { get; set; }
+    public int? Angle { get; set; }
+    public int VerbosityLevel { get; set; }
+    public TimeSpan? Time { get; set; }
+    public FileMode? FileMode { get; set; }
+    public List<string> InputFiles { get; set; } = [];
+    public DateTime? Date { get; set; }
+    public string? Name { get; set; }
+    public int? Width { get; set; }
+    public int? Height { get; set; }
+}
+#pragma warning restore

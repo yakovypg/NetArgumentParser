@@ -19,6 +19,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.FurtherConfigureOption", "Examples\NetArgumentParser.Examples.FurtherConfigureOption\NetArgumentParser.Examples.FurtherConfigureOption.csproj", "{850C9444-F85A-46FA-AE65-734A9AED1A0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.CustomConverter", "Examples\NetArgumentParser.Examples.CustomConverter\NetArgumentParser.Examples.CustomConverter.csproj", "{67AEF7CC-BDC4-43D0-8627-9C807502A6EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.OptionalArguments", "Examples\NetArgumentParser.Examples.OptionalArguments\NetArgumentParser.Examples.OptionalArguments.csproj", "{3B17B627-D157-47C8-8F1A-4A768ADA0F74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.ParserGenerationUsingAttributes", "Examples\NetArgumentParser.Examples.ParserGenerationUsingAttributes\NetArgumentParser.Examples.ParserGenerationUsingAttributes.csproj", "{150103E0-BAED-4EB7-BB3A-7871D5E5EB22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.Subcommands", "Examples\NetArgumentParser.Examples.Subcommands\NetArgumentParser.Examples.Subcommands.csproj", "{A9379A83-FBDD-425F-8C4A-9EA60EC6D779}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.PrintingHelp", "Examples\NetArgumentParser.Examples.PrintingHelp\NetArgumentParser.Examples.PrintingHelp.csproj", "{91681128-8B86-471D-82B4-2A7F0390569F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +58,26 @@ Global
 		{850C9444-F85A-46FA-AE65-734A9AED1A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{850C9444-F85A-46FA-AE65-734A9AED1A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{850C9444-F85A-46FA-AE65-734A9AED1A0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67AEF7CC-BDC4-43D0-8627-9C807502A6EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67AEF7CC-BDC4-43D0-8627-9C807502A6EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67AEF7CC-BDC4-43D0-8627-9C807502A6EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67AEF7CC-BDC4-43D0-8627-9C807502A6EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B17B627-D157-47C8-8F1A-4A768ADA0F74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B17B627-D157-47C8-8F1A-4A768ADA0F74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B17B627-D157-47C8-8F1A-4A768ADA0F74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B17B627-D157-47C8-8F1A-4A768ADA0F74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{150103E0-BAED-4EB7-BB3A-7871D5E5EB22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{150103E0-BAED-4EB7-BB3A-7871D5E5EB22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{150103E0-BAED-4EB7-BB3A-7871D5E5EB22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{150103E0-BAED-4EB7-BB3A-7871D5E5EB22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9379A83-FBDD-425F-8C4A-9EA60EC6D779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9379A83-FBDD-425F-8C4A-9EA60EC6D779}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9379A83-FBDD-425F-8C4A-9EA60EC6D779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9379A83-FBDD-425F-8C4A-9EA60EC6D779}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91681128-8B86-471D-82B4-2A7F0390569F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91681128-8B86-471D-82B4-2A7F0390569F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91681128-8B86-471D-82B4-2A7F0390569F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91681128-8B86-471D-82B4-2A7F0390569F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2C140CC4-00C6-4017-8CB3-68B32CC7C058} = {649A384F-36AE-432F-8AF5-D28674D77B7D}
@@ -55,5 +85,10 @@ Global
 		{540F9CC0-410A-48D4-B44E-8B3845C66F0B} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
 		{F56E27F2-A034-4268-BF1A-9D211648D999} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
 		{850C9444-F85A-46FA-AE65-734A9AED1A0B} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
+		{67AEF7CC-BDC4-43D0-8627-9C807502A6EE} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
+		{3B17B627-D157-47C8-8F1A-4A768ADA0F74} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
+		{150103E0-BAED-4EB7-BB3A-7871D5E5EB22} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
+		{A9379A83-FBDD-425F-8C4A-9EA60EC6D779} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
+		{91681128-8B86-471D-82B4-2A7F0390569F} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
 	EndGlobalSection
 EndGlobal
