@@ -14,5 +14,6 @@ This library supports the following main features:
 - Provide a lot of default option types.
 - Support custom options and converters.
 - Configure command-line help generation and output stream.
+- Generation of argument parser using attributes.
 
 Many other features with examples you can find in [documentation](https://github.com/yakovypg/NetArgumentParser/blob/main/DOCUMENTATION.md).

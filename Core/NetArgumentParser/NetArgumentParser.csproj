@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>NetArgumentParser</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Product>NetArgumentParser</Product>
     <Title>NetArgumentParser</Title>
     <Authors>yakovypg</Authors>
@@ -17,7 +17,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<!--<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>-->
     <RequireLicenseAcceptance>true</RequireLicenseAcceptance>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl> 
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
