@@ -185,12 +185,22 @@ Subcommands can be configured using `SubcommandAttribute` attribute. The corresp
 [ParserConfig]
 internal class CustomParserConfig
 {
+    public CustomParserConfig()
+    {
+        Status = new();
+    }
+
     [Subcommand("status", "description")]
     public StatusSubcommand Status { get; }
 }
 
 internal class StatusSubcommand
 {
+    public StatusSubcommand()
+    {
+        Update = new();
+    }
+
     [CounterOption("verbosity", "v")]
     public int Verbosity { get; set; }
 
