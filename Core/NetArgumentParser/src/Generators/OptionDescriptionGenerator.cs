@@ -95,7 +95,7 @@ public class OptionDescriptionGenerator
         ExtendedArgumentNullException.ThrowIfNull(builder, nameof(builder));
         ExtendedArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
 
-        int maxExampleLength = GetMaxOptionExampleLength();
+        int maxExampleLength = GetMaxSuitableOptionExampleLength();
 
         string example = GetOptionExample(commonOption);
         string exampleWithDelimiter = example + DelimiterAfterOptionExample;
@@ -116,7 +116,7 @@ public class OptionDescriptionGenerator
         ExtendedArgumentNullException.ThrowIfNull(builder, nameof(builder));
         ExtendedArgumentNullException.ThrowIfNull(commonOption, nameof(commonOption));
 
-        int maxExampleLength = GetMaxOptionExampleLength();
+        int maxExampleLength = GetMaxSuitableOptionExampleLength();
         int emptySpaceLength = GetEmptySpaceForOptionExample(maxExampleLength).Length;
 
         int charsForDescriptionLine = WindowWidth - emptySpaceLength;
@@ -146,17 +146,24 @@ public class OptionDescriptionGenerator
     {
         ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
 
-        int maxOptionExampleLength = GetMaxOptionExampleLength();
+        int maxOptionExampleLength = GetMaxSuitableOptionExampleLength();
         string example = OptionExamplePrefix + option.GetLongExample();
 
         return example.AddEmptyPostfix(maxOptionExampleLength);
     }
 
-    protected int GetMaxOptionExampleLength()
+    protected int GetMaxSuitableOptionExampleLength()
     {
-        int maxOptionExampleLength = Options
+        if (!Options.Any())
+            return 0;
+
+        List<ICommonOption> suitableOptions = Options
             .Where(t => t.GetLongExample().Length <= OptionExampleCharsLimit)
-            .Max(t => t.GetLongExample().Length);
+            .ToList();
+
+        int maxOptionExampleLength = suitableOptions.Count > 0
+            ? suitableOptions.Max(t => t.GetLongExample().Length)
+            : Options.Min(t => t.GetLongExample().Length);
 
         maxOptionExampleLength += OptionExamplePrefix?.Length ?? 0;
 
