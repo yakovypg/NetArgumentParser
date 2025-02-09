@@ -7,20 +7,20 @@ using System.Runtime.Serialization;
 namespace NetArgumentParser;
 
 [Serializable]
-public class ExtendedArgumentException : ArgumentException
+internal class ExtendedArgumentException : ArgumentException
 {
-    public ExtendedArgumentException() { }
+    internal ExtendedArgumentException() { }
 
-    public ExtendedArgumentException(string? message)
+    internal ExtendedArgumentException(string? message)
         : base(message) { }
 
-    public ExtendedArgumentException(string? message, Exception? innerException)
+    internal ExtendedArgumentException(string? message, Exception? innerException)
         : base(message, innerException) { }
 
-    public ExtendedArgumentException(string? message, string? paramName)
+    internal ExtendedArgumentException(string? message, string? paramName)
         : base(message, paramName) { }
 
-    public ExtendedArgumentException(
+    internal ExtendedArgumentException(
         string? message,
         string? paramName,
         Exception? innerException)
@@ -33,7 +33,17 @@ public class ExtendedArgumentException : ArgumentException
     protected ExtendedArgumentException(SerializationInfo info, StreamingContext context)
         : base(info, context) { }
 
-    public static void ThrowIfNullOrEmpty<T>(T? argument, string? paramName = null)
+    #if NET8_0_OR_GREATER
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
+    public override void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+        base.GetObjectData(info, context);
+    }
+
+    internal static void ThrowIfNullOrEmpty<T>(T? argument, string? paramName = null)
     {
         if (argument is null)
             throw new ArgumentNullException(paramName);
@@ -51,7 +61,7 @@ public class ExtendedArgumentException : ArgumentException
         }
     }
 
-    public static void ThrowIfContainsNullOrEmptyItem(
+    internal static void ThrowIfContainsNullOrEmptyItem(
         IEnumerable argument,
         string? paramName = null)
     {
@@ -65,7 +75,7 @@ public class ExtendedArgumentException : ArgumentException
         }
     }
 
-    public static void ThrowIfNullOrWhiteSpace<T>(T? argument, string? paramName = null)
+    internal static void ThrowIfNullOrWhiteSpace<T>(T? argument, string? paramName = null)
     {
         if (argument is null)
             throw new ArgumentNullException(paramName);
@@ -78,15 +88,5 @@ public class ExtendedArgumentException : ArgumentException
             string message = $"{paramName} cannot be an empty string.";
             throw new ArgumentException(message, paramName);
         }
-    }
-
-#if NET8_0_OR_GREATER
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
-#endif
-    public override void GetObjectData(SerializationInfo info, StreamingContext context)
-    {
-        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
-        base.GetObjectData(info, context);
     }
 }
