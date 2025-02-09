@@ -2,7 +2,7 @@ using System;
 
 namespace NetArgumentParser.Subcommands;
 
-public class Subcommand : ParserQuantum
+public class Subcommand : ParserQuantum, ISubcommand
 {
     internal Subcommand(string name, string description)
     {
