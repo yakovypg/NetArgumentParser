@@ -6,6 +6,7 @@ using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
 using NetArgumentParser.Subcommands;
+using NetArgumentParser.Tests.Extensions;
 using NetArgumentParser.Tests.Models;
 
 namespace NetArgumentParser.Tests;
@@ -1989,9 +1990,6 @@ public class ArgumentParserSubcommandTests
         ExtendedArgumentNullException.ThrowIfNull(actual, nameof(expected));
         ExtendedArgumentNullException.ThrowIfNull(actual, nameof(actual));
 
-        expected = expected.OrderBy(t => t);
-        actual = actual.OrderBy(t => t);
-
-        Assert.True(expected.SequenceEqual(actual));
+        Assert.True(expected.ScrambledEquals(actual));
     }
 }

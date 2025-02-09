@@ -7,6 +7,7 @@ using NetArgumentParser.Converters;
 using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
+using NetArgumentParser.Tests.Extensions;
 using NetArgumentParser.Tests.Models;
 
 // Necessary for using dynamic
@@ -709,11 +710,13 @@ public class ArgumentParserTests
             new EnumValueOption<BindMode>(
                 string.Empty,
                 "a",
+                useDefaultChoices: false,
                 choices: [BindMode.TwoWay, BindMode.OneWayToSource]),
 
             new EnumValueOption<StringSplitOptions>(
                 string.Empty,
                 "b",
+                useDefaultChoices: false,
                 choices: [StringSplitOptions.RemoveEmptyEntries])
         };
 
@@ -722,11 +725,13 @@ public class ArgumentParserTests
             new EnumValueOption<BindMode>(
                 string.Empty,
                 "c",
+                useDefaultChoices: false,
                 choices: [BindMode.OneWay, BindMode.OneWayToSource]),
 
             new EnumValueOption<StringSplitOptions>(
                 string.Empty,
                 "d",
+                useDefaultChoices: false,
                 choices: [StringSplitOptions.RemoveEmptyEntries])
         };
 
@@ -2067,9 +2072,6 @@ public class ArgumentParserTests
         ExtendedArgumentNullException.ThrowIfNull(actual, nameof(expected));
         ExtendedArgumentNullException.ThrowIfNull(actual, nameof(actual));
 
-        expected = expected.OrderBy(t => t);
-        actual = actual.OrderBy(t => t);
-
-        Assert.True(expected.SequenceEqual(actual));
+        Assert.True(expected.ScrambledEquals(actual));
     }
 }

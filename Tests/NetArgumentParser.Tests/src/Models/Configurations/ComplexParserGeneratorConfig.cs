@@ -23,6 +23,7 @@ internal class ComplexParserGeneratorConfig
     public const bool ModeIsRequired = true;
     public const bool ModeIsHidden = false;
     public const bool ModeIsFinal = false;
+    public const bool ModeUseDefaultChoices = true;
 
     public const string IgnoreCaseLongName = "ignore-case";
     public const string IgnoreCaseShortName = "i";
@@ -119,6 +120,7 @@ internal class ComplexParserGeneratorConfig
         ModeIsRequired,
         ModeIsHidden,
         ModeIsFinal,
+        ModeUseDefaultChoices,
         [],
         [FileMode.Create, FileMode.Open])
     ]
