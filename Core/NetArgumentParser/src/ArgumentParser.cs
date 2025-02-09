@@ -133,7 +133,10 @@ public class ArgumentParser : ParserQuantum
         var handledSubcommands = new List<Subcommand>();
 
         argumentsVisitor.SubcommandExtracted += (s, e) =>
+        {
+            e.Subcommand.Handle();
             handledSubcommands.Add(e.Subcommand);
+        };
 
         argumentsVisitor.OptionExtracted += (s, e) =>
         {
@@ -238,7 +241,11 @@ public class ArgumentParser : ParserQuantum
         argumentsVisitor.SubcommandExtracted += (s, e) =>
         {
             if (!isFinalOptionHandled)
+            {
+                // Don't handle subcommand here
+                // e.Subcommand.Handle();
                 handledSubcommands.Add(e.Subcommand);
+            }
         };
 
         argumentsVisitor.OptionExtracted += (s, e) =>

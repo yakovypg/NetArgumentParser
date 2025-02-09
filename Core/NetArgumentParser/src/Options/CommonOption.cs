@@ -43,7 +43,7 @@ public abstract class CommonOption : ICommonOption
         ContextCapture = contextCapture ?? new EmptyContextCapture();
     }
 
-    public event EventHandler<EventArgs>? OptionHandled;
+    public event EventHandler<EventArgs>? Handled;
 
     public string LongName { get; }
     public string ShortName { get; }
@@ -119,12 +119,12 @@ public abstract class CommonOption : ICommonOption
         HandleValue(value);
 
         IsHandled = true;
-        OnOptionHandled();
+        OnHandled();
     }
 
-    protected virtual void OnOptionHandled(EventArgs? e = null)
+    protected virtual void OnHandled(EventArgs? e = null)
     {
-        OptionHandled?.Invoke(this, e ?? EventArgs.Empty);
+        Handled?.Invoke(this, e ?? EventArgs.Empty);
     }
 
     protected abstract void HandleValue(params string[] value);

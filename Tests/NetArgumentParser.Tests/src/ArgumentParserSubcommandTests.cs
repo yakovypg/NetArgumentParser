@@ -1276,6 +1276,7 @@ public class ArgumentParserSubcommandTests
             _ = conflictingOptions.Remove(newOption);
 
             parser.ResetOptionsHandledState();
+            parser.ResetSubcommandsHandledState();
         }
         while (conflictingOptions.Count > 1);
 

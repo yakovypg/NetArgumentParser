@@ -43,7 +43,7 @@ ICommonOption? helpOptionCandidate = parser
 
 if (helpOptionCandidate is HelpOption helpOption)
 {
-    helpOption.OptionHandled += (_, _) =>
+    helpOption.Handled += (_, _) =>
     {
         Console.WriteLine(parser.DescriptionGenerator?.GenerateDescription());
         Environment.Exit(0);
