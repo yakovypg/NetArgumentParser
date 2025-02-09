@@ -3,62 +3,62 @@ using System.Collections.Generic;
 
 namespace NetArgumentParser;
 
-public static class DefaultExceptions
+internal static class DefaultExceptions
 {
-    public static void ThrowIfZero(double value, string? paramName = null)
+    internal static void ThrowIfZero(double value, string? paramName = null)
     {
         if (value == 0)
             ThrowZero(value, paramName);
     }
 
-    public static void ThrowIfNegative(double value, string? paramName = null)
+    internal static void ThrowIfNegative(double value, string? paramName = null)
     {
         if (value < 0)
             ThrowNegative(value, paramName);
     }
 
-    public static void ThrowIfNegativeOrZero(double value, string? paramName = null)
+    internal static void ThrowIfNegativeOrZero(double value, string? paramName = null)
     {
         if (value <= 0)
             ThrowNegativeOrZero(value, paramName);
     }
 
-    public static void ThrowIfEqual<T>(T value, T other, string? paramName = null)
+    internal static void ThrowIfEqual<T>(T value, T other, string? paramName = null)
         where T : IEquatable<T>
     {
         if (EqualityComparer<T>.Default.Equals(value, other))
             ThrowEqual(value, other, paramName);
     }
 
-    public static void ThrowIfNotEqual<T>(T value, T other, string? paramName = null)
+    internal static void ThrowIfNotEqual<T>(T value, T other, string? paramName = null)
         where T : IEquatable<T>
     {
         if (!EqualityComparer<T>.Default.Equals(value, other))
             ThrowNotEqual(value, other, paramName);
     }
 
-    public static void ThrowIfGreaterThan<T>(T value, T other, string? paramName = null)
+    internal static void ThrowIfGreaterThan<T>(T value, T other, string? paramName = null)
         where T : IComparable<T>
     {
         if (value.CompareTo(other) > 0)
             ThrowGreater(value, other, paramName);
     }
 
-    public static void ThrowIfGreaterThanOrEqual<T>(T value, T other, string? paramName = null)
+    internal static void ThrowIfGreaterThanOrEqual<T>(T value, T other, string? paramName = null)
         where T : IComparable<T>
     {
         if (value.CompareTo(other) >= 0)
             ThrowGreaterEqual(value, other, paramName);
     }
 
-    public static void ThrowIfLessThan<T>(T value, T other, string? paramName = null)
+    internal static void ThrowIfLessThan<T>(T value, T other, string? paramName = null)
         where T : IComparable<T>
     {
         if (value.CompareTo(other) < 0)
             ThrowLess(value, other, paramName);
     }
 
-    public static void ThrowIfLessThanOrEqual<T>(T value, T other, string? paramName = null)
+    internal static void ThrowIfLessThanOrEqual<T>(T value, T other, string? paramName = null)
         where T : IComparable<T>
     {
         if (value.CompareTo(other) <= 0)
