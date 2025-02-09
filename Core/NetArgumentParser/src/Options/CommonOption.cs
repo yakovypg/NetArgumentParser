@@ -47,7 +47,7 @@ public abstract class CommonOption : ICommonOption
 
     public string LongName { get; }
     public string ShortName { get; }
-    public string Description { get; }
+    public string Description { get; set; }
     public bool IsRequired { get; }
     public bool IsHidden { get; }
     public bool IsFinal { get; }
