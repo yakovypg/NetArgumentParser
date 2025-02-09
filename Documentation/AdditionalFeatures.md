@@ -7,6 +7,7 @@
 *    [Parse Known Arguments](#parse-known-arguments)
 *    [Skip Arguments](#skip-arguments)
 *    [Getting Info About Handled Options And Subcommands](#getting-info-about-handled-options-and-subcommands)
+*    [Add Choices To Description](#add-choices-to-description)
 
 ## Negative Numbers & Scientific Notation
 As you can see here, **NetArgumentParser** supports negative numbers and scientific notation.
@@ -113,4 +114,96 @@ ParseArgumentsResult result = parser.ParseKnownArguments(args, out _);
 
 // result.HandledOptions: verboseOption (without value), filesOption (with values img.jpg, img.png)
 // result.HandledSubcommands: compressSubcommand
+```
+
+## Add Choices To Description
+You can add choices to the value option description automatically. To do this, you can use `AddChoicesToDescription()` method as follows:
+
+```cs
+var angleOption = new ValueOption<int>(
+    longName: "angle",
+    shortName: "a",
+    description: "Angle",
+    choices: [0, 45, 90]);
+
+angleOption.AddChoicesToDescription();
+
+var namesOption = new MultipleValueOption<string>(
+    longName: "input",
+    shortName: "i",
+    description: "Names",
+    contextCapture: new OneOrMoreContextCapture(),
+    choices: [["John", "Max"], ["James", "Michael"]]);
+
+namesOption.AddChoicesToDescription(
+    separator: ", ",
+    prefix: " (",
+    postfix: ")",
+    arraySeparator: "; ",
+    arrayPrefix: "[",
+    arrayPostfix: "]");
+
+var fileModeOption = new EnumValueOption<FileMode>(
+    longName: "mode",
+    shortName: "m",
+    description: "File mode",
+    useDefaultChoices: true);
+
+fileModeOption.AddChoicesToDescription(
+    separator: " | ",
+    prefix: ". Choices: { ",
+    postfix: " }");
+
+// Angle (0, 45, 90)
+Console.WriteLine(angleOption.Description);
+
+// Names ([John, Max]; [James, Michael])
+Console.WriteLine(namesOption.Description);
+
+// File mode. Choices: { CreateNew | Create | Open | OpenOrCreate | Truncate | Append }
+Console.WriteLine(fileModeOption.Description);
+```
+
+All value options implement interface `IValueOptionDescriptionDesigner`, so if you don't want to manually call method `AddChoicesToDescription()` for each option, you can get all options from parser using `GetAllOptions()` method, filter them and then use a loop.
+
+```cs
+var angleOption = new ValueOption<int>(
+    longName: "angle",
+    shortName: "a",
+    description: "Angle",
+    choices: [0, 45, 90]);
+
+var namesOption = new MultipleValueOption<string>(
+    longName: "input",
+    shortName: "i",
+    description: "Names",
+    contextCapture: new OneOrMoreContextCapture(),
+    choices: [["John", "Max"], ["James", "Michael"]]);
+
+var fileModeOption = new EnumValueOption<FileMode>(
+    longName: "mode",
+    shortName: "m",
+    description: "File mode",
+    useDefaultChoices: true);
+
+var parser = new ArgumentParser();
+parser.AddOptions(angleOption, namesOption, fileModeOption);
+
+var designers = parser.GetAllOptions()
+    .Where(t => t is IValueOptionDescriptionDesigner)
+    .Cast<IValueOptionDescriptionDesigner>();
+
+foreach (var designer in designers)
+{
+    designer.AddChoicesToDescription();
+}
+
+// Angle (0, 45, 90)
+Console.WriteLine(angleOption.Description);
+
+// Names ([John, Max]; [James, Michael])
+Console.WriteLine(namesOption.Description);
+
+// File mode (CreateNew, Create, Open, OpenOrCreate, Truncate, Append)
+Console.WriteLine(fileModeOption.Description);
 ```

@@ -181,7 +181,7 @@ StringSplitOptions? splitOption = null;
 
 var option = new EnumValueOption<StringSplitOptions>("split-option", string.Empty,
     description: "specifies how the String.Split method should split a string",
-    afterValueParsingAction: t => splitOption = t)
+    afterValueParsingAction: t => splitOption = t);
 
 var parser = new ArgumentParser();
 parser.AddOptions(option);

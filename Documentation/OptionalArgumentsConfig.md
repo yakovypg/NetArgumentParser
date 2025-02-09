@@ -115,7 +115,7 @@ var multipleValueOption = new MultipleValueOption<byte>("margin", "m",
     choices: [[0, 0, 0, 0], [10, 10, 10, 10]]);
 
 var enumValueOption = new EnumValueOption<StringSplitOptions>("options", "o",
-    choices: [StringSplitOptions.TrimEntries, StringSplitOptions.RemoveEmptyEntries])
+    choices: [StringSplitOptions.TrimEntries, StringSplitOptions.RemoveEmptyEntries]);
 ```
 
 Enum value options have default choices. It is all values of the corresponding enum that satisfy the restriction (if it specified). You can disable the use of default choices by setting `useDefaultChoices` parameter to `false` or by specifying your own choices.
