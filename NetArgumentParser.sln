@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.PrintingHelp", "Examples\NetArgumentParser.Examples.PrintingHelp\NetArgumentParser.Examples.PrintingHelp.csproj", "{91681128-8B86-471D-82B4-2A7F0390569F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArgumentParser.Examples.AddChoicesToDescription", "Examples\NetArgumentParser.Examples.AddChoicesToDescription\NetArgumentParser.Examples.AddChoicesToDescription.csproj", "{61A10479-C5AC-4D81-B004-9BE69CC8ADDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +80,10 @@ Global
 		{91681128-8B86-471D-82B4-2A7F0390569F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91681128-8B86-471D-82B4-2A7F0390569F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91681128-8B86-471D-82B4-2A7F0390569F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61A10479-C5AC-4D81-B004-9BE69CC8ADDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61A10479-C5AC-4D81-B004-9BE69CC8ADDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61A10479-C5AC-4D81-B004-9BE69CC8ADDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61A10479-C5AC-4D81-B004-9BE69CC8ADDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2C140CC4-00C6-4017-8CB3-68B32CC7C058} = {649A384F-36AE-432F-8AF5-D28674D77B7D}
@@ -90,5 +96,6 @@ Global
 		{150103E0-BAED-4EB7-BB3A-7871D5E5EB22} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
 		{A9379A83-FBDD-425F-8C4A-9EA60EC6D779} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
 		{91681128-8B86-471D-82B4-2A7F0390569F} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
+		{61A10479-C5AC-4D81-B004-9BE69CC8ADDD} = {5F8AF5AE-CF52-4ECE-92B8-EE6F7F401E98}
 	EndGlobalSection
 EndGlobal
