@@ -15,12 +15,12 @@ public class SubcommandAlreadyHandledException : Exception
     public SubcommandAlreadyHandledException(string? message, Exception? innerException)
         : base(message, innerException) { }
 
-    public SubcommandAlreadyHandledException(string? message, Subcommand subcommand)
+    public SubcommandAlreadyHandledException(string? message, ISubcommand subcommand)
         : this(message, subcommand, null) { }
 
     public SubcommandAlreadyHandledException(
         string? message,
-        Subcommand subcommand,
+        ISubcommand subcommand,
         Exception? innerException)
         : base(message ?? GetDefaultMessage(subcommand), innerException)
     {
@@ -36,10 +36,10 @@ public class SubcommandAlreadyHandledException : Exception
         : base(info, context)
     {
         ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
-        Subcommand = info.GetValue(nameof(Subcommand), typeof(Subcommand)) as Subcommand;
+        Subcommand = info.GetValue(nameof(Subcommand), typeof(ISubcommand)) as ISubcommand;
     }
 
-    public Subcommand? Subcommand { get; private set; }
+    public ISubcommand? Subcommand { get; private set; }
 
 #if NET8_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -49,11 +49,11 @@ public class SubcommandAlreadyHandledException : Exception
     {
         ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
 
-        info.AddValue(nameof(Subcommand), Subcommand, typeof(Subcommand));
+        info.AddValue(nameof(Subcommand), Subcommand, typeof(ISubcommand));
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(Subcommand subcommand)
+    private static string GetDefaultMessage(ISubcommand subcommand)
     {
         ExtendedArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
         return $"Subcommand '{subcommand}' has already been handled.";
