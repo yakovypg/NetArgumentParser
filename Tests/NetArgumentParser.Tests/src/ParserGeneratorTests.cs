@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -8,6 +9,7 @@ using NetArgumentParser.Generators;
 using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
 using NetArgumentParser.Subcommands;
+using NetArgumentParser.Tests.Extensions;
 using NetArgumentParser.Tests.Models;
 using NetArgumentParser.Tests.Models.Configurations;
 
@@ -377,7 +379,7 @@ public class ParserGeneratorTests
         Assert.Equal(expectedAngle, config.ComplexSubcommand.Angle);
 
         Assert.NotNull(config.ComplexSubcommand.InputFiles);
-        Assert.True(expectedInputFiles.SequenceEqual(config.ComplexSubcommand.InputFiles));
+        Assert.Equal(expectedInputFiles, config.ComplexSubcommand.InputFiles);
 
         Assert.Equal(
             expectedShowGuide,
@@ -434,11 +436,9 @@ public class ParserGeneratorTests
             FlagOptionsOnlyParserGeneratorConfig.ShowGuideIsFinal,
             showGuideOption.IsFinal);
 
-        bool showGuideAliasesEqual = FlagOptionsOnlyParserGeneratorConfig
-            .ShowGuideAliases
-            .SequenceEqual(showGuideOption.Aliases);
-
-        Assert.True(showGuideAliasesEqual);
+        Assert.Equal(
+            FlagOptionsOnlyParserGeneratorConfig.ShowGuideAliases,
+            showGuideOption.Aliases);
 
         ICommonOption? overwriteFileOption = quantum.Options.FirstOrDefault(t =>
         {
@@ -471,11 +471,9 @@ public class ParserGeneratorTests
             FlagOptionsOnlyParserGeneratorConfig.OverwriteFileIsFinal,
             overwriteFileOption.IsFinal);
 
-        bool overwriteFileAliasesEqual = FlagOptionsOnlyParserGeneratorConfig
-            .OverwriteFileAliases
-            .SequenceEqual(overwriteFileOption.Aliases);
-
-        Assert.True(overwriteFileAliasesEqual);
+        Assert.Equal(
+            FlagOptionsOnlyParserGeneratorConfig.OverwriteFileAliases,
+            overwriteFileOption.Aliases);
 
         ICommonOption? overwriteDirectoryOption = quantum.Options.FirstOrDefault(t =>
         {
@@ -508,11 +506,9 @@ public class ParserGeneratorTests
             FlagOptionsOnlyParserGeneratorConfig.OverwriteDirectoryIsFinal,
             overwriteDirectoryOption.IsFinal);
 
-        bool overwriteDirectoryAliasesEqual = FlagOptionsOnlyParserGeneratorConfig
-            .OverwriteDirectoryAliases
-            .SequenceEqual(overwriteDirectoryOption.Aliases);
-
-        Assert.True(overwriteDirectoryAliasesEqual);
+        Assert.Equal(
+            FlagOptionsOnlyParserGeneratorConfig.OverwriteDirectoryAliases,
+            overwriteDirectoryOption.Aliases);
     }
 
     private static void VerifySubcommandsOnlyParserGeneratorConfigQuantum(ParserQuantum quantum)
@@ -735,11 +731,9 @@ public class ParserGeneratorTests
             ComplexParserGeneratorConfig.VerbosityLevelIsFinal,
             verbosityLevelOption.IsFinal);
 
-        bool verbosityLevelAliasesEqual = ComplexParserGeneratorConfig
-            .VerbosityLevelAliases
-            .SequenceEqual(verbosityLevelOption.Aliases);
-
-        Assert.True(verbosityLevelAliasesEqual);
+        Assert.Equal(
+            ComplexParserGeneratorConfig.VerbosityLevelAliases,
+            verbosityLevelOption.Aliases);
 
         ICommonOption? modeOptionBase = quantum.Options.FirstOrDefault(t =>
         {
@@ -778,11 +772,20 @@ public class ParserGeneratorTests
             ComplexParserGeneratorConfig.ModeIsFinal,
             modeOption.IsFinal);
 
-        bool modeAliasesEqual = ComplexParserGeneratorConfig
-            .ModeAliases
-            .SequenceEqual(modeOption.Aliases);
+        Assert.Equal(
+            ComplexParserGeneratorConfig.ModeAliases,
+            modeOption.Aliases);
 
-        Assert.True(modeAliasesEqual);
+        if (ComplexParserGeneratorConfig.ModeUseDefaultChoices
+            && ComplexParserGeneratorConfig.ModeChoices is null)
+        {
+            FileMode[] expectedChoices = (FileMode[])Enum.GetValues(typeof(FileMode));
+            Assert.True(expectedChoices.ScrambledEquals(modeOption.Choices));
+        }
+        else
+        {
+            Assert.Equal(ComplexParserGeneratorConfig.ModeChoices, modeOption.Choices);
+        }
 
         ICommonOption? ignoreCaseOption = quantum.Options.FirstOrDefault(t =>
         {
@@ -815,11 +818,9 @@ public class ParserGeneratorTests
             ComplexParserGeneratorConfig.IgnoreCaseIsFinal,
             ignoreCaseOption.IsFinal);
 
-        bool ignoreCaseAliasesEqual = ComplexParserGeneratorConfig
-            .IgnoreCaseAliases
-            .SequenceEqual(ignoreCaseOption.Aliases);
-
-        Assert.True(ignoreCaseAliasesEqual);
+        Assert.Equal(
+            ComplexParserGeneratorConfig.IgnoreCaseAliases,
+            ignoreCaseOption.Aliases);
 
         ICommonOption? inputFilesOptionBase = quantum.Options.FirstOrDefault(t =>
         {
@@ -858,11 +859,9 @@ public class ParserGeneratorTests
             ComplexParserGeneratorConfig.InputFilesIsFinal,
             inputFilesOption.IsFinal);
 
-        bool inputFilesAliasesEqual = ComplexParserGeneratorConfig
-            .InputFilesAliases
-            .SequenceEqual(inputFilesOption.Aliases);
-
-        Assert.True(inputFilesAliasesEqual);
+        Assert.Equal(
+            ComplexParserGeneratorConfig.InputFilesAliases,
+            inputFilesOption.Aliases);
 
         ICommonOption? marginOptionBase = quantum.Options.FirstOrDefault(t =>
         {
@@ -901,11 +900,9 @@ public class ParserGeneratorTests
             ComplexParserGeneratorConfig.MarginIsFinal,
             marginOption.IsFinal);
 
-        bool marginAliasesEqual = ComplexParserGeneratorConfig
-            .MarginAliases
-            .SequenceEqual(marginOption.Aliases);
-
-        Assert.True(marginAliasesEqual);
+        Assert.Equal(
+            ComplexParserGeneratorConfig.MarginAliases,
+            marginOption.Aliases);
 
         ICommonOption? angleOptionBase = quantum.Options.FirstOrDefault(t =>
         {
@@ -948,11 +945,13 @@ public class ParserGeneratorTests
             ComplexParserGeneratorConfig.AngleDefaultValue,
             angleOption.DefaultValue?.Value);
 
-        bool angleAliasesEqual = ComplexParserGeneratorConfig
-            .AngleAliases
-            .SequenceEqual(angleOption.Aliases);
+        Assert.Equal(
+            ComplexParserGeneratorConfig.AngleAliases,
+            angleOption.Aliases);
 
-        Assert.True(angleAliasesEqual);
+        Assert.Equal(
+            ComplexParserGeneratorConfig.AngleChoices,
+            angleOption.Choices);
     }
 
     private static void VerifyParseSpecificParserGeneratorConfigQuantum(ParserQuantum quantum)
@@ -1006,11 +1005,9 @@ public class ParserGeneratorTests
             ParseSpecificParserGeneratorConfig.ShowHelpIsHidden,
             showHelpOption.IsHidden);
 
-        bool showHelpAliasesEqual = ParseSpecificParserGeneratorConfig
-            .ShowHelpAliases
-            .SequenceEqual(showHelpOption.Aliases);
-
-        Assert.True(showHelpAliasesEqual);
+        Assert.Equal(
+            ParseSpecificParserGeneratorConfig.ShowHelpAliases,
+            showHelpOption.Aliases);
 
         ICommonOption? showVersionOption = quantum.Options.FirstOrDefault(t =>
         {
@@ -1035,11 +1032,9 @@ public class ParserGeneratorTests
             ParseSpecificParserGeneratorConfig.ShowVersionIsHidden,
             showVersionOption.IsHidden);
 
-        bool showVersionAliasesEqual = ParseSpecificParserGeneratorConfig
-            .ShowVersionAliases
-            .SequenceEqual(showVersionOption.Aliases);
-
-        Assert.True(showVersionAliasesEqual);
+        Assert.Equal(
+            ParseSpecificParserGeneratorConfig.ShowVersionAliases,
+            showVersionOption.Aliases);
     }
 
     private static void VerifyParserQuantumIsEmpty(ParserQuantum quantum)
