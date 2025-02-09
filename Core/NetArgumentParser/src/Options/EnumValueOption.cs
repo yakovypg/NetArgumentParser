@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Options.Context;
 
@@ -8,6 +9,7 @@ namespace NetArgumentParser.Options;
 public class EnumValueOption<T> : ValueOption<T>
     where T : struct, Enum
 {
+#pragma warning disable SA1118 // Parameter should not span multiple lines
     public EnumValueOption(
         string longName,
         string shortName = "",
@@ -16,6 +18,7 @@ public class EnumValueOption<T> : ValueOption<T>
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool useDefaultChoices = true,
         IEnumerable<string>? aliases = null,
         IEnumerable<T>? choices = null,
         DefaultOptionValue<T>? defaultValue = null,
@@ -31,13 +34,18 @@ public class EnumValueOption<T> : ValueOption<T>
             isHidden,
             isFinal,
             aliases,
-            choices,
+            useDefaultChoices && choices is null
+                ? (valueRestriction is not null
+                    ? ((T[])Enum.GetValues(typeof(T))).Where(t => valueRestriction.IsValueAllowed(t))
+                    : (T[])Enum.GetValues(typeof(T)))
+                : choices,
             defaultValue,
             valueRestriction,
             afterValueParsingAction,
             new FixedContextCapture(1))
     {
     }
+#pragma warning restore SA1118 // Parameter should not span multiple lines
 
     protected override IValueConverter<T> GetDefaultConverter()
     {

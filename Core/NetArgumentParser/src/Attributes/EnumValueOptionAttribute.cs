@@ -23,6 +23,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool useDefaultChoices = true,
         string[]? aliases = null,
         T[]? choices = null)
         : base(
@@ -37,6 +38,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             aliases,
             choices)
     {
+        UseDefaultChoices = useDefaultChoices;
     }
 #pragma warning restore CA1019 // Define accessors for attribute arguments
 
@@ -48,6 +50,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool useDefaultChoices = true,
         string[]? aliases = null,
         T[]? choices = null)
         : base(
@@ -61,7 +64,10 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             isFinal,
             aliases)
     {
+        UseDefaultChoices = useDefaultChoices;
     }
+
+    public bool UseDefaultChoices { get; }
 
     public override ICommonOption CreateOption(object source, PropertyInfo propertyInfo)
     {
@@ -79,6 +85,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             IsRequired,
             IsHidden,
             IsFinal,
+            UseDefaultChoices,
             Aliases,
             Choices,
             DefaultValue,
