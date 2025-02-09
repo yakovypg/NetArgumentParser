@@ -118,6 +118,16 @@ var enumValueOption = new EnumValueOption<StringSplitOptions>("options", "o",
     choices: [StringSplitOptions.TrimEntries, StringSplitOptions.RemoveEmptyEntries])
 ```
 
+Enum value options have default choices. It is all values of the corresponding enum that satisfy the restriction (if it specified). You can disable the use of default choices by setting `useDefaultChoices` parameter to `false` or by specifying your own choices.
+
+```cs
+var stringSplitOptions = new EnumValueOption<StringSplitOptions>("options", "o",
+    useDefaultChoices: false);
+
+var fileMode = new EnumValueOption<FileMode>("mode", "m",
+    choices: [FileMode.Open, FileMode.Create]);
+```
+
 ### Default Value
 You can specify a default value for the option. In this case, if the input argument list doesn't contain a matching argument, the option will be assigned its default value. Default value is only available for value options.
 
@@ -139,7 +149,7 @@ var multipleValueOption = new MultipleValueOption<byte>("margin", "m",
     valueRestriction: new OptionValueRestriction<IList<byte>>(t => t.Contains(5)));
 
 var enumValueOption = new EnumValueOption<StringSplitOptions>("options", "o",
-    valueRestriction: new OptionValueRestriction<StringSplitOptions>(t => t != StringSplitOptions.None))
+    valueRestriction: new OptionValueRestriction<StringSplitOptions>(t => t != StringSplitOptions.None));
 ```
 
 ### Required Options

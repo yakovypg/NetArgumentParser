@@ -69,6 +69,7 @@ internal class CustomParserConfig
         isRequired: true,
         isHidden: false,
         isFinal: false,
+        useDefaultChoices: false,
         aliases: ["file-mode"],
         choices: [FileMode.Create, FileMode.Open])
     ]
