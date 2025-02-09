@@ -10,7 +10,7 @@ public interface IOptionSetContainer
     IEnumerable<ICommonOption> HiddenOptions { get; }
     IEnumerable<ICommonOption> VisibleOptions { get; }
 
-    void ResetOptionsHandledState();
+    void ResetOptionsHandledState(bool recursive = true);
     void AddOptions(params ICommonOption[] options);
     void AddConverters(params IValueConverter[] converters);
     bool RemoveOption(ICommonOption commonOption);

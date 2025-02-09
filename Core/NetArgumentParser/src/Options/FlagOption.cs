@@ -27,7 +27,7 @@ public class FlagOption : CommonOption
             new EmptyContextCapture())
     {
         if (afterHandlingAction is not null)
-            OptionHandled += (sender, e) => afterHandlingAction.Invoke();
+            Handled += (sender, e) => afterHandlingAction.Invoke();
     }
 
     protected override void HandleValue(params string[] value)

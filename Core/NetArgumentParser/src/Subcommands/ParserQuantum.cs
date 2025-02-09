@@ -58,13 +58,27 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         }
     }
 
-    public virtual void ResetOptionsHandledState()
+    public virtual void ResetOptionsHandledState(bool recursive = true)
     {
         _optionSet.ResetOptionsHandledState();
 
+        if (recursive)
+        {
+            foreach (Subcommand subcommand in _subcommands)
+            {
+                subcommand.ResetOptionsHandledState(recursive);
+            }
+        }
+    }
+
+    public virtual void ResetSubcommandsHandledState(bool recursive = true)
+    {
         foreach (Subcommand subcommand in _subcommands)
         {
-            subcommand.ResetOptionsHandledState();
+            subcommand.ResetHandledState();
+
+            if (recursive)
+                subcommand.ResetSubcommandsHandledState(recursive);
         }
     }
 
