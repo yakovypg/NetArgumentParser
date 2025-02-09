@@ -5,12 +5,14 @@ using System.Linq;
 using NetArgumentParser.Configuration;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Options.Context;
+using NetArgumentParser.Utils;
 
 namespace NetArgumentParser.Options;
 
 public class ValueOption<T> : CommonOption, IValueOption<T>
 {
     private List<T> _choices;
+    private bool _areChoicesAddedToDescription;
 
     public ValueOption(
         string longName,
@@ -130,6 +132,36 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         }
 
         return false;
+    }
+
+    public void AddChoicesToDescription(
+        string separator = ", ",
+        string prefix = " (",
+        string postfix = ")",
+        string arraySeparator = "; ",
+        string arrayPrefix = "[",
+        string arrayPostfix = "]")
+    {
+        ExtendedArgumentNullException.ThrowIfNull(separator, nameof(separator));
+        ExtendedArgumentNullException.ThrowIfNull(prefix, nameof(prefix));
+        ExtendedArgumentNullException.ThrowIfNull(postfix, nameof(postfix));
+        ExtendedArgumentNullException.ThrowIfNull(arraySeparator, nameof(arraySeparator));
+        ExtendedArgumentNullException.ThrowIfNull(arrayPrefix, nameof(arrayPrefix));
+        ExtendedArgumentNullException.ThrowIfNull(arrayPostfix, nameof(arrayPostfix));
+
+        if (_areChoicesAddedToDescription)
+            return;
+
+        string choices = ExtendedString.JoinWithExpand(
+            separator,
+            arraySeparator,
+            arrayPrefix,
+            arrayPostfix,
+            Choices);
+
+        Description += $"{prefix}{choices}{postfix}";
+
+        _areChoicesAddedToDescription = true;
     }
 
     public virtual void HandleDefaultValue()

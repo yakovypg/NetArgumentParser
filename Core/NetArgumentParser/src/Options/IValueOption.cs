@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using NetArgumentParser.Converters;
+using NetArgumentParser.Options.Design;
 
 namespace NetArgumentParser.Options;
 
-public interface IValueOption<T> : ICommonOption
+public interface IValueOption<T> : ICommonOption, IValueOptionDescriptionDesigner
 {
     bool HasDefaultValue { get; }
     bool HasConverter { get; }
