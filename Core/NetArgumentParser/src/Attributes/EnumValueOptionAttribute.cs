@@ -23,6 +23,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool ignoreCaseInChoices = false,
         bool useDefaultChoices = true,
         string[]? aliases = null,
         T[]? choices = null)
@@ -35,6 +36,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             isRequired,
             isHidden,
             isFinal,
+            ignoreCaseInChoices,
             aliases,
             choices)
     {
@@ -50,6 +52,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool ignoreCaseInChoices = false,
         bool useDefaultChoices = true,
         string[]? aliases = null,
         T[]? choices = null)
@@ -62,6 +65,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             isRequired,
             isHidden,
             isFinal,
+            ignoreCaseInChoices,
             aliases)
     {
         UseDefaultChoices = useDefaultChoices;
@@ -85,6 +89,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             IsRequired,
             IsHidden,
             IsFinal,
+            IgnoreCaseInChoices,
             UseDefaultChoices,
             Aliases,
             Choices,

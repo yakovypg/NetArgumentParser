@@ -23,6 +23,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool ignoreCaseInChoices = false,
         string[]? aliases = null,
         T[]? choices = null)
         : this(
@@ -34,6 +35,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             isRequired,
             isHidden,
             isFinal,
+            ignoreCaseInChoices,
             aliases)
     {
         DefaultValue = new DefaultOptionValue<T>(defaultValue);
@@ -48,6 +50,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool ignoreCaseInChoices = false,
         string[]? aliases = null)
         : this(
             choices: null,
@@ -58,6 +61,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             isRequired,
             isHidden,
             isFinal,
+            ignoreCaseInChoices,
             aliases)
     {
     }
@@ -71,6 +75,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool ignoreCaseInChoices = false,
         string[]? aliases = null)
         : base(
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -84,10 +89,13 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         ExtendedArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
 
         MetaVariable = metaVariable;
+        IgnoreCaseInChoices = ignoreCaseInChoices;
         Choices = choices;
     }
 
     public string MetaVariable { get; }
+    public bool IgnoreCaseInChoices { get; }
+
     public IEnumerable<T>? Choices { get; }
     public DefaultOptionValue<T>? DefaultValue { get; }
 
@@ -109,6 +117,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             IsRequired,
             IsHidden,
             IsFinal,
+            IgnoreCaseInChoices,
             Aliases,
             Choices,
             DefaultValue,
