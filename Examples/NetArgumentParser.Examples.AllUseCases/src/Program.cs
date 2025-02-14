@@ -87,6 +87,15 @@ var options = new ICommonOption[]
         contextCapture: new OneOrMoreContextCapture(),
         afterValueParsingAction: t => resultValues.InputFiles = new List<string>(t)),
 
+    new MultipleValueOption<string>(
+        longName: "persons",
+        shortName: string.Empty,
+        description: "persons that should be added to organization",
+        ignoreCaseInChoices: true,
+        ignoreOrderInChoices: true,
+        contextCapture: new FixedContextCapture(3),
+        choices: [["Max", "Robert", "Tom"], ["David", "John", "Richard"]]),
+
     new ValueOption<int>(
         longName: "angle",
         shortName: "a",

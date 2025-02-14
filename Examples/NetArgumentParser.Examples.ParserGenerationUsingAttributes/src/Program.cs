@@ -131,6 +131,23 @@ internal class CustomParserConfig
     [OptionGroup("complex-values", "Complex value options", "Complex value options descripton")]
     public List<string> InputFiles { get; set; }
 
+    [MultipleValueOption<string>(
+        longName: "persons",
+        shortName: "P",
+        description: "persons",
+        metaVariable: "",
+        isRequired: false,
+        isHidden: false,
+        isFinal: false,
+        ignoreCaseInChoices: true,
+        ignoreOrderInChoices: true,
+        aliases: ["ps"],
+        contextCaptureType: ContextCaptureType.Fixed,
+        numberOfItemsToCapture: 3)
+    ]
+    [OptionGroup("complex-values", "", "")]
+    public List<string> Persons { get; set; }
+
     [ValueOption<Point>(
         longName: "point",
         shortName: "p",
