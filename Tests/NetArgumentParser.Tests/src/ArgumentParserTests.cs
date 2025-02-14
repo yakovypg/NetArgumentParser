@@ -4,10 +4,10 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetArgumentParser.Converters;
+using NetArgumentParser.Extensions;
 using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
-using NetArgumentParser.Tests.Extensions;
 using NetArgumentParser.Tests.Models;
 
 // Necessary for using dynamic
@@ -817,6 +817,128 @@ public class ArgumentParserTests
         Exception? ex = Record.Exception(
             () => parser.ParseKnownArguments(arguments, out _));
 
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_ValueOptions_DoNotThrowsExceptionIfValueNotSatisfyChoicesDueCase()
+    {
+        var arguments = new string[]
+        {
+            "--item", "aPpLe",
+            "--first-name", "max",
+            "--second-name", "SMITH"
+        };
+
+        var options = new ICommonOption[]
+        {
+            new ValueOption<string>(
+                "item",
+                string.Empty,
+                ignoreCaseInChoices: true,
+                choices: ["Banana", "Apple", "Grape"]),
+
+            new ValueOption<string>(
+                "first-name",
+                string.Empty,
+                ignoreCaseInChoices: true,
+                choices: ["Max"]),
+
+            new ValueOption<string>(
+                "second-name",
+                string.Empty,
+                ignoreCaseInChoices: true,
+                choices: ["Smith", "Brown"])
+        };
+
+        var parser = new ArgumentParser();
+        parser.AddOptions(options);
+
+        Exception? ex = Record.Exception(() => parser.Parse(arguments));
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_MultipleValueOptions_DoNotThrowsExceptionIfValueNotSatisfyChoicesDueCase()
+    {
+        var arguments = new string[]
+        {
+            "--items", "bAnAnA", "apple", "GRAPE"
+        };
+
+        var options = new ICommonOption[]
+        {
+            new MultipleValueOption<string>(
+                "items",
+                "i",
+                ignoreCaseInChoices: true,
+                contextCapture: new ZeroOrMoreContextCapture(),
+                choices: [["Banana", "Apple", "Grape"], ["Cucumber", "Tomato"]])
+        };
+
+        var parser = new ArgumentParser();
+        parser.AddOptions(options);
+
+        Exception? ex = Record.Exception(() => parser.Parse(arguments));
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_MultipleValueOptions_DoNotThrowsExceptionIfValueNotSatisfyChoicesDueOrder()
+    {
+        var arguments = new string[]
+        {
+            "-n", "7", "0", "1", "0",
+            "--items", "Apple", "Grape", "Banana"
+        };
+
+        var options = new ICommonOption[]
+        {
+            new MultipleValueOption<byte>(
+                "numbers",
+                "n",
+                ignoreOrderInChoices: true,
+                contextCapture: new FixedContextCapture(4),
+                choices: [[1, 2, 3, 4], [0, 0, 7, 1]]),
+
+            new MultipleValueOption<string>(
+                "items",
+                "i",
+                ignoreOrderInChoices: true,
+                contextCapture: new ZeroOrMoreContextCapture(),
+                choices: [["Banana", "Apple", "Grape"], ["Cucumber", "Tomato"]])
+        };
+
+        var parser = new ArgumentParser();
+        parser.AddOptions(options);
+
+        Exception? ex = Record.Exception(() => parser.Parse(arguments));
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_MultipleValueOptions_DoNotThrowsExceptionIfValueNotSatisfyChoicesDueCaseAndOrder()
+    {
+        var arguments = new string[]
+        {
+            "--items", "apple", "GRAPE", "bAnAnA"
+        };
+
+        var options = new ICommonOption[]
+        {
+            new MultipleValueOption<string>(
+                "items",
+                "i",
+                ignoreCaseInChoices: true,
+                ignoreOrderInChoices: true,
+                contextCapture: new ZeroOrMoreContextCapture(),
+                choices: [["Banana", "Apple", "Grape"], ["Cucumber", "Tomato"]])
+        };
+
+        var parser = new ArgumentParser();
+        parser.AddOptions(options);
+
+        Exception? ex = Record.Exception(() => parser.Parse(arguments));
         Assert.Null(ex);
     }
 

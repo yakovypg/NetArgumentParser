@@ -23,6 +23,7 @@ internal class ComplexParserGeneratorConfig
     public const bool ModeIsRequired = true;
     public const bool ModeIsHidden = false;
     public const bool ModeIsFinal = false;
+    public const bool ModeIgnoreCaseInChoices = false;
     public const bool ModeUseDefaultChoices = true;
 
     public const string IgnoreCaseLongName = "ignore-case";
@@ -39,6 +40,8 @@ internal class ComplexParserGeneratorConfig
     public const bool InputFilesIsRequired = true;
     public const bool InputFilesIsHidden = false;
     public const bool InputFilesIsFinal = false;
+    public const bool InputFilesIgnoreCaseInChoices = false;
+    public const bool InputFilesIgnoreOrderInChoices = false;
 
     public const string MarginLongName = "margin";
     public const string MarginShortName = "M";
@@ -47,6 +50,7 @@ internal class ComplexParserGeneratorConfig
     public const bool MarginIsRequired = false;
     public const bool MarginIsHidden = true;
     public const bool MarginIsFinal = false;
+    public const bool MarginIgnoreCaseInChoices = false;
 
     public const string AngleLongName = "angle";
     public const string AngleShortName = "a";
@@ -55,6 +59,7 @@ internal class ComplexParserGeneratorConfig
     public const bool AngleIsRequired = false;
     public const bool AngleIsHidden = false;
     public const bool AngleIsFinal = false;
+    public const bool AngleIgnoreCaseInChoices = false;
     public const double AngleDefaultValue = 45;
 
     public const string SubcommandsOnlySubcommandName = "subcommands-only";
@@ -120,6 +125,7 @@ internal class ComplexParserGeneratorConfig
         ModeIsRequired,
         ModeIsHidden,
         ModeIsFinal,
+        ModeIgnoreCaseInChoices,
         ModeUseDefaultChoices,
         [],
         [FileMode.Create, FileMode.Open])
@@ -156,6 +162,8 @@ internal class ComplexParserGeneratorConfig
         InputFilesIsRequired,
         InputFilesIsHidden,
         InputFilesIsFinal,
+        InputFilesIgnoreCaseInChoices,
+        InputFilesIgnoreOrderInChoices,
         ["i1", "i2", "i3"],
         ContextCaptureType.OneOrMore)
     ]
@@ -173,6 +181,7 @@ internal class ComplexParserGeneratorConfig
         MarginIsRequired,
         MarginIsHidden,
         MarginIsFinal,
+        MarginIgnoreCaseInChoices,
         [])
     ]
     [OptionGroup(
@@ -190,6 +199,7 @@ internal class ComplexParserGeneratorConfig
         AngleIsRequired,
         AngleIsHidden,
         AngleIsFinal,
+        AngleIgnoreCaseInChoices,
         [],
         [0, 45, 90, 135, 180])
     ]

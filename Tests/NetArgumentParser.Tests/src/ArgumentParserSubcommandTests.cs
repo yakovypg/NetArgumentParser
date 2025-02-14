@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using NetArgumentParser.Extensions;
 using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
 using NetArgumentParser.Subcommands;
-using NetArgumentParser.Tests.Extensions;
 using NetArgumentParser.Tests.Models;
 
 namespace NetArgumentParser.Tests;

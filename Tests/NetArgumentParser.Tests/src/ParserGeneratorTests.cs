@@ -5,11 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using NetArgumentParser.Converters;
+using NetArgumentParser.Extensions;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
 using NetArgumentParser.Subcommands;
-using NetArgumentParser.Tests.Extensions;
 using NetArgumentParser.Tests.Models;
 using NetArgumentParser.Tests.Models.Configurations;
 
@@ -773,6 +773,10 @@ public class ParserGeneratorTests
             modeOption.IsFinal);
 
         Assert.Equal(
+            ComplexParserGeneratorConfig.ModeIgnoreCaseInChoices,
+            modeOption.IgnoreCaseInChoices);
+
+        Assert.Equal(
             ComplexParserGeneratorConfig.ModeAliases,
             modeOption.Aliases);
 
@@ -862,6 +866,14 @@ public class ParserGeneratorTests
             inputFilesOption.IsFinal);
 
         Assert.Equal(
+            ComplexParserGeneratorConfig.InputFilesIgnoreCaseInChoices,
+            inputFilesOption.IgnoreCaseInChoices);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.InputFilesIgnoreOrderInChoices,
+            inputFilesOption.IgnoreOrderInChoices);
+
+        Assert.Equal(
             ComplexParserGeneratorConfig.InputFilesAliases,
             inputFilesOption.Aliases);
 
@@ -903,6 +915,10 @@ public class ParserGeneratorTests
             marginOption.IsFinal);
 
         Assert.Equal(
+            ComplexParserGeneratorConfig.MarginIgnoreCaseInChoices,
+            marginOption.IgnoreCaseInChoices);
+
+        Assert.Equal(
             ComplexParserGeneratorConfig.MarginAliases,
             marginOption.Aliases);
 
@@ -942,6 +958,10 @@ public class ParserGeneratorTests
         Assert.Equal(
             ComplexParserGeneratorConfig.AngleIsFinal,
             angleOption.IsFinal);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.AngleIgnoreCaseInChoices,
+            angleOption.IgnoreCaseInChoices);
 
         Assert.Equal(
             ComplexParserGeneratorConfig.AngleDefaultValue,
