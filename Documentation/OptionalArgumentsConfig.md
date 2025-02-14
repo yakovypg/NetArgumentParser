@@ -128,6 +128,34 @@ var fileMode = new EnumValueOption<FileMode>("mode", "m",
     choices: [FileMode.Open, FileMode.Create]);
 ```
 
+You can allow values ​​to be specified for a multiple value option in any order by passing `true` as the `ignoreOrderInChoices` argument. For example, if you specified [1, 2] as a choices, the parser will allow both [1, 2] and [2, 1] to be entered.
+
+```cs
+var numbersOption = new MultipleValueOption<byte>(
+    "numbers",
+    "n",
+    ignoreOrderInChoices: true,
+    contextCapture: new FixedContextCapture(2),
+    choices: [[1, 2]]);
+```
+
+You can also allow string data to be entered in any case by passing `true` as the `ignoreCaseInChoices` argument. For example, if you specified ["Max"] as a choices, the parser will allow the string "Max" to be entered in any case (i.e. "Max", "max", "MAX", "mAx", etc. will be considered valid data).
+
+```cs
+var namesOption = new MultipleValueOption<string>(
+    "names",
+    "n",
+    ignoreCaseInChoices: true,
+    contextCapture: new FixedContextCapture(1),
+    choices: [["Max"]]);
+
+var firstNameOption = new ValueOption<string>(
+    "first-name",
+    string.Empty,
+    ignoreCaseInChoices: true,
+    choices: ["Max"]);
+```
+
 ### Default Value
 You can specify a default value for the option. In this case, if the input argument list doesn't contain a matching argument, the option will be assigned its default value. Default value is only available for value options.
 
