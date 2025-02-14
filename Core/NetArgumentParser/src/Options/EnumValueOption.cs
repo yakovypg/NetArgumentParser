@@ -19,6 +19,7 @@ public class EnumValueOption<T> : ValueOption<T>
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool ignoreCaseInChoices = false,
         bool useDefaultChoices = true,
         IEnumerable<string>? aliases = null,
         IEnumerable<T>? choices = null,
@@ -33,6 +34,7 @@ public class EnumValueOption<T> : ValueOption<T>
             isRequired,
             isHidden,
             isFinal,
+            ignoreCaseInChoices,
             aliases,
             useDefaultChoices && choices is null
                 ? (valueRestriction is not null

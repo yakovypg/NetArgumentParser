@@ -6,6 +6,7 @@ using NetArgumentParser.Configuration;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Options.Context;
 using NetArgumentParser.Utils;
+using NetArgumentParser.Utils.Comparers;
 
 namespace NetArgumentParser.Options;
 
@@ -22,6 +23,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool ignoreCaseInChoices = false,
         IEnumerable<string>? aliases = null,
         IEnumerable<T>? choices = null,
         DefaultOptionValue<T>? defaultValue = null,
@@ -36,6 +38,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
             isRequired,
             isHidden,
             isFinal,
+            ignoreCaseInChoices,
             aliases,
             choices,
             defaultValue,
@@ -53,6 +56,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool ignoreCaseInChoices = false,
         IEnumerable<string>? aliases = null,
         IEnumerable<T>? choices = null,
         DefaultOptionValue<T>? defaultValue = null,
@@ -97,6 +101,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
             ? GetDefaultMetaVariable()
             : metaVariable;
 
+        IgnoreCaseInChoices = ignoreCaseInChoices;
         DefaultValue = defaultValue;
         ValueRestriction = valueRestriction;
 
@@ -107,6 +112,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
     public event EventHandler<OptionValueEventArgs<T>>? ValueParsed;
 
     public string MetaVariable { get; }
+    public bool IgnoreCaseInChoices { get; }
 
     public DefaultOptionValue<T>? DefaultValue { get; set; }
     public OptionValueRestriction<T>? ValueRestriction { get; set; }
@@ -157,7 +163,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
             arraySeparator,
             arrayPrefix,
             arrayPostfix,
-            Choices);
+            _choices);
 
         Description += $"{prefix}{choices}{postfix}";
 
@@ -249,7 +255,19 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
     protected virtual bool IsValueSatisfyChoices(T value)
     {
         ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
-        return _choices.Count == 0 || _choices.Contains(value);
+
+        if (_choices.Count == 0)
+            return true;
+
+        if (IgnoreCaseInChoices && typeof(T) == typeof(string))
+        {
+            IEnumerable<string> choices = _choices.Cast<string>();
+            StringEqualityComparer comparer = new(StringComparison.OrdinalIgnoreCase);
+
+            return choices.Contains(value as string, comparer);
+        }
+
+        return _choices.Contains(value);
     }
 
     protected virtual bool IsValueSatisfyRestriction(T value)

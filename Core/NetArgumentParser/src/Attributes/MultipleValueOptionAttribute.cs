@@ -24,6 +24,8 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool ignoreCaseInChoices = false,
+        bool ignoreOrderInChoices = false,
         string[]? aliases = null,
         ContextCaptureType contextCaptureType = ContextCaptureType.None,
         int numberOfItemsToCapture = -1)
@@ -36,9 +38,11 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
             isRequired,
             isHidden,
             isFinal,
+            ignoreCaseInChoices,
             aliases,
             choices: null)
     {
+        IgnoreOrderInChoices = ignoreOrderInChoices;
         ContextCapture = CreateContextCapture(contextCaptureType, numberOfItemsToCapture);
     }
 
@@ -50,6 +54,8 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool ignoreCaseInChoices = false,
+        bool ignoreOrderInChoices = false,
         string[]? aliases = null,
         ContextCaptureType contextCaptureType = ContextCaptureType.None,
         int numberOfItemsToCapture = -1)
@@ -62,12 +68,15 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
             isRequired,
             isHidden,
             isFinal,
+            ignoreCaseInChoices,
             aliases)
     {
+        IgnoreOrderInChoices = ignoreOrderInChoices;
         ContextCapture = CreateContextCapture(contextCaptureType, numberOfItemsToCapture);
     }
 #pragma warning restore CA1019 // Define accessors for attribute arguments
 
+    public bool IgnoreOrderInChoices { get; }
     public IContextCapture? ContextCapture { get; }
 
     protected override IReadOnlyList<Type> ValidPropertyTypes => [typeof(IList<T>)];
@@ -98,6 +107,8 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
             IsRequired,
             IsHidden,
             IsFinal,
+            IgnoreCaseInChoices,
+            IgnoreOrderInChoices,
             Aliases,
             choices: null,
             DefaultValue,

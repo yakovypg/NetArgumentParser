@@ -3,9 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using NetArgumentParser.Configuration;
 using NetArgumentParser.Converters;
+using NetArgumentParser.Extensions;
 using NetArgumentParser.Options.Context;
+using NetArgumentParser.Utils.Comparers;
 
 namespace NetArgumentParser.Options;
+
+using StringEnumerableComparer = System.Func<
+    System.Collections.Generic.IEnumerable<string>,
+    System.Collections.Generic.IEnumerable<string>,
+    System.Collections.Generic.IEqualityComparer<string>,
+    bool>;
 
 public class MultipleValueOption<T> : ValueOption<IList<T>>
 {
@@ -17,6 +25,8 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>
         bool isRequired = false,
         bool isHidden = false,
         bool isFinal = false,
+        bool ignoreCaseInChoices = false,
+        bool ignoreOrderInChoices = false,
         IEnumerable<string>? aliases = null,
         IEnumerable<IList<T>>? choices = null,
         DefaultOptionValue<IList<T>>? defaultValue = null,
@@ -32,6 +42,7 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>
             isRequired,
             isHidden,
             isFinal,
+            ignoreCaseInChoices,
             aliases,
             choices,
             defaultValue,
@@ -39,7 +50,10 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>
             afterValueParsingAction,
             contextCapture ?? new ZeroOrMoreContextCapture())
     {
+        IgnoreOrderInChoices = ignoreOrderInChoices;
     }
+
+    public bool IgnoreOrderInChoices { get; }
 
     public override string GetShortExample()
     {
@@ -106,6 +120,30 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>
     protected override bool IsValueSatisfyChoices(IList<T> value)
     {
         ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
-        return Choices.Count == 0 || Choices.Any(t => t.SequenceEqual(value));
+
+        if (Choices.Count == 0)
+            return true;
+
+        if (IgnoreCaseInChoices && typeof(T) == typeof(string))
+        {
+            IList<string>? castedValue = value as IList<string>;
+            IEnumerable<IList<string>> choices = Choices.Cast<IList<string>>();
+
+            StringEnumerableComparer enumerableComparer = IgnoreOrderInChoices
+                ? EnumerableExtensions.ScrambledEquals<string>
+                : Enumerable.SequenceEqual;
+
+            return choices.Any(t =>
+            {
+                var stringComparer = new StringEqualityComparer(StringComparison.OrdinalIgnoreCase);
+                return enumerableComparer.Invoke(t, castedValue!, stringComparer);
+            });
+        }
+
+        Func<IList<T>, IList<T>, bool> comparer = IgnoreOrderInChoices
+            ? EnumerableExtensions.ScrambledEquals
+            : Enumerable.SequenceEqual;
+
+        return Choices.Any(t => comparer.Invoke(t, value));
     }
 }
