@@ -19,6 +19,7 @@
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <CodeAnalysisRuleSet>../../.ruleset</CodeAnalysisRuleSet>
     <AnalysisMode>All</AnalysisMode>
+    <ErrorLog>compiler-diagnostics.sarif</ErrorLog>
   </PropertyGroup>
 
   <ItemGroup>
