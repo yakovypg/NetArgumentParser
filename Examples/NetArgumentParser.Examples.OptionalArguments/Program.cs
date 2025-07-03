@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NetArgumentParser;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Configuration;
 using NetArgumentParser.Options.Context;
 
 var resultValues = new ResultValues();

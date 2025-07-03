@@ -5,6 +5,7 @@ using NetArgumentParser.Attributes;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Configuration;
 
 var generator = new ArgumentParserGenerator();
 var parser = new ArgumentParser();

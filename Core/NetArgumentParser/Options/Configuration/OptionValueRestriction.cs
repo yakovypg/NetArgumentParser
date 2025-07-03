@@ -1,5 +1,5 @@
 using System;
 
-namespace NetArgumentParser.Options;
+namespace NetArgumentParser.Options.Configuration;
 
 public record OptionValueRestriction<T>(Predicate<T> IsValueAllowed);

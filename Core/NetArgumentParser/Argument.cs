@@ -5,6 +5,7 @@ using NetArgumentParser.Configuration;
 using NetArgumentParser.Extensions;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Collections;
+using NetArgumentParser.Options.Configuration;
 using NetArgumentParser.Options.Context;
 
 namespace NetArgumentParser;

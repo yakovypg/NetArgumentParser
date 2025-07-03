@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Collections;
+using NetArgumentParser.Options.Configuration;
 using NetArgumentParser.Subcommands;
 
 namespace NetArgumentParser.Visitors;

@@ -1,5 +1,6 @@
 using System;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Configuration;
 
 namespace NetArgumentParser.Subcommands;
 

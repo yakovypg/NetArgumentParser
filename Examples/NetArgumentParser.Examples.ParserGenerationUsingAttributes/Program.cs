@@ -9,6 +9,7 @@ using NetArgumentParser.Attributes;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Configuration;
 using NetArgumentParser.Options.Context;
 
 var generator = new ArgumentParserGenerator();
