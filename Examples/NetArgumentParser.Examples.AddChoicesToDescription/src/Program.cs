@@ -37,6 +37,21 @@ fileModeOption.AddChoicesToDescription(
     prefix: ". Choices: { ",
     postfix: " }");
 
+var widthOption = new ValueOption<double>(
+    longName: "width",
+    shortName: "w",
+    description: "Width",
+    choices: [1920, 1920.5],
+    beforeParseChoices: ["1920", "1920,5"]);
+
+widthOption.AddBeforeParseChoicesToDescription(
+    separator: " or ",
+    prefix: ". Before parse choices: ",
+    postfix: string.Empty);
+
+// Error: you can add only one type of choices to description
+// widthOption.AddChoicesToDescription();
+
 // Angle (0, 45, 90)
 Console.WriteLine(angleOption.Description);
 
@@ -45,3 +60,6 @@ Console.WriteLine(namesOption.Description);
 
 // File mode. Choices: { CreateNew | Create | Open | OpenOrCreate | Truncate | Append }
 Console.WriteLine(fileModeOption.Description);
+
+// Width. Before parse choices: 1920 or 1920,5
+Console.WriteLine(widthOption.Description);
