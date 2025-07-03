@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NetArgumentParser;
 using NetArgumentParser.Options;
 using NetArgumentParser.Subcommands;

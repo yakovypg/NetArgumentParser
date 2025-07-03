@@ -1,4 +1,4 @@
-﻿using NetArgumentParser;
+using NetArgumentParser;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Context;
