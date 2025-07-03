@@ -45,6 +45,7 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>
             ignoreCaseInChoices,
             aliases,
             choices,
+            beforeParseChoices: null,
             defaultValue,
             valueRestriction,
             afterValueParsingAction,

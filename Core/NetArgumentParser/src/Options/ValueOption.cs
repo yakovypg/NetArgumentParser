@@ -13,6 +13,7 @@ namespace NetArgumentParser.Options;
 public class ValueOption<T> : CommonOption, IValueOption<T>
 {
     private List<T> _choices;
+    private List<string> _beforeParseChoices;
     private bool _areChoicesAddedToDescription;
 
     public ValueOption(
@@ -26,6 +27,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         bool ignoreCaseInChoices = false,
         IEnumerable<string>? aliases = null,
         IEnumerable<T>? choices = null,
+        IEnumerable<string>? beforeParseChoices = null,
         DefaultOptionValue<T>? defaultValue = null,
         OptionValueRestriction<T>? valueRestriction = null,
         Action<T>? afterValueParsingAction = null)
@@ -41,6 +43,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
             ignoreCaseInChoices,
             aliases,
             choices,
+            beforeParseChoices,
             defaultValue,
             valueRestriction,
             afterValueParsingAction,
@@ -59,6 +62,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         bool ignoreCaseInChoices = false,
         IEnumerable<string>? aliases = null,
         IEnumerable<T>? choices = null,
+        IEnumerable<string>? beforeParseChoices = null,
         DefaultOptionValue<T>? defaultValue = null,
         OptionValueRestriction<T>? valueRestriction = null,
         Action<T>? afterValueParsingAction = null,
@@ -76,7 +80,8 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
     {
         ExtendedArgumentNullException.ThrowIfNull(metaVariable, nameof(metaVariable));
 
-        _choices = new List<T>(choices ?? []);
+        _choices = [.. choices ?? []];
+        _beforeParseChoices = [.. beforeParseChoices ?? []];
 
         if (defaultValue is not null
             && _choices.Count > 0
@@ -119,12 +124,18 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
     public IValueConverter<T>? Converter { get; set; }
 
     public IReadOnlyCollection<T> Choices => _choices;
+    public IReadOnlyCollection<string> BeforeParseChoices => _beforeParseChoices;
     public bool HasDefaultValue => DefaultValue is not null;
     public bool HasConverter => Converter is not null;
 
     public void ChangeChoices(IEnumerable<T>? choices)
     {
-        _choices = new List<T>(choices ?? []);
+        _choices = [.. choices ?? []];
+    }
+
+    public void ChangeBeforeParseChoices(IEnumerable<string>? beforeParseChoices)
+    {
+        _beforeParseChoices = [.. beforeParseChoices ?? []];
     }
 
     public bool TrySetConverter(IValueConverter converter)
@@ -155,19 +166,39 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         ExtendedArgumentNullException.ThrowIfNull(arrayPrefix, nameof(arrayPrefix));
         ExtendedArgumentNullException.ThrowIfNull(arrayPostfix, nameof(arrayPostfix));
 
-        if (_areChoicesAddedToDescription)
-            return;
-
-        string choices = ExtendedString.JoinWithExpand(
+        AddChoicesToDescription(
+            _choices,
             separator,
+            prefix,
+            postfix,
             arraySeparator,
             arrayPrefix,
-            arrayPostfix,
-            _choices);
+            arrayPostfix);
+    }
 
-        Description += $"{prefix}{choices}{postfix}";
+    public void AddBeforeParseChoicesToDescription(
+        string separator = ", ",
+        string prefix = " (",
+        string postfix = ")",
+        string arraySeparator = "; ",
+        string arrayPrefix = "[",
+        string arrayPostfix = "]")
+    {
+        ExtendedArgumentNullException.ThrowIfNull(separator, nameof(separator));
+        ExtendedArgumentNullException.ThrowIfNull(prefix, nameof(prefix));
+        ExtendedArgumentNullException.ThrowIfNull(postfix, nameof(postfix));
+        ExtendedArgumentNullException.ThrowIfNull(arraySeparator, nameof(arraySeparator));
+        ExtendedArgumentNullException.ThrowIfNull(arrayPrefix, nameof(arrayPrefix));
+        ExtendedArgumentNullException.ThrowIfNull(arrayPostfix, nameof(arrayPostfix));
 
-        _areChoicesAddedToDescription = true;
+        AddChoicesToDescription(
+            _beforeParseChoices,
+            separator,
+            prefix,
+            postfix,
+            arraySeparator,
+            arrayPrefix,
+            arrayPostfix);
     }
 
     public virtual void HandleDefaultValue()
@@ -219,7 +250,11 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         if (value.Length == 0)
             throw new OptionValueNotSpecifiedException(null, ToString());
 
-        T parsedValue = converter.Convert(value[0]);
+        string firstValueItem = value[0];
+
+        VerifyBeforeParseValueIsAllowed(firstValueItem, value);
+
+        T parsedValue = converter.Convert(firstValueItem);
 
         VerifyValueIsAllowed(parsedValue, value);
         OnValueParsed(new OptionValueEventArgs<T>(parsedValue));
@@ -247,9 +282,53 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
 
     protected virtual string[] GetAllowedValues()
     {
-        return _choices
-            .Select(t => t?.ToString() ?? string.Empty)
-            .ToArray();
+        return _beforeParseChoices.Count > 0
+            ? GetAllowedBeforeParseValues()
+            : GetAllowedAfterParseValues();
+    }
+
+    protected virtual string[] GetAllowedAfterParseValues()
+    {
+        IEnumerable<string> choices = _choices
+            .Select(t => t?.ToString() ?? string.Empty);
+
+        return [.. choices];
+    }
+
+    protected virtual string[] GetAllowedBeforeParseValues()
+    {
+        return [.. _beforeParseChoices];
+    }
+
+    protected virtual void AddChoicesToDescription<TChoices>(
+        IEnumerable<TChoices> choices,
+        string separator = ", ",
+        string prefix = " (",
+        string postfix = ")",
+        string arraySeparator = "; ",
+        string arrayPrefix = "[",
+        string arrayPostfix = "]")
+    {
+        ExtendedArgumentNullException.ThrowIfNull(choices, nameof(choices));
+        ExtendedArgumentNullException.ThrowIfNull(separator, nameof(separator));
+        ExtendedArgumentNullException.ThrowIfNull(prefix, nameof(prefix));
+        ExtendedArgumentNullException.ThrowIfNull(postfix, nameof(postfix));
+        ExtendedArgumentNullException.ThrowIfNull(arraySeparator, nameof(arraySeparator));
+        ExtendedArgumentNullException.ThrowIfNull(arrayPrefix, nameof(arrayPrefix));
+        ExtendedArgumentNullException.ThrowIfNull(arrayPostfix, nameof(arrayPostfix));
+
+        if (_areChoicesAddedToDescription)
+            throw new ChoicesAlreadyAddedToDescriptionException();
+
+        string choicesString = ExtendedString.JoinWithExpand(
+            separator,
+            arraySeparator,
+            arrayPrefix,
+            arrayPostfix,
+            choices);
+
+        Description += $"{prefix}{choicesString}{postfix}";
+        _areChoicesAddedToDescription = true;
     }
 
     protected virtual bool IsValueSatisfyChoices(T value)
@@ -268,6 +347,22 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         }
 
         return _choices.Contains(value);
+    }
+
+    protected virtual bool IsBeforeParseValueSatisfyChoices(string value)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
+
+        if (_beforeParseChoices.Count == 0)
+            return true;
+
+        StringComparison stringComparison = IgnoreCaseInChoices
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+
+        var comparer = new StringEqualityComparer(stringComparison);
+
+        return _beforeParseChoices.Contains(value, comparer);
     }
 
     protected virtual bool IsValueSatisfyRestriction(T value)
@@ -291,7 +386,26 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
             throw new OptionValueNotSatisfyRestrictionException(null, valueSource);
 
         if (!IsValueSatisfyChoices(value))
-            throw new OptionValueNotSatisfyChoicesException(null, valueSource, GetAllowedValues());
+        {
+            throw new OptionValueNotSatisfyChoicesException(
+                null,
+                valueSource,
+                GetAllowedAfterParseValues());
+        }
+    }
+
+    protected void VerifyBeforeParseValueIsAllowed(string value, string[] valueSource)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(value, nameof(value));
+        ExtendedArgumentNullException.ThrowIfNull(valueSource, nameof(valueSource));
+
+        if (!IsBeforeParseValueSatisfyChoices(value))
+        {
+            throw new OptionValueNotSatisfyChoicesException(
+                null,
+                valueSource,
+                GetAllowedBeforeParseValues());
+        }
     }
 
     protected string GetExtendedMetavariable()

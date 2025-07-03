@@ -25,9 +25,11 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         bool isFinal = false,
         bool ignoreCaseInChoices = false,
         string[]? aliases = null,
-        T[]? choices = null)
+        T[]? choices = null,
+        string[]? beforeParseChoices = null)
         : this(
             choices,
+            beforeParseChoices,
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
             description ?? throw new ArgumentNullException(nameof(description)),
@@ -54,6 +56,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         string[]? aliases = null)
         : this(
             choices: null,
+            beforeParseChoices: null,
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
             description ?? throw new ArgumentNullException(nameof(description)),
@@ -68,6 +71,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
 
     public ValueOptionAttribute(
         T[]? choices,
+        string[]? beforeParseChoices,
         string longName,
         string shortName = "",
         string description = "",
@@ -91,12 +95,14 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         MetaVariable = metaVariable;
         IgnoreCaseInChoices = ignoreCaseInChoices;
         Choices = choices;
+        BeforeParseChoices = beforeParseChoices;
     }
 
     public string MetaVariable { get; }
     public bool IgnoreCaseInChoices { get; }
 
     public IEnumerable<T>? Choices { get; }
+    public IEnumerable<string>? BeforeParseChoices { get; }
     public DefaultOptionValue<T>? DefaultValue { get; }
 
     protected override IReadOnlyList<Type> ValidPropertyTypes => [typeof(T)];
@@ -120,8 +126,9 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             IgnoreCaseInChoices,
             Aliases,
             Choices,
+            BeforeParseChoices,
             DefaultValue,
-            valueRestriction: null,
+            null,
             t => propertyInfo.SetValue(source, t));
     }
 }
