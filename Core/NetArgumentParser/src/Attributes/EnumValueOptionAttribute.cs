@@ -26,7 +26,8 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         bool ignoreCaseInChoices = false,
         bool useDefaultChoices = true,
         string[]? aliases = null,
-        T[]? choices = null)
+        T[]? choices = null,
+        string[]? beforeParseChoices = null)
         : base(
             defaultValue,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -38,7 +39,8 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             isFinal,
             ignoreCaseInChoices,
             aliases,
-            choices)
+            choices,
+            beforeParseChoices)
     {
         UseDefaultChoices = useDefaultChoices;
     }
@@ -55,9 +57,11 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         bool ignoreCaseInChoices = false,
         bool useDefaultChoices = true,
         string[]? aliases = null,
-        T[]? choices = null)
+        T[]? choices = null,
+        string[]? beforeParseChoices = null)
         : base(
             choices,
+            beforeParseChoices,
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
             description ?? throw new ArgumentNullException(nameof(description)),
@@ -93,6 +97,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             UseDefaultChoices,
             Aliases,
             Choices,
+            BeforeParseChoices,
             DefaultValue,
             valueRestriction: null,
             t => propertyInfo.SetValue(source, t));

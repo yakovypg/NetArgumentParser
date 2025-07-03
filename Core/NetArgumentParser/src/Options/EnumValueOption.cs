@@ -23,6 +23,7 @@ public class EnumValueOption<T> : ValueOption<T>
         bool useDefaultChoices = true,
         IEnumerable<string>? aliases = null,
         IEnumerable<T>? choices = null,
+        IEnumerable<string>? beforeParseChoices = null,
         DefaultOptionValue<T>? defaultValue = null,
         OptionValueRestriction<T>? valueRestriction = null,
         Action<T>? afterValueParsingAction = null)
@@ -41,6 +42,7 @@ public class EnumValueOption<T> : ValueOption<T>
                     ? ((T[])Enum.GetValues(typeof(T))).Where(t => valueRestriction.IsValueAllowed(t))
                     : (T[])Enum.GetValues(typeof(T)))
                 : choices,
+            beforeParseChoices,
             defaultValue,
             valueRestriction,
             afterValueParsingAction,

@@ -13,12 +13,18 @@ internal static class ExtendedString
         string arrayPostfix,
         IEnumerable<T> items)
     {
+        ExtendedArgumentNullException.ThrowIfNull(separator, nameof(separator));
+        ExtendedArgumentNullException.ThrowIfNull(arraySeparator, nameof(arraySeparator));
+        ExtendedArgumentNullException.ThrowIfNull(arrayPrefix, nameof(arrayPrefix));
+        ExtendedArgumentNullException.ThrowIfNull(arrayPostfix, nameof(arrayPostfix));
+        ExtendedArgumentNullException.ThrowIfNull(items, nameof(items));
+
         return JoinItemsWithExpand(
             separator,
             arraySeparator,
             arrayPrefix,
             arrayPostfix,
-            [..items]);
+            [.. items!]);
     }
 
     internal static string JoinItemsWithExpand(

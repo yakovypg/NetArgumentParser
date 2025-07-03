@@ -9,4 +9,12 @@ public interface IValueOptionDescriptionDesigner
         string arraySeparator = "; ",
         string arrayPrefix = "[",
         string arrayPostfix = "]");
+
+    void AddBeforeParseChoicesToDescription(
+        string separator = ", ",
+        string prefix = " (",
+        string postfix = ")",
+        string arraySeparator = "; ",
+        string arrayPrefix = "[",
+        string arrayPostfix = "]");
 }
