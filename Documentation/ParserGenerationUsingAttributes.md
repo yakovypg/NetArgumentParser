@@ -71,7 +71,8 @@ internal class CustomParserConfig
         isFinal: false,
         useDefaultChoices: false,
         aliases: ["file-mode"],
-        choices: [FileMode.Create, FileMode.Open])
+        choices: [FileMode.Create, FileMode.Open],
+        beforeParseChoices: ["Create", "Open"])
     ]
     public FileMode Mode { get; set; }
 
@@ -137,7 +138,8 @@ internal class CustomParserConfig
         isHidden: false,
         isFinal: false,
         aliases: [],
-        choices: [0, 45, 90])
+        choices: [0, 45, 90],
+        beforeParseChoices: ["0", "45", "90"])
     ]
     public double? Angle { get; set; }
 }
@@ -301,7 +303,8 @@ if (foundOption is ValueOption<DateTime> birthDateOption)
     birthDateOption.DefaultValue = new DefaultOptionValue<DateTime>(default);
     birthDateOption.ValueParsed += (_, _) => Console.WriteLine("Parsed");
 
-    birthDateOption.ChangeChoices(new DateTime[] { default });
+    birthDateOption.ChangeChoices([default]);
+    birthDateOption.ChangeBeforeParseChoices(["01.01.2025"]);
 }
 
 parser.Parse(["--date", "01.01.2025"]);

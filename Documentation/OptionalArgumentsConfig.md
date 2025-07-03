@@ -118,6 +118,26 @@ var enumValueOption = new EnumValueOption<StringSplitOptions>("options", "o",
     choices: [StringSplitOptions.TrimEntries, StringSplitOptions.RemoveEmptyEntries]);
 ```
 
+You can also specify a set of allowed before parse values for the option. These choices are available for value options and enum value options, but not for multiple value options. It can be useful if you have a custom converter and want to validate values before they are passed to it.
+
+```cs
+var valueOption = new ValueOption<int>("angle", "a",
+    description: "angle by which you want to rotate the image",
+    beforeParseChoices: ["0", "45", "90"]);
+
+var enumValueOption = new EnumValueOption<StringSplitOptions>("options", "o",
+    beforeParseChoices: ["TrimEntries", "RemoveEmptyEntries"]);
+```
+
+If necessary, before parse choices can be combined with standard choices.
+
+```cs
+var valueOption = new ValueOption<int>("width", "w",
+    description: "new width of the image",
+    choices: [1920, 1920.5]
+    beforeParseChoices: ["1920", "1920,5"]);
+```
+
 Enum value options have default choices. It is all values of the corresponding enum that satisfy the restriction (if it specified). You can disable the use of default choices by setting `useDefaultChoices` parameter to `false` or by specifying your own choices.
 
 ```cs
