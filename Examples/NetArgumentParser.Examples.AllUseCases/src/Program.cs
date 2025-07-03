@@ -102,6 +102,7 @@ var options = new ICommonOption[]
         description: "angle by which you want to rotate the image",
         isRequired: true,
         choices: [0, 45, 90, 180],
+        beforeParseChoices: ["0", "45", "90", "180"],
         afterValueParsingAction: t => resultValues.Angle = t),
 
     new CounterOption(

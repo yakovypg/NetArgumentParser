@@ -23,7 +23,8 @@ if (foundOption is ValueOption<DateTime> birthDateOption)
     birthDateOption.DefaultValue = new DefaultOptionValue<DateTime>(default);
     birthDateOption.ValueParsed += (_, _) => Console.WriteLine("Parsed");
 
-    birthDateOption.ChangeChoices(new DateTime[] { default });
+    birthDateOption.ChangeChoices([default]);
+    birthDateOption.ChangeBeforeParseChoices(["01.01.2025"]);
 }
 
 parser.Parse(["--date", "01.01.2025"]);
