@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Configuration;
 
 namespace NetArgumentParser.Attributes;
 

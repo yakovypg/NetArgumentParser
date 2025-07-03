@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NetArgumentParser;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Configuration;
 using NetArgumentParser.Options.Context;
 
 int? angle = default;

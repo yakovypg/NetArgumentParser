@@ -4,6 +4,7 @@ using System.Linq;
 using NetArgumentParser.Configuration;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Extensions;
+using NetArgumentParser.Options.Configuration;
 using NetArgumentParser.Options.Context;
 using NetArgumentParser.Utils.Comparers;
 
