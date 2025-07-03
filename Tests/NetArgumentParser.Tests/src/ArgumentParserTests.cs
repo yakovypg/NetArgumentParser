@@ -943,6 +943,219 @@ public class ArgumentParserTests
     }
 
     [Fact]
+    public void Parse_ValueOptions_ThrowsExceptionIfValueNotSatisfyBeforeParseChoices()
+    {
+        var arguments = new string[]
+        {
+            "-H", "1080",
+            "-w", "1000",
+            "-a", "45",
+            "--name", "John",
+            "--fruit", "banana",
+            "-o", "0.5"
+        };
+
+        var optionsWithIncorrectChoice = new ICommonOption[]
+        {
+            new ValueOption<int>(string.Empty, "w", beforeParseChoices: ["1920", "1366", "1280"]),
+            new ValueOption<double>(string.Empty, "H", beforeParseChoices: ["1080", "768", "720"]),
+            new ValueOption<string>("name", string.Empty, beforeParseChoices: ["Tom"])
+        };
+
+        var optionsWithCorrectChoice = new ICommonOption[]
+        {
+            new ValueOption<int>(string.Empty, "a", beforeParseChoices: ["0", "45", "90"]),
+            new ValueOption<double>(string.Empty, "o", beforeParseChoices: ["0.1", "0.5", "1"]),
+            new ValueOption<string>("fruit", string.Empty, beforeParseChoices: ["apple", "banana"])
+        };
+
+        var allOptions = optionsWithIncorrectChoice.Concat(optionsWithCorrectChoice);
+
+        var parser = new ArgumentParser();
+        parser.AddOptions([.. allOptions]);
+
+        foreach (ICommonOption option in optionsWithIncorrectChoice)
+        {
+            Assert.Throws<OptionValueNotSatisfyChoicesException>(() =>
+            {
+                _ = parser.ParseKnownArguments(arguments, out _);
+            });
+
+            parser.RemoveOption(option);
+            parser.ResetOptionsHandledState();
+        }
+
+        Exception? ex = Record.Exception(
+            () => parser.ParseKnownArguments(arguments, out _));
+
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_EnumValueOptions_ThrowsExceptionIfValueNotSatisfyBeforeParseChoices()
+    {
+        var arguments = new string[]
+        {
+            "-a", BindMode.OneWay.ToString(),
+            "-c", BindMode.OneWay.ToString(),
+            "-b", StringSplitOptions.None.ToString(),
+            "-d", StringSplitOptions.RemoveEmptyEntries.ToString()
+        };
+
+        var optionsWithIncorrectChoice = new ICommonOption[]
+        {
+            new EnumValueOption<BindMode>(
+                string.Empty,
+                "a",
+                useDefaultChoices: false,
+                beforeParseChoices: [BindMode.TwoWay.ToString(), BindMode.OneWayToSource.ToString()]),
+
+            new EnumValueOption<StringSplitOptions>(
+                string.Empty,
+                "b",
+                useDefaultChoices: false,
+                beforeParseChoices: [StringSplitOptions.RemoveEmptyEntries.ToString()])
+        };
+
+        var optionsWithCorrectChoice = new ICommonOption[]
+        {
+            new EnumValueOption<BindMode>(
+                string.Empty,
+                "c",
+                useDefaultChoices: false,
+                beforeParseChoices: [BindMode.OneWay.ToString(), BindMode.OneWayToSource.ToString()]),
+
+            new EnumValueOption<StringSplitOptions>(
+                string.Empty,
+                "d",
+                useDefaultChoices: false,
+                beforeParseChoices: [StringSplitOptions.RemoveEmptyEntries.ToString()])
+        };
+
+        var allOptions = optionsWithIncorrectChoice.Concat(optionsWithCorrectChoice);
+
+        var parser = new ArgumentParser();
+        parser.AddOptions(allOptions.ToArray());
+
+        foreach (ICommonOption option in optionsWithIncorrectChoice)
+        {
+            Assert.Throws<OptionValueNotSatisfyChoicesException>(() =>
+            {
+                _ = parser.ParseKnownArguments(arguments, out _);
+            });
+
+            parser.RemoveOption(option);
+            parser.ResetOptionsHandledState();
+        }
+
+        Exception? ex = Record.Exception(
+            () => parser.ParseKnownArguments(arguments, out _));
+
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_ValueOptions_ThrowsExceptionIfValueNotSatisfyChoicesButSatisfyBeforeParseChoices()
+    {
+        var arguments = new string[]
+        {
+            "-H", "1080",
+            "-w", "1000",
+            "-a", "45",
+            "--name", "John",
+            "--fruit", "banana",
+            "-o", "0.5"
+        };
+
+        var optionsWithIncorrectChoice = new ICommonOption[]
+        {
+            new ValueOption<int>(
+                string.Empty,
+                "w",
+                choices: [1920, 1366, 1280],
+                beforeParseChoices: ["0", "45", "90"]),
+
+            new ValueOption<double>(
+                string.Empty,
+                "H",
+                choices: [1080, 768, 720],
+                beforeParseChoices: ["0.1", "0.5", "1"]),
+
+            new ValueOption<string>(
+                "name",
+                string.Empty,
+                choices: ["Tom"],
+                beforeParseChoices: ["apple", "banana"])
+        };
+
+        var optionsWithCorrectChoice = new ICommonOption[]
+        {
+            new ValueOption<int>(string.Empty, "a", beforeParseChoices: ["0", "45", "90"]),
+            new ValueOption<double>(string.Empty, "o", beforeParseChoices: ["0.1", "0.5", "1"]),
+            new ValueOption<string>("fruit", string.Empty, beforeParseChoices: ["apple", "banana"])
+        };
+
+        var allOptions = optionsWithIncorrectChoice.Concat(optionsWithCorrectChoice);
+
+        var parser = new ArgumentParser();
+        parser.AddOptions([.. allOptions]);
+
+        foreach (ICommonOption option in optionsWithIncorrectChoice)
+        {
+            Assert.Throws<OptionValueNotSatisfyChoicesException>(() =>
+            {
+                _ = parser.ParseKnownArguments(arguments, out _);
+            });
+
+            parser.RemoveOption(option);
+            parser.ResetOptionsHandledState();
+        }
+
+        Exception? ex = Record.Exception(
+            () => parser.ParseKnownArguments(arguments, out _));
+
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public void Parse_ValueOptions_DoNotThrowsExceptionIfValueNotSatisfyBeforeParseChoicesDueCase()
+    {
+        var arguments = new string[]
+        {
+            "--item", "aPpLe",
+            "--first-name", "max",
+            "--second-name", "SMITH"
+        };
+
+        var options = new ICommonOption[]
+        {
+            new ValueOption<string>(
+                "item",
+                string.Empty,
+                ignoreCaseInChoices: true,
+                beforeParseChoices: ["Banana", "Apple", "Grape"]),
+
+            new ValueOption<string>(
+                "first-name",
+                string.Empty,
+                ignoreCaseInChoices: true,
+                beforeParseChoices: ["Max"]),
+
+            new ValueOption<string>(
+                "second-name",
+                string.Empty,
+                ignoreCaseInChoices: true,
+                beforeParseChoices: ["Smith", "Brown"])
+        };
+
+        var parser = new ArgumentParser();
+        parser.AddOptions(options);
+
+        Exception? ex = Record.Exception(() => parser.Parse(arguments));
+        Assert.Null(ex);
+    }
+
+    [Fact]
     public void Parse_OptionsWithAliases_OptionsHandledCorrectly()
     {
         const int expectedAngle = 45;
