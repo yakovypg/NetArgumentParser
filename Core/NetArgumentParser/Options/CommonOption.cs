@@ -32,7 +32,7 @@ public abstract class CommonOption : ICommonOption
         if (aliases is not null)
             OptionNameCorrectnessVerifier.VerifyAliasesIsCorrect(aliases);
 
-        _aliases = new List<string>(aliases?.Distinct() ?? []);
+        _aliases = [.. aliases?.Distinct() ?? []];
 
         LongName = longName;
         ShortName = shortName;
