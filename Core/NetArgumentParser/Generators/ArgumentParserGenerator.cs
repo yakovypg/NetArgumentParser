@@ -5,6 +5,7 @@ using System.Reflection;
 using NetArgumentParser.Attributes;
 using NetArgumentParser.Attributes.Extensions;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Collections;
 using NetArgumentParser.Subcommands;
 
 namespace NetArgumentParser.Generators;

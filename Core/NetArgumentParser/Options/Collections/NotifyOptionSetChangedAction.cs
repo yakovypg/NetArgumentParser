@@ -1,4 +1,4 @@
-namespace NetArgumentParser.Options;
+namespace NetArgumentParser.Options.Collections;
 
 public enum NotifyOptionSetChangedAction
 {

@@ -8,6 +8,7 @@ using NetArgumentParser.Converters;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Collections;
 using NetArgumentParser.Options.Context;
 using NetArgumentParser.Subcommands;
 

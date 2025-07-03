@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NetArgumentParser.Options;
+namespace NetArgumentParser.Options.Collections;
 
 public interface IOptionGroup<T>
     where T : IOption

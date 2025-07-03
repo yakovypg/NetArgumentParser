@@ -9,6 +9,7 @@ using NetArgumentParser.Extensions;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Collections;
 using NetArgumentParser.Subcommands;
 using NetArgumentParser.Tests.Models;
 using NetArgumentParser.Tests.Models.Configurations;
