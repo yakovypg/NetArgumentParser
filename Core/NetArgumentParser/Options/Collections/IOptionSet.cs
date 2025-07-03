@@ -1,6 +1,6 @@
 using NetArgumentParser.Converters;
 
-namespace NetArgumentParser.Options;
+namespace NetArgumentParser.Options.Collections;
 
 public interface IOptionSet<T> : IReadOnlyOptionSet<T>
     where T : IOption

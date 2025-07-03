@@ -5,7 +5,7 @@ using NetArgumentParser.Converters;
 using NetArgumentParser.Options.Utils;
 using NetArgumentParser.Options.Utils.Verifiers;
 
-namespace NetArgumentParser.Options;
+namespace NetArgumentParser.Options.Collections;
 
 public class OptionSet : IBuildableOptionSet<ICommonOption>
 {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Collections;
 
 namespace NetArgumentParser.Subcommands;
 

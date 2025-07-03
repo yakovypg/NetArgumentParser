@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using NetArgumentParser.Converters;
 
-namespace NetArgumentParser.Options;
+namespace NetArgumentParser.Options.Collections;
 
 public interface IReadOnlyOptionSet<T>
     where T : IOption

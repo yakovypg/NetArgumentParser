@@ -5,6 +5,7 @@ using System.Linq;
 using NetArgumentParser.Extensions;
 using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Collections;
 using NetArgumentParser.Options.Context;
 using NetArgumentParser.Subcommands;
 using NetArgumentParser.Tests.Models;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetArgumentParser.Options;
+namespace NetArgumentParser.Options.Collections;
 
 public sealed class MutuallyExclusiveOptionGroup<T> : IOptionGroup<T>
     where T : IOption

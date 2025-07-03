@@ -4,6 +4,7 @@ using System.Linq;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Collections;
 using NetArgumentParser.Subcommands.Utils.Verifiers;
 
 namespace NetArgumentParser.Subcommands;

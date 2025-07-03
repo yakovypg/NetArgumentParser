@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Collections;
 using NetArgumentParser.Options.Context;
 using NetArgumentParser.Tests.Models;
 

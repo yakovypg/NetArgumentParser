@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetArgumentParser.Options;
+namespace NetArgumentParser.Options.Collections;
 
 public sealed class OptionGroup<T> : IOptionGroup<T>
     where T : IOption

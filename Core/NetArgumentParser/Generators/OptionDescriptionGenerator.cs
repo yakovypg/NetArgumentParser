@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NetArgumentParser.Extensions;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Collections;
 
 namespace NetArgumentParser.Generators;
 
