@@ -164,7 +164,31 @@ Console.WriteLine(namesOption.Description);
 Console.WriteLine(fileModeOption.Description);
 ```
 
-All value options implement interface `IValueOptionDescriptionDesigner`, so if you don't want to manually call method `AddChoicesToDescription()` for each option, you can get all options from parser using `GetAllOptions()` method, filter them and then use a loop.
+You can also add before parse choices to the value option description automatically. To do this, you can use `AddBeforeParseChoicesToDescription()` method as follows:
+
+```cs
+var widthOption = new ValueOption<double>(
+    longName: "width",
+    shortName: "w",
+    description: "Width",
+    choices: [1920, 1920.5],
+    beforeParseChoices: ["1920", "1920,5"]);
+
+widthOption.AddBeforeParseChoicesToDescription(
+    separator: " or ",
+    prefix: ". Before parse choices: ",
+    postfix: string.Empty);
+
+// Error: you can add only one type of choices to description
+// widthOption.AddChoicesToDescription();
+
+// Width. Before parse choices: 1920 or 1920,5
+Console.WriteLine(widthOption.Description);
+```
+
+Note that you can add only one type of choices to description. So you can't call `AddChoicesToDescription()` method after after you have already called method `AddBeforeParseChoicesToDescription()`, or vice versa.
+
+All value options implement interface `IValueOptionDescriptionDesigner`, so if you don't want to manually call method `AddChoicesToDescription()` or `AddBeforeParseChoicesToDescription()` for each option, you can get all options from parser using `GetAllOptions()` method, filter them and then use a loop.
 
 ```cs
 var angleOption = new ValueOption<int>(
