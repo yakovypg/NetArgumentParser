@@ -18,7 +18,7 @@ var options = new ICommonOption[]
         description: "images that need to be processed",
         isRequired: true,
         contextCapture: new OneOrMoreContextCapture(),
-        afterValueParsingAction: t => inputFiles = new List<string>(t)),
+        afterValueParsingAction: t => inputFiles = [.. t]),
 
     new ValueOption<int>(
         "angle",

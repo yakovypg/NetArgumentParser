@@ -87,7 +87,7 @@ var options = new ICommonOption[]
         isRequired: true,
         valueRestriction: new OptionValueRestriction<IList<string>>(t => t.All(p => File.Exists(p))),
         contextCapture: new OneOrMoreContextCapture(),
-        afterValueParsingAction: t => resultValues.InputFiles = new List<string>(t)),
+        afterValueParsingAction: t => resultValues.InputFiles = [.. t]),
 
     new MultipleValueOption<string>(
         longName: "persons",

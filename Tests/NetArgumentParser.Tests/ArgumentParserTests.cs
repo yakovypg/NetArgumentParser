@@ -246,7 +246,7 @@ public class ArgumentParserTests
                 string.Empty,
                 "f",
                 contextCapture: new ZeroOrMoreContextCapture(),
-                afterValueParsingAction: t => files = new List<string>(t)),
+                afterValueParsingAction: t => files = [.. t]),
 
             new MultipleValueOption<double>(
                 string.Empty,
