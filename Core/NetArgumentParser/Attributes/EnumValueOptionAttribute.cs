@@ -61,7 +61,6 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         string[]? beforeParseChoices = null)
         : base(
             choices,
-            beforeParseChoices,
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
             description ?? throw new ArgumentNullException(nameof(description)),
@@ -70,7 +69,8 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             isHidden,
             isFinal,
             ignoreCaseInChoices,
-            aliases)
+            aliases,
+            beforeParseChoices)
     {
         UseDefaultChoices = useDefaultChoices;
     }

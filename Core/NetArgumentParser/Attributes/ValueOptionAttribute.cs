@@ -30,7 +30,6 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         string[]? beforeParseChoices = null)
         : this(
             choices,
-            beforeParseChoices,
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
             description ?? throw new ArgumentNullException(nameof(description)),
@@ -39,7 +38,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             isHidden,
             isFinal,
             ignoreCaseInChoices,
-            aliases)
+            aliases,
+            beforeParseChoices)
     {
         DefaultValue = new DefaultOptionValue<T>(defaultValue);
     }
@@ -54,10 +54,10 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         bool isHidden = false,
         bool isFinal = false,
         bool ignoreCaseInChoices = false,
-        string[]? aliases = null)
+        string[]? aliases = null,
+        string[]? beforeParseChoices = null)
         : this(
             choices: null,
-            beforeParseChoices: null,
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
             description ?? throw new ArgumentNullException(nameof(description)),
@@ -66,13 +66,13 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             isHidden,
             isFinal,
             ignoreCaseInChoices,
-            aliases)
+            aliases,
+            beforeParseChoices)
     {
     }
 
     public ValueOptionAttribute(
         T[]? choices,
-        string[]? beforeParseChoices,
         string longName,
         string shortName = "",
         string description = "",
@@ -81,7 +81,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         bool isHidden = false,
         bool isFinal = false,
         bool ignoreCaseInChoices = false,
-        string[]? aliases = null)
+        string[]? aliases = null,
+        string[]? beforeParseChoices = null)
         : base(
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
