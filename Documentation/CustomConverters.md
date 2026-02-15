@@ -5,6 +5,7 @@ Custom converters allow you to easily work with options whose values are non-sta
 *    [Converter Types](#converter-types)
      *    [Value Converter](#value-converter)
      *    [Multiple Value Converter](#multiple-value-converter)
+     *    [Enum Value Converter](#enum-value-converter)
 *    [Converter Set](#converter-set)
 
 ## Converter Types
@@ -186,6 +187,31 @@ record PageFontSize(int PageNumber, int FontSize)
     }
 }
 ```
+
+All rules regarding the visibility level, adding converters, and using them in subcommands, as well as others, are the same as for the value converter.
+
+### Enum Value Converter
+To create an enum value converter for type T, you don't need any special functions. You only need to pass a flag indicating whether the converter should ignore case in the input string.
+
+Here is an example of creating enum value converter and using it in the parser:
+
+```cs
+FileMode fileMode = FileMode.Create;
+
+var fileModeOption = new EnumValueOption<FileMode>("mode",
+    afterValueParsingAction: t => fileMode = t);
+
+var converter = new EnumValueConverter<FileMode>(ignoreCase: true);
+var parser = new ArgumentParser();
+
+parser.AddOptions(fileModeOption);
+parser.AddConverters(converter);
+
+parser.Parse(new string[] { "--mode", "OpeN" });
+// fileMode: Open
+```
+
+If we had passed `false` as the value for `ignoreCase`, we would have encountered an error.
 
 All rules regarding the visibility level, adding converters, and using them in subcommands, as well as others, are the same as for the value converter.
 
