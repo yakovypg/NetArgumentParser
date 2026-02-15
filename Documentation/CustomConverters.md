@@ -4,10 +4,11 @@ Custom converters allow you to easily work with options whose values are non-sta
 ## Table of Contents
 *    [Converter Types](#converter-types)
      *    [Value Converter](#value-converter)
+     *    [Multiple Value Converter](#multiple-value-converter)
 *    [Converter Set](#converter-set)
 
 ## Converter Types
-There are three converter types: value converter, multiple value converter and enum value converter. They are used in value options, multiple value options and enum value options. However, in the vast majority of situations it is sufficient to use only the value converter.
+There are three converter types: value converter, multiple value converter and enum value converter. They are used in value options, multiple value options and enum value options. However, in the vast majority of situations it is sufficient to use only the value converter and multiple value converter.
 
 Furthermore, you can create your own converters. To do this you need to inherit your class from the `IValueConverter` interface and implement it. You can also use an existing option class as a base class. See examples of this kind of inheritance, for example, by looking at the implementation of the `MultipleValueConverter` and `EnumValueConverter` classes. Next, you can use this class in the same way as the standard ones.
 
@@ -100,6 +101,93 @@ parser.Parse(new string[] { "--first", "name", "subcommand", "--second", "name" 
 // firstName: NAME
 // secondName: NAME
 ```
+
+### Multiple Value Converter
+To create a multiple value converter for type T, you need a function that takes a string and returns T or T[]. Pass this function to the constructor of the appropriate class as shown in the example below.
+
+Here is an example of creating multiple value converter and using it in the parser:
+
+```cs
+var ranges = new List<PageRange>();
+
+var rangesOption = new MultipleValueOption<PageRange>("ranges",
+    afterValueParsingAction: t => ranges.AddRange(t));
+
+var converter = new MultipleValueConverter<PageRange>(PageRange.Parse);
+var parser = new ArgumentParser();
+
+parser.AddOptions(rangesOption);
+parser.AddConverters(converter);
+
+parser.Parse(new string[] { "--ranges", "1-2", "5-7" });
+// ranges: [PageRange { Start = 1, End = 2 }, PageRange { Start = 5, End = 7 }]
+
+record PageRange(int Start, int End)
+{
+    public static PageRange Parse(string data)
+    {
+        int[] parts = data.Split('-').Select(int.Parse).ToArray();
+        return new PageRange(parts[0], parts[1]);
+    }
+}
+```
+
+A similar example of using a converter with a function that returns T[] is given in the example below:
+
+```cs
+var fontSizes = new List<PageFontSize>();
+
+var fontSizesOption = new MultipleValueOption<PageFontSize>("fonts",
+    afterValueParsingAction: t => fontSizes = new List<PageFontSize>(t));
+
+var converter = new MultipleValueConverter<PageFontSize>(PageFontSize.ParseMany);
+var parser = new ArgumentParser();
+
+parser.AddOptions(fontSizesOption);
+parser.AddConverters(converter);
+
+parser.Parse(new string[] { "--fonts", "1-2:12", "5-5:16" });
+/* ranges: [
+ *   PageFontSize { PageNumber = 1, FontSize = 12 },
+ *   PageFontSize { PageNumber = 2, FontSize = 12 },
+ *   PageFontSize { PageNumber = 5, FontSize = 16 },
+ * ]
+ */
+
+record PageRange(int Start, int End)
+{
+    public static PageRange Parse(string data)
+    {
+        int[] parts = data.Split('-').Select(int.Parse).ToArray();
+        return new PageRange(parts[0], parts[1]);
+    }
+}
+
+record PageFontSize(int PageNumber, int FontSize)
+{
+    public static PageFontSize Parse(string data)
+    {
+        int[] parts = data.Split(';').Select(int.Parse).ToArray();
+        return new PageFontSize(parts[0], parts[1]);
+    }
+
+    public static PageFontSize[] ParseMany(string data)
+    {
+        string[] parts = data.Split(':');
+
+        PageRange pageRange = PageRange.Parse(parts[0]);
+        int fontSize = int.Parse(parts[1]);
+
+        IEnumerable<int> pages = Enumerable.Range(
+            pageRange.Start,
+            pageRange.End - pageRange.Start + 1);
+
+        return pages.Select(t => $"{t};{fontSize}").Select(Parse).ToArray();
+    }
+}
+```
+
+All rules regarding the visibility level, adding converters, and using them in subcommands, as well as others, are the same as for the value converter.
 
 ## Converter Set
 You can put just one converter for each type in converter set.
