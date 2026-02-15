@@ -96,7 +96,8 @@ var options = new ICommonOption[]
         ignoreCaseInChoices: true,
         ignoreOrderInChoices: true,
         contextCapture: new FixedContextCapture(3),
-        choices: [["Max", "Robert", "Tom"], ["David", "John", "Richard"]]),
+        choices: [["Max", "Robert", "Tom"], ["David", "John", "Richard"]],
+        afterValueParsingAction: t => resultValues.Persons = [.. t]),
 
     new MultipleValueOption<PageRange>(
         longName: "ranges",
@@ -241,6 +242,7 @@ Console.WriteLine($"Angle: {resultValues.Angle}");
 Console.WriteLine($"Time: {resultValues.Time}");
 Console.WriteLine($"File mode: {resultValues.FileMode}");
 Console.WriteLine($"Input files: {string.Join(" ", resultValues.InputFiles)}");
+Console.WriteLine($"Persons: {string.Join(" ", resultValues.Persons)}");
 Console.WriteLine($"Page ranges: {string.Join(" ", resultValues.PageRanges)}");
 Console.WriteLine($"Page font sizes: {string.Join(" ", resultValues.PageFontSizes)}");
 Console.WriteLine($"Date: {resultValues.Date?.ToLongDateString()}");
@@ -296,6 +298,7 @@ internal sealed class ResultValues
     public TimeSpan? Time { get; set; }
     public FileMode? FileMode { get; set; }
     public List<string> InputFiles { get; set; } = [];
+    public List<string> Persons { get; set; } = [];
     public List<PageRange> PageRanges { get; set; } = [new PageRange(1, 1)];
     public List<PageFontSize> PageFontSizes { get; set; } = [];
     public DateTime? Date { get; set; }
