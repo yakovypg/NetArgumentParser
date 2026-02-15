@@ -103,7 +103,9 @@ internal class CustomParserConfig
         useDefaultChoices: false,
         aliases: ["file-mode"],
         choices: [FileMode.Create, FileMode.Open],
-        beforeParseChoices: ["Create", "Open"])
+        beforeParseChoices: ["Create", "Open"],
+        addChoicesToDescription: false,
+        addBeforeParseChoicesToDescription: true)
     ]
     [OptionGroup("complex-values", "", "")]
     public FileMode Mode { get; set; }
@@ -174,7 +176,9 @@ internal class CustomParserConfig
         isFinal: false,
         aliases: [],
         choices: [0, 45, 90],
-        beforeParseChoices: ["0", "45", "90"])
+        beforeParseChoices: ["0", "45", "90"],
+        addChoicesToDescription: true,
+        addBeforeParseChoicesToDescription: false)
     ]
     [OptionGroup("values", "", "")]
     public double? Angle { get; set; }
