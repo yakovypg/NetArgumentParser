@@ -423,7 +423,7 @@ public class OptionSetTests
         Assert.False(optionSet.RemoveConverter(new ValueConverter<List<string>>(_ => [])));
         Assert.False(optionSet.RemoveConverter(new ValueConverter<IList<int>>(_ => [])));
         Assert.False(optionSet.RemoveConverter(new MultipleValueConverter<double>(_ => 0)));
-        Assert.False(optionSet.RemoveConverter(new MultipleValueConverter<int[]>(_ => [])));
+        Assert.False(optionSet.RemoveConverter(new MultipleValueConverter<int[]>(_ => [0])));
         Assert.False(optionSet.RemoveConverter(new EnumValueConverter<BindMode>(false)));
         Assert.False(optionSet.RemoveConverter(new EnumValueConverter<AttributeTargets>(true)));
     }
