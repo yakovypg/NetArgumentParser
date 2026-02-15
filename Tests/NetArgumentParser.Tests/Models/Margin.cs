@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace NetArgumentParser.Tests.Models;
 
@@ -16,6 +17,27 @@ internal class Margin : IEquatable<Margin>
     internal int Top { get; }
     internal int Right { get; }
     internal int Bottom { get; }
+
+    public static Margin Parse(string data)
+    {
+        ExtendedArgumentException.ThrowIfNullOrWhiteSpace(data, nameof(data));
+
+        string[] parts = data.Split(',');
+
+        if (parts.Length != 4)
+        {
+            throw new ArgumentException(
+                $"Recieved data has incorrect format. Expected: L,T,R,B",
+                nameof(data));
+        }
+
+        int left = int.Parse(parts[0], CultureInfo.InvariantCulture);
+        int top = int.Parse(parts[1], CultureInfo.InvariantCulture);
+        int right = int.Parse(parts[2], CultureInfo.InvariantCulture);
+        int bottom = int.Parse(parts[3], CultureInfo.InvariantCulture);
+
+        return new Margin(left, top, right, bottom);
+    }
 
     public bool Equals(Margin? other)
     {

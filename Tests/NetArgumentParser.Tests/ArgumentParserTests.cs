@@ -361,6 +361,113 @@ public class ArgumentParserTests
     }
 
     [Fact]
+    public void Parse_MultipleValueOptions_SpecialConverterApplied()
+    {
+        const int pageMarginLeft = 10;
+        const int pageMarginTop = -20;
+        const int pageMarginRight = 30;
+        const int pageMarginBottom = -40;
+
+        const int contentMarginLeft = -15;
+        const int contentMarginTop = 25;
+        const int contentMarginRight = -35;
+        const int contentMarginBottom = 45;
+
+        const int firstPageRangeStart = 1;
+        const int firstPageRangeEnd = 5;
+        const double firstPageRangeFontSize = 12.5;
+
+        const int secondPageRangeStart = 6;
+        const int secondPageRangeEnd = 6;
+        const double secondPageRangeFontSize = 16;
+
+        const int thirdPageRangeStart = 7;
+        const int thirdPageRangeEnd = 10;
+        const double thirdPageRangeFontSize = 24;
+
+        List<Margin> margins = [];
+        List<PageFontSize> pageFontSizes = [];
+
+        var arguments = new string[]
+        {
+            "-m",
+            $"{pageMarginLeft},{pageMarginTop},{pageMarginRight},{pageMarginBottom}",
+            $"{contentMarginLeft},{contentMarginTop},{contentMarginRight},{contentMarginBottom}",
+            "-s",
+            $"{firstPageRangeStart}-{firstPageRangeEnd}:{firstPageRangeFontSize}",
+            $"{secondPageRangeStart}-{secondPageRangeEnd}:{secondPageRangeFontSize}",
+            $"{thirdPageRangeStart}-{thirdPageRangeEnd}:{thirdPageRangeFontSize}"
+        };
+
+        var options = new ICommonOption[]
+        {
+            new MultipleValueOption<Margin>(
+                string.Empty,
+                "m",
+                afterValueParsingAction: t => margins.AddRange(t)),
+
+            new MultipleValueOption<PageFontSize>(
+                string.Empty,
+                "s",
+                afterValueParsingAction: t => pageFontSizes.AddRange(t))
+        };
+
+        var converters = new IValueConverter[]
+        {
+            new MultipleValueConverter<Margin>(Margin.Parse),
+            new MultipleValueConverter<PageFontSize>(PageFontSize.ParseFromRange)
+        };
+
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
+
+        parser.AddOptions(options);
+        parser.AddConverters(converters);
+
+        _ = parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
+
+        var expectedPageMargin = new Margin(
+            pageMarginLeft,
+            pageMarginTop,
+            pageMarginRight,
+            pageMarginBottom);
+
+        var expectedContentMargin = new Margin(
+            contentMarginLeft,
+            contentMarginTop,
+            contentMarginRight,
+            contentMarginBottom);
+
+        IEnumerable<Margin> expectedMargins = [expectedPageMargin, expectedContentMargin];
+
+        IEnumerable<PageFontSize> expectedPageFontSizesForFirstPageRange = Enumerable
+            .Range(firstPageRangeStart, firstPageRangeEnd - firstPageRangeStart + 1)
+            .Select(t => new PageFontSize(t, firstPageRangeFontSize));
+
+        IEnumerable<PageFontSize> expectedPageFontSizesForSecondPageRange = Enumerable
+            .Range(secondPageRangeStart, secondPageRangeEnd - secondPageRangeStart + 1)
+            .Select(t => new PageFontSize(t, secondPageRangeFontSize));
+
+        IEnumerable<PageFontSize> expectedPageFontSizesForThirdPageRange = Enumerable
+            .Range(thirdPageRangeStart, thirdPageRangeEnd - thirdPageRangeStart + 1)
+            .Select(t => new PageFontSize(t, thirdPageRangeFontSize));
+
+        IEnumerable<PageFontSize> expectedPageFontSizes = expectedPageFontSizesForFirstPageRange
+            .Concat(expectedPageFontSizesForSecondPageRange)
+            .Concat(expectedPageFontSizesForThirdPageRange);
+
+        bool marginsCorrect = margins.SequenceEqual(expectedMargins);
+        bool pageFontSizesCorrect = pageFontSizes.SequenceEqual(expectedPageFontSizes);
+
+        Assert.True(marginsCorrect);
+        Assert.True(pageFontSizesCorrect);
+
+        Assert.Empty(extraArguments);
+    }
+
+    [Fact]
     public void Parse_ValueOptions_DefaultValueApplied()
     {
         const int defaultAngle = 45;
