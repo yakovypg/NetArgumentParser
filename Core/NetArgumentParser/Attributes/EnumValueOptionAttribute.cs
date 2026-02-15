@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
@@ -27,7 +28,9 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         bool useDefaultChoices = true,
         string[]? aliases = null,
         T[]? choices = null,
-        string[]? beforeParseChoices = null)
+        string[]? beforeParseChoices = null,
+        bool addChoicesToDescription = false,
+        bool addBeforeParseChoicesToDescription = false)
         : base(
             defaultValue,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -40,7 +43,9 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             ignoreCaseInChoices,
             aliases,
             choices,
-            beforeParseChoices)
+            beforeParseChoices,
+            addChoicesToDescription,
+            addBeforeParseChoicesToDescription)
     {
         UseDefaultChoices = useDefaultChoices;
     }
@@ -58,7 +63,9 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         bool useDefaultChoices = true,
         string[]? aliases = null,
         T[]? choices = null,
-        string[]? beforeParseChoices = null)
+        string[]? beforeParseChoices = null,
+        bool addChoicesToDescription = false,
+        bool addBeforeParseChoicesToDescription = false)
         : base(
             choices,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -70,7 +77,9 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             isFinal,
             ignoreCaseInChoices,
             aliases,
-            beforeParseChoices)
+            beforeParseChoices,
+            addChoicesToDescription,
+            addBeforeParseChoicesToDescription)
     {
         UseDefaultChoices = useDefaultChoices;
     }
@@ -85,7 +94,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         if (!CanCreateOption(source, propertyInfo))
             throw new CannotCreateOptionException(null, propertyInfo);
 
-        return new EnumValueOption<T>(
+        var enumValueOption = new EnumValueOption<T>(
             LongName,
             ShortName,
             Description,
@@ -101,5 +110,12 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             DefaultValue,
             valueRestriction: null,
             t => propertyInfo.SetValue(source, t));
+
+        if (AddBeforeParseChoicesToDescription && BeforeParseChoices is not null && BeforeParseChoices.Any())
+            enumValueOption.AddBeforeParseChoicesToDescription();
+        else if (AddChoicesToDescription && Choices is not null && Choices.Any())
+            enumValueOption.AddChoicesToDescription();
+
+        return enumValueOption;
     }
 }

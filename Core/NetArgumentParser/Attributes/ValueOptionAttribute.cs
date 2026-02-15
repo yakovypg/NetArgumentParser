@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
@@ -27,7 +28,9 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         bool ignoreCaseInChoices = false,
         string[]? aliases = null,
         T[]? choices = null,
-        string[]? beforeParseChoices = null)
+        string[]? beforeParseChoices = null,
+        bool addChoicesToDescription = false,
+        bool addBeforeParseChoicesToDescription = false)
         : this(
             choices,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -39,7 +42,9 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             isFinal,
             ignoreCaseInChoices,
             aliases,
-            beforeParseChoices)
+            beforeParseChoices,
+            addChoicesToDescription,
+            addBeforeParseChoicesToDescription)
     {
         DefaultValue = new DefaultOptionValue<T>(defaultValue);
     }
@@ -55,7 +60,9 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         bool isFinal = false,
         bool ignoreCaseInChoices = false,
         string[]? aliases = null,
-        string[]? beforeParseChoices = null)
+        string[]? beforeParseChoices = null,
+        bool addChoicesToDescription = false,
+        bool addBeforeParseChoicesToDescription = false)
         : this(
             choices: null,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -67,7 +74,9 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             isFinal,
             ignoreCaseInChoices,
             aliases,
-            beforeParseChoices)
+            beforeParseChoices,
+            addChoicesToDescription,
+            addBeforeParseChoicesToDescription)
     {
     }
 
@@ -82,7 +91,9 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         bool isFinal = false,
         bool ignoreCaseInChoices = false,
         string[]? aliases = null,
-        string[]? beforeParseChoices = null)
+        string[]? beforeParseChoices = null,
+        bool addChoicesToDescription = false,
+        bool addBeforeParseChoicesToDescription = false)
         : base(
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
@@ -96,12 +107,17 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
 
         MetaVariable = metaVariable;
         IgnoreCaseInChoices = ignoreCaseInChoices;
+        AddChoicesToDescription = addChoicesToDescription;
+        AddBeforeParseChoicesToDescription = addBeforeParseChoicesToDescription;
+
         Choices = choices;
         BeforeParseChoices = beforeParseChoices;
     }
 
     public string MetaVariable { get; }
     public bool IgnoreCaseInChoices { get; }
+    public bool AddChoicesToDescription { get; }
+    public bool AddBeforeParseChoicesToDescription { get; }
 
     public IEnumerable<T>? Choices { get; }
     public IEnumerable<string>? BeforeParseChoices { get; }
@@ -117,7 +133,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         if (!CanCreateOption(source, propertyInfo))
             throw new CannotCreateOptionException(null, propertyInfo);
 
-        return new ValueOption<T>(
+        var valueOption = new ValueOption<T>(
             LongName,
             ShortName,
             Description,
@@ -132,5 +148,12 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             DefaultValue,
             null,
             t => propertyInfo.SetValue(source, t));
+
+        if (AddBeforeParseChoicesToDescription && BeforeParseChoices is not null && BeforeParseChoices.Any())
+            valueOption.AddBeforeParseChoicesToDescription();
+        else if (AddChoicesToDescription && Choices is not null && Choices.Any())
+            valueOption.AddChoicesToDescription();
+
+        return valueOption;
     }
 }
