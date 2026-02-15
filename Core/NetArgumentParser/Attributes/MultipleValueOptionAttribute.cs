@@ -62,7 +62,6 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
         int numberOfItemsToCapture = -1)
         : base(
             choices: null,
-            beforeParseChoices: null,
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
             description ?? throw new ArgumentNullException(nameof(description)),
@@ -71,7 +70,8 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
             isHidden,
             isFinal,
             ignoreCaseInChoices,
-            aliases)
+            aliases,
+            beforeParseChoices: null)
     {
         IgnoreOrderInChoices = ignoreOrderInChoices;
         ContextCapture = CreateContextCapture(contextCaptureType, numberOfItemsToCapture);
