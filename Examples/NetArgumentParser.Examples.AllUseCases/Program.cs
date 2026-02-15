@@ -98,6 +98,18 @@ var options = new ICommonOption[]
         contextCapture: new FixedContextCapture(3),
         choices: [["Max", "Robert", "Tom"], ["David", "John", "Richard"]]),
 
+    new MultipleValueOption<PageRange>(
+        longName: "ranges",
+        shortName: string.Empty,
+        description: "ranges of pages that should be processed",
+        afterValueParsingAction: t => resultValues.PageRanges.AddRange(t)),
+
+    new MultipleValueOption<PageFontSize>(
+        longName: "fonts",
+        shortName: string.Empty,
+        description: "font sizes for pages",
+        afterValueParsingAction: t => resultValues.PageFontSizes = [.. t]),
+
     new ValueOption<int>(
         longName: "angle",
         shortName: "a",
@@ -167,7 +179,10 @@ var converters = new IValueConverter[]
 
             _ => throw new FormatException()
         };
-    })
+    }),
+
+    new MultipleValueConverter<PageRange>(PageRange.Parse),
+    new MultipleValueConverter<PageFontSize>(PageFontSize.ParseMany)
 };
 
 var descriptionGenerator = new ApplicationDescriptionGenerator(parser)
@@ -226,12 +241,52 @@ Console.WriteLine($"Angle: {resultValues.Angle}");
 Console.WriteLine($"Time: {resultValues.Time}");
 Console.WriteLine($"File mode: {resultValues.FileMode}");
 Console.WriteLine($"Input files: {string.Join(" ", resultValues.InputFiles)}");
+Console.WriteLine($"Page ranges: {string.Join(" ", resultValues.PageRanges)}");
+Console.WriteLine($"Page font sizes: {string.Join(" ", resultValues.PageFontSizes)}");
 Console.WriteLine($"Date: {resultValues.Date?.ToLongDateString()}");
 Console.WriteLine($"Name: {resultValues.Name}");
 Console.WriteLine($"Width: {resultValues.Width}");
 Console.WriteLine($"Height: {resultValues.Height}");
 
 #pragma warning disable
+internal sealed record PageRange(int Start, int End)
+{
+    public static PageRange Parse(string data)
+    {
+        int[] parts = data.Split('-').Select(int.Parse).ToArray();
+
+        return parts.Length == 2
+            ? new PageRange(parts[0], parts[1])
+            : throw new ArgumentException("Incorrect format");
+    }
+}
+
+internal sealed record PageFontSize(int PageNumber, int FontSize)
+{
+    public static PageFontSize Parse(string data)
+    {
+        int[] parts = data.Split(';').Select(int.Parse).ToArray();
+
+        return parts.Length == 2
+            ? new PageFontSize(parts[0], parts[1])
+            : throw new ArgumentException("Incorrect format");
+    }
+
+    public static PageFontSize[] ParseMany(string data)
+    {
+        string[] parts = data.Split(':');
+
+        if (parts.Length != 2)
+            throw new ArgumentException("Incorrect format");
+
+        PageRange pageRange = PageRange.Parse(parts[0]);
+        IEnumerable<int> pages = Enumerable.Range(pageRange.Start, pageRange.End - pageRange.Start + 1);
+        int fontSize = int.Parse(parts[1]);
+
+        return pages.Select(t => $"{t};{fontSize}").Select(Parse).ToArray();
+    }
+}
+
 internal sealed class ResultValues
 {
     public bool Verbose { get; set; }
@@ -241,9 +296,19 @@ internal sealed class ResultValues
     public TimeSpan? Time { get; set; }
     public FileMode? FileMode { get; set; }
     public List<string> InputFiles { get; set; } = [];
+    public List<PageRange> PageRanges { get; set; } = [new PageRange(1, 1)];
+    public List<PageFontSize> PageFontSizes { get; set; } = [];
     public DateTime? Date { get; set; }
     public string? Name { get; set; }
     public int? Width { get; set; }
     public int? Height { get; set; }
 }
 #pragma warning restore
+
+/*
+./NetArgumentParser.Examples.AllUseCases -n Name --verbose -q \
+    --input ./NetArgumentParser.Examples.AllUseCases ./NetArgumentParser.dll \
+    --persons David John Richard --ranges 2-5 6-8 --fonts 1-2:12 3-7:16 -a 45 \
+    -VVV --time 1,2,3,4,5 --file-mode open --date 2026 02 15 \
+    extra1 --extra2 extra3
+*/
