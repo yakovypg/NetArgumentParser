@@ -30,7 +30,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         T[]? choices = null,
         string[]? beforeParseChoices = null,
         bool addChoicesToDescription = false,
-        bool addBeforeParseChoicesToDescription = false)
+        bool addBeforeParseChoicesToDescription = false,
+        bool addDefaultValueToDescription = false)
         : this(
             choices,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -44,7 +45,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             aliases,
             beforeParseChoices,
             addChoicesToDescription,
-            addBeforeParseChoicesToDescription)
+            addBeforeParseChoicesToDescription,
+            addDefaultValueToDescription)
     {
         DefaultValue = new DefaultOptionValue<T>(defaultValue);
     }
@@ -62,7 +64,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         string[]? aliases = null,
         string[]? beforeParseChoices = null,
         bool addChoicesToDescription = false,
-        bool addBeforeParseChoicesToDescription = false)
+        bool addBeforeParseChoicesToDescription = false,
+        bool addDefaultValueToDescription = false)
         : this(
             choices: null,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -76,7 +79,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             aliases,
             beforeParseChoices,
             addChoicesToDescription,
-            addBeforeParseChoicesToDescription)
+            addBeforeParseChoicesToDescription,
+            addDefaultValueToDescription)
     {
     }
 
@@ -93,7 +97,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         string[]? aliases = null,
         string[]? beforeParseChoices = null,
         bool addChoicesToDescription = false,
-        bool addBeforeParseChoicesToDescription = false)
+        bool addBeforeParseChoicesToDescription = false,
+        bool addDefaultValueToDescription = false)
         : base(
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
@@ -109,6 +114,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         IgnoreCaseInChoices = ignoreCaseInChoices;
         AddChoicesToDescription = addChoicesToDescription;
         AddBeforeParseChoicesToDescription = addBeforeParseChoicesToDescription;
+        AddDefaultValueToDescription = addDefaultValueToDescription;
 
         Choices = choices;
         BeforeParseChoices = beforeParseChoices;
@@ -118,6 +124,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
     public bool IgnoreCaseInChoices { get; }
     public bool AddChoicesToDescription { get; }
     public bool AddBeforeParseChoicesToDescription { get; }
+    public bool AddDefaultValueToDescription { get; }
 
     public IEnumerable<T>? Choices { get; }
     public IEnumerable<string>? BeforeParseChoices { get; }
@@ -148,6 +155,9 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             DefaultValue,
             null,
             t => propertyInfo.SetValue(source, t));
+
+        if (AddDefaultValueToDescription)
+            valueOption.AddDefaultValueToDescription();
 
         if (AddBeforeParseChoicesToDescription && BeforeParseChoices is not null && BeforeParseChoices.Any())
             valueOption.AddBeforeParseChoicesToDescription();

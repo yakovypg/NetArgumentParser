@@ -28,7 +28,8 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
         bool ignoreOrderInChoices = false,
         string[]? aliases = null,
         ContextCaptureType contextCaptureType = ContextCaptureType.None,
-        int numberOfItemsToCapture = -1)
+        int numberOfItemsToCapture = -1,
+        bool addDefaultValueToDescription = false)
         : base(
             defaultValue,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -41,7 +42,8 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
             ignoreCaseInChoices,
             aliases,
             choices: null,
-            beforeParseChoices: null)
+            beforeParseChoices: null,
+            addDefaultValueToDescription: addDefaultValueToDescription)
     {
         IgnoreOrderInChoices = ignoreOrderInChoices;
         ContextCapture = CreateContextCapture(contextCaptureType, numberOfItemsToCapture);
@@ -59,7 +61,8 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
         bool ignoreOrderInChoices = false,
         string[]? aliases = null,
         ContextCaptureType contextCaptureType = ContextCaptureType.None,
-        int numberOfItemsToCapture = -1)
+        int numberOfItemsToCapture = -1,
+        bool addDefaultValueToDescription = false)
         : base(
             choices: null,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -71,7 +74,8 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
             isFinal,
             ignoreCaseInChoices,
             aliases,
-            beforeParseChoices: null)
+            beforeParseChoices: null,
+            addDefaultValueToDescription: addDefaultValueToDescription)
     {
         IgnoreOrderInChoices = ignoreOrderInChoices;
         ContextCapture = CreateContextCapture(contextCaptureType, numberOfItemsToCapture);
