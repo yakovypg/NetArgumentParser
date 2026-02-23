@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -15,6 +16,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
 {
     private List<T> _choices;
     private List<string> _beforeParseChoices;
+    private bool _areDefaultValueAddedToDescription;
     private bool _areChoicesAddedToDescription;
 
     public ValueOption(
@@ -150,6 +152,50 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         }
 
         return false;
+    }
+
+    public void AddDefaultValueToDescription(
+        string separator = ", ",
+        string prefix = " [default=",
+        string postfix = "]",
+        string arraySeparator = "; ",
+        string arrayPrefix = "[",
+        string arrayPostfix = "]",
+        string nullPresenter = "null")
+    {
+        ExtendedArgumentNullException.ThrowIfNull(separator, nameof(separator));
+        ExtendedArgumentNullException.ThrowIfNull(prefix, nameof(prefix));
+        ExtendedArgumentNullException.ThrowIfNull(postfix, nameof(postfix));
+        ExtendedArgumentNullException.ThrowIfNull(arraySeparator, nameof(arraySeparator));
+        ExtendedArgumentNullException.ThrowIfNull(arrayPrefix, nameof(arrayPrefix));
+        ExtendedArgumentNullException.ThrowIfNull(arrayPostfix, nameof(arrayPostfix));
+        ExtendedArgumentNullException.ThrowIfNull(nullPresenter, nameof(nullPresenter));
+
+        if (_areDefaultValueAddedToDescription)
+            throw new DefaultValueAlreadyAddedToDescriptionException();
+
+        string defaultValueString;
+
+        if (DefaultValue is null)
+        {
+            defaultValueString = nullPresenter;
+        }
+        else if (DefaultValue.Value is IEnumerable defaultValueEnumerable)
+        {
+            defaultValueString = ExtendedString.JoinWithExpand(
+                separator,
+                arraySeparator,
+                arrayPrefix,
+                arrayPostfix,
+                defaultValueEnumerable.Cast<object>());
+        }
+        else
+        {
+            defaultValueString = DefaultValue.Value?.ToString() ?? nullPresenter;
+        }
+
+        Description += $"{prefix}{defaultValueString}{postfix}";
+        _areDefaultValueAddedToDescription = true;
     }
 
     public void AddChoicesToDescription(

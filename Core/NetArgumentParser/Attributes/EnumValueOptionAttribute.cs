@@ -30,7 +30,8 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         T[]? choices = null,
         string[]? beforeParseChoices = null,
         bool addChoicesToDescription = false,
-        bool addBeforeParseChoicesToDescription = false)
+        bool addBeforeParseChoicesToDescription = false,
+        bool addDefaultValueToDescription = false)
         : base(
             defaultValue,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -45,7 +46,8 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             choices,
             beforeParseChoices,
             addChoicesToDescription,
-            addBeforeParseChoicesToDescription)
+            addBeforeParseChoicesToDescription,
+            addDefaultValueToDescription)
     {
         UseDefaultChoices = useDefaultChoices;
     }
@@ -65,7 +67,8 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         T[]? choices = null,
         string[]? beforeParseChoices = null,
         bool addChoicesToDescription = false,
-        bool addBeforeParseChoicesToDescription = false)
+        bool addBeforeParseChoicesToDescription = false,
+        bool addDefaultValueToDescription = false)
         : base(
             choices,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -79,7 +82,8 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             aliases,
             beforeParseChoices,
             addChoicesToDescription,
-            addBeforeParseChoicesToDescription)
+            addBeforeParseChoicesToDescription,
+            addDefaultValueToDescription)
     {
         UseDefaultChoices = useDefaultChoices;
     }
