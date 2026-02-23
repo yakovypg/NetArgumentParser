@@ -85,7 +85,9 @@ var options = new ICommonOption[]
         shortName: "i",
         description: "images that need to be processed",
         isRequired: true,
-        valueRestriction: new OptionValueRestriction<IList<string>>(t => t.All(p => File.Exists(p))),
+        valueRestriction: new OptionValueRestriction<IList<string>>(
+            t => t.All(p => File.Exists(p)),
+            "all files must exist"),
         contextCapture: new OneOrMoreContextCapture(),
         afterValueParsingAction: t => resultValues.InputFiles = [.. t]),
 
