@@ -2,4 +2,4 @@ using System;
 
 namespace NetArgumentParser.Options.Configuration;
 
-public record OptionValueRestriction<T>(Predicate<T> IsValueAllowed);
+public record OptionValueRestriction<T>(Predicate<T> IsValueAllowed, string? ValueNotSatisfyRestrictionMessage = null);
