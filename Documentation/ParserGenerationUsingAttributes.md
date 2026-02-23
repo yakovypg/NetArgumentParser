@@ -291,7 +291,7 @@ Using attributes in C# imposes a restriction on their argument types. An attribu
 - `MultipleValueOption` choices.
 - Custom after handing action and after value parsing action.
 
-However, you can find the option using `FindOptions()` method and further configure it.
+However, you can find the option using `FindOptions()`, `FindFirstOptionByLongName()`, or a similar method, and then configure it.
 
 ```cs
 var generator = new ArgumentParserGenerator();
