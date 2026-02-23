@@ -11,7 +11,10 @@ using NetArgumentParser.Options;
 using NetArgumentParser.Options.Collections;
 using NetArgumentParser.Options.Configuration;
 using NetArgumentParser.Options.Context;
+using NetArgumentParser.Options.Design;
 using NetArgumentParser.Subcommands;
+
+const string fileModeOptionName = "file-mode";
 
 var resultValues = new ResultValues();
 
@@ -138,7 +141,7 @@ var additionalOptions = new ICommonOption[]
         afterValueParsingAction: t => resultValues.Time = t),
 
     new EnumValueOption<FileMode>(
-        longName: "file-mode",
+        longName: fileModeOptionName,
         shortName: string.Empty,
         description: "specifies how the operatng system should open a file",
         defaultValue: new DefaultOptionValue<FileMode>(FileMode.OpenOrCreate),
@@ -215,6 +218,17 @@ MutuallyExclusiveOptionGroup<ICommonOption> mutuallyExclusiveOptionGroup =
 Subcommand resizeSubcommand = parser.AddSubcommand("resize", "resize the image");
 resizeSubcommand.UseDefaultHelpOption = true;
 resizeSubcommand.AddOptions(resizeSubcommandOptions);
+
+bool fileModeOptionFound = parser.FindFirstOptionByLongName(
+    fileModeOptionName,
+    false,
+    out ICommonOption? fileModeOption);
+
+if (fileModeOptionFound && fileModeOption is IValueOptionDescriptionDesigner fileModeOptionDesigner)
+{
+    fileModeOptionDesigner.AddDefaultValueToDescription();
+    fileModeOptionDesigner.AddChoicesToDescription();
+}
 
 ParseArgumentsResult result;
 IList<string> extraArguments;
