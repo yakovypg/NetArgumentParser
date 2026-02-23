@@ -200,6 +200,16 @@ var enumValueOption = new EnumValueOption<StringSplitOptions>("options", "o",
     valueRestriction: new OptionValueRestriction<StringSplitOptions>(t => t != StringSplitOptions.None));
 ```
 
+You can also specify a message to be shown if the value doesn't satisfy the restriction:
+
+```cs
+var restriction = new OptionValueRestriction<int>(t => t > 0, "angle must be greater than zero");
+
+var valueOption = new ValueOption<int>("angle", "a",
+    description: "angle by which you want to rotate the image",
+    valueRestriction: restriction);
+```
+
 ### Required Options
 You can indicate that the option is required. In this case, if the input argument list doesn't contain a matching argument, an exception will be thrown.
 
