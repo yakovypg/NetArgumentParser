@@ -96,12 +96,17 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         if (valueRestriction is not null)
         {
             if (defaultValue is not null && !valueRestriction.IsValueAllowed(defaultValue.Value))
-                throw new OptionValueNotSatisfyRestrictionException(null, [$"{defaultValue.Value}"]);
+            {
+                throw new OptionValueNotSatisfyRestrictionException(
+                    valueRestriction.ValueNotSatisfyRestrictionMessage,
+                    [$"{defaultValue.Value}"]);
+            }
 
             if (_choices.Count > 0 && _choices.Any(t => !valueRestriction.IsValueAllowed(t)))
             {
                 throw new OptionValueNotSatisfyRestrictionException(
-                    null, [$"{_choices.First(t => !valueRestriction.IsValueAllowed(t))}"]);
+                    valueRestriction.ValueNotSatisfyRestrictionMessage,
+                    [$"{_choices.First(t => !valueRestriction.IsValueAllowed(t))}"]);
             }
         }
 
@@ -430,7 +435,11 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         ExtendedArgumentNullException.ThrowIfNull(valueSource, nameof(valueSource));
 
         if (!IsValueSatisfyRestriction(value))
-            throw new OptionValueNotSatisfyRestrictionException(null, valueSource);
+        {
+            throw new OptionValueNotSatisfyRestrictionException(
+                ValueRestriction?.ValueNotSatisfyRestrictionMessage,
+                valueSource);
+        }
 
         if (!IsValueSatisfyChoices(value))
         {
