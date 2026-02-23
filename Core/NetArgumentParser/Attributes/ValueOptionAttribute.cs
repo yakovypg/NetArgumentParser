@@ -156,14 +156,27 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             null,
             t => propertyInfo.SetValue(source, t));
 
+        AddDefaultValueToDescriptionIfNeeded(valueOption);
+        AddChoicesToDescriptionIfNeeded(valueOption);
+
+        return valueOption;
+    }
+
+    private void AddDefaultValueToDescriptionIfNeeded(ValueOption<T> valueOption)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(valueOption, nameof(valueOption));
+
         if (AddDefaultValueToDescription)
             valueOption.AddDefaultValueToDescription();
+    }
+
+    private void AddChoicesToDescriptionIfNeeded(ValueOption<T> valueOption)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(valueOption, nameof(valueOption));
 
         if (AddBeforeParseChoicesToDescription && BeforeParseChoices is not null && BeforeParseChoices.Any())
             valueOption.AddBeforeParseChoicesToDescription();
         else if (AddChoicesToDescription && Choices is not null && Choices.Any())
             valueOption.AddChoicesToDescription();
-
-        return valueOption;
     }
 }
