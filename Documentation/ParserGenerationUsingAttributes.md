@@ -74,7 +74,8 @@ internal class CustomParserConfig
         choices: [FileMode.Create, FileMode.Open],
         beforeParseChoices: ["Create", "Open"],
         addChoicesToDescription: false,
-        addBeforeParseChoicesToDescription: true)
+        addBeforeParseChoicesToDescription: true,
+        addDefaultValueToDescription: false)
     ]
     public FileMode Mode { get; set; }
 
@@ -143,7 +144,8 @@ internal class CustomParserConfig
         choices: [0, 45, 90],
         beforeParseChoices: ["0", "45", "90"],
         addChoicesToDescription: true,
-        addBeforeParseChoicesToDescription: false)
+        addBeforeParseChoicesToDescription: false,
+        addDefaultValueToDescription: true)
     ]
     public double? Angle { get; set; }
 }
@@ -151,7 +153,7 @@ internal class CustomParserConfig
 internal record Point(double X, double Y, double Z);
 ```
 
-Note that attributes allow you to add choices and before parse choices to the option description (if the corresponding option supports it) using `addChoicesToDescription` and `addBeforeParseChoicesToDescription` parameters, so you don't need to find the generated options to do this.
+Note that attributes allow you to add default value, choices and before parse choices to the option description (if the corresponding option supports it) using `addDefaultValueToDescription`, `addChoicesToDescription`, and `addBeforeParseChoicesToDescription` parameters, so you don't need to find the generated options to do this.
 
 ### Group Attributes
 Goups can be configured using `OptionGroupAttribute` attribute. In addition to specifying the group header and description, you should specify the group ID. It is necessary for the correct placement of options, since groups can have the same header. Options that you want to put in the same group must be marked with an attribute with the same ID. You should't specify header and description for all group attributes with same id. It is enough to do this for only one attribute.

@@ -7,6 +7,7 @@
 *    [Parse Known Arguments](#parse-known-arguments)
 *    [Skip Arguments](#skip-arguments)
 *    [Getting Info About Handled Options And Subcommands](#getting-info-about-handled-options-and-subcommands)
+*    [Add Default Value To Description](#add-default-value-to-description)
 *    [Add Choices To Description](#add-choices-to-description)
 
 ## Negative Numbers & Scientific Notation
@@ -114,6 +115,50 @@ ParseArgumentsResult result = parser.ParseKnownArguments(args, out _);
 
 // result.HandledOptions: verboseOption (without value), filesOption (with values img.jpg, img.png)
 // result.HandledSubcommands: compressSubcommand
+```
+
+## Add Default Value To Description
+You can add default value to the value option description automatically. To do this, you can use `AddDefaultValueToDescription()` method as follows:
+
+```cs
+var angleOption = new ValueOption<int>(
+    defaultValue: new DefaultOptionValue<int>(45),
+    longName: "angle",
+    description: "Angle");
+
+angleOption.AddDefaultValueToDescription();
+
+var namesOption = new MultipleValueOption<List<string>>(
+    defaultValue: new DefaultOptionValue<IList<List<string>>>([["Leo", "Max"], ["Eva", "Zoe"]]),
+    longName: "input",
+    description: "Names");
+
+namesOption.AddDefaultValueToDescription(
+    separator: ", ",
+    prefix: " (default: ",
+    postfix: ")",
+    arraySeparator: "; ",
+    arrayPrefix: "[",
+    arrayPostfix: "]",
+    nullPresenter: "null");
+
+var fileModeOption = new ValueOption<FileMode>(
+    defaultValue: new DefaultOptionValue<FileMode>(FileMode.Open),
+    longName: "mode",
+    description: "File mode");
+
+fileModeOption.AddDefaultValueToDescription(
+    prefix: ". Default ",
+    postfix: string.Empty);
+
+// Angle [default=45]
+Console.WriteLine(angleOption.Description);
+
+// Names (default: [John, Max]; [John1, Max1])
+Console.WriteLine(namesOption.Description);
+
+// File mode. Default Open
+Console.WriteLine(fileModeOption.Description);
 ```
 
 ## Add Choices To Description
