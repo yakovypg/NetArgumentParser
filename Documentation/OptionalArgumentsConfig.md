@@ -182,7 +182,7 @@ You can specify a default value for the option. In this case, if the input argum
 ```cs
 var option = new ValueOption<int>("angle", "a",
     description: "angle by which you want to rotate the image",
-    defaultValue: 60);
+    defaultValue: new DefaultOptionValue<int>(60));
 ```
 
 ### Value Restrictions
