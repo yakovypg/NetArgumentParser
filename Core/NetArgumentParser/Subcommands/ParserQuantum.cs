@@ -209,6 +209,28 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
         return foundOptions.Concat(recursiveFoundOptions);
     }
 
+    public bool FindFirstOptionByLongName(string longName, bool recursive, out ICommonOption? foundOption)
+    {
+        IEnumerable<ICommonOption> foundOptions = FindOptions(t => t.LongName == longName, recursive);
+        foundOption = foundOptions.FirstOrDefault();
+
+        return foundOption is not null;
+    }
+
+    public bool FindFirstValueOptionByLongName<T>(
+        string longName,
+        bool recursive,
+        out IValueOption<T>? foundOption)
+    {
+        IEnumerable<ICommonOption> foundOptions = FindOptions(
+            t => t.LongName == longName && t is IValueOption<T>,
+            recursive);
+
+        foundOption = foundOptions.FirstOrDefault() as IValueOption<T>;
+
+        return foundOption is not null;
+    }
+
     protected virtual void AddDefaultOptions()
     {
         foreach (ParserQuantum quantum in _subcommands.Concat([this]))
