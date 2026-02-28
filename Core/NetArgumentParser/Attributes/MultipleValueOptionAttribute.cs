@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
+using NetArgumentParser.Options.Configuration;
 using NetArgumentParser.Options.Context;
 
 namespace NetArgumentParser.Attributes;
@@ -29,7 +30,8 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
         string[]? aliases = null,
         ContextCaptureType contextCaptureType = ContextCaptureType.None,
         int numberOfItemsToCapture = -1,
-        bool addDefaultValueToDescription = false)
+        bool addDefaultValueToDescription = false,
+        string? valueRestriction = null)
         : base(
             defaultValue,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -47,6 +49,7 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
     {
         IgnoreOrderInChoices = ignoreOrderInChoices;
         ContextCapture = CreateContextCapture(contextCaptureType, numberOfItemsToCapture);
+        ValueRestriction = CreateValueRestriction(valueRestriction);
     }
 
     public MultipleValueOptionAttribute(
@@ -62,7 +65,8 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
         string[]? aliases = null,
         ContextCaptureType contextCaptureType = ContextCaptureType.None,
         int numberOfItemsToCapture = -1,
-        bool addDefaultValueToDescription = false)
+        bool addDefaultValueToDescription = false,
+        string? valueRestriction = null)
         : base(
             choices: null,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -79,6 +83,7 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
     {
         IgnoreOrderInChoices = ignoreOrderInChoices;
         ContextCapture = CreateContextCapture(contextCaptureType, numberOfItemsToCapture);
+        ValueRestriction = CreateValueRestriction(valueRestriction);
     }
 #pragma warning restore CA1019 // Define accessors for attribute arguments
 
@@ -118,7 +123,7 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
             Aliases,
             choices: null,
             DefaultValue,
-            valueRestriction: null,
+            valueRestriction: ValueRestriction,
             t => propertyInfo.SetValue(source, t),
             ContextCapture);
     }
@@ -137,5 +142,12 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
         return ContextCaptureRecognizer.Recognize(
                 contextCaptureType,
                 itemsToCapture);
+    }
+
+    private static OptionValueRestriction<IList<T>>? CreateValueRestriction(string? data)
+    {
+        return data is not null && !string.IsNullOrWhiteSpace(data)
+            ? OptionValueRestrictionParser.ParseForList<T>(data, true)
+            : null;
     }
 }
