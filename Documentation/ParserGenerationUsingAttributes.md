@@ -5,6 +5,7 @@ You can generate `ArgumentParser` using special class provided parser configurat
 *    [Attributes](#attributes)
      *    [Configuration Attributes](#configuration-attributes)
      *    [Option Attributes](#option-attributes)
+          *    [Add value restriction](#add-value-restriction)
      *    [Group Attributes](#group-attributes)
      *    [Subcommand Attributes](#subcommand-attributes)
 *    [Argument Parser Generation](#argument-parser-generation)
@@ -75,7 +76,8 @@ internal class CustomParserConfig
         beforeParseChoices: ["Create", "Open"],
         addChoicesToDescription: false,
         addBeforeParseChoicesToDescription: true,
-        addDefaultValueToDescription: false)
+        addDefaultValueToDescription: false,
+        valueRestriction: null)
     ]
     public FileMode Mode { get; set; }
 
@@ -98,7 +100,9 @@ internal class CustomParserConfig
         isHidden: false,
         isFinal: false,
         aliases: ["input", "input-files"],
-        contextCaptureType: ContextCaptureType.OneOrMore)
+        contextCaptureType: ContextCaptureType.OneOrMore,
+        addDefaultValueToDescription: false,
+        valueRestriction: null)
     ]
     public List<string> InputFiles { get; set; }
 
@@ -114,7 +118,9 @@ internal class CustomParserConfig
         ignoreOrderInChoices: true,
         aliases: ["ps"],
         contextCaptureType: ContextCaptureType.Fixed,
-        numberOfItemsToCapture: 3)
+        numberOfItemsToCapture: 3,
+        addDefaultValueToDescription: false,
+        valueRestriction: null)
     ]
     [OptionGroup("complex-values", "", "")]
     public List<string> Persons { get; set; }
@@ -127,7 +133,12 @@ internal class CustomParserConfig
         isRequired: false,
         isHidden: false,
         isFinal: false,
-        aliases: [])
+        aliases: [],
+        beforeParseChoices: null,
+        addChoicesToDescription: false,
+        addBeforeParseChoicesToDescription: false,
+        addDefaultValueToDescription: false,
+        valueRestriction: null)
     ]
     public Point? Point { get; set; }
 
@@ -145,7 +156,8 @@ internal class CustomParserConfig
         beforeParseChoices: ["0", "45", "90"],
         addChoicesToDescription: true,
         addBeforeParseChoicesToDescription: false,
-        addDefaultValueToDescription: true)
+        addDefaultValueToDescription: true,
+        valueRestriction: null)
     ]
     public double? Angle { get; set; }
 }
@@ -154,6 +166,74 @@ internal record Point(double X, double Y, double Z);
 ```
 
 Note that attributes allow you to add default value, choices and before parse choices to the option description (if the corresponding option supports it) using `addDefaultValueToDescription`, `addChoicesToDescription`, and `addBeforeParseChoicesToDescription` parameters, so you don't need to find the generated options to do this.
+
+#### Add value restriction
+You can add a common value restriction using `valueRestriction` parameter. This is specified through a string that will be converted into an actual restriction by a special parser. The format of this string is as follows:
+
+```
+predicate1_name parameter1 ... parameterN
+...
+logical_operator predicateK_name parameter1 ... parameterM
+?value_not_satisfy_restriction_message
+```
+
+In other words, a string consists of one or more predicates, each separated by a newline character `\n`. Following the predicate name, its parameters are listed. A logical connective (`AND` or `OR`) may precede the predicate name; if omitted, it defaults to `AND`. A line that begins with the `?` character specifies a message to be displayed if the option value doesn't satisfy the restriction. However, this message can be omitted.
+
+It is also important to note that parentheses are not supported, and logical connectives will be evaluated in the order in which they are specified. Thus, `x OR y AND z` will actually be interpreted as `(x OR y) AND z`. Additionally, logical connectives have aliases: for `OR`, they are `||` and `|`, while for `AND`, they are `&&` and `&`.
+
+The following predicates are available:
+1. `equal` (`==`, `=`): takes a single parameter. The option value must equal this parameter. The parameter type must be double, and the option value type must have the overloaded `==` operator.
+2. `notequal` (`!=`, `<>`): takes a single parameter. The option value must differ from this parameter. The parameter type must be double, and the option value type must have the overloaded `!=` operator.
+3. `less` (`<`): takes a single parameter. The option value must be less than this parameter. The parameter type must be double, and the option value type must have the overloaded `<` operator.
+4. `lessorequal` (`<=`): takes a single parameter. The option value must be less than or equal to this parameter. The parameter type must be double, and the option value type must have the overloaded `<=` operator.
+5. `greater` (`>`): takes a single parameter. The option value must be greater than this parameter. The parameter type must be double, and the option value type must have the overloaded `>` operator.
+6. `greaterorequal` (`>=`): takes a single parameter. The option value must be greater than or equal to this parameter. The parameter type must be double, and the option value type must have the overloaded `>=` operator.
+7. `inrange` (`minmax`): takes two parameters. The option value must be greater than or equal to the first parameter and less than or equal to the second parameter. The parameter types must be double, and the option value type must have the overloaded `>=` and `<=` operators.
+8. `oneof` (`inlist`): takes one or more parameters. The option value, converted to a string, must equal one of the specified parameters.
+9. `match` (`regex`): takes a single parameter. The option value, converted to a string, must match the specified parameter representing a regular expression. Anything written after the first space will be avaluated as a regular expression, so it can contain spaces.
+10. `directoryexists` (`directory`): takes no parameters. The option value must be a string representing the path to an existing directory.
+11. `fileexists` (`file`): takes no parameters. The option value must be a string representing the path to an existing file.
+12. `maxfilesize` (`maxsize`): takes a single parameter. The option value must be a string representing the path to a file whose size is less than or equal to this parameter (in bytes).
+13. `extension` (`ext`): takes one or more parameters. The option value must be a string representing the path to a file whose extension matches one of the specified parameters. The dot in the file extension is optional, and its case (uppercase or lowercase) doesn't matter.
+
+Examples of simple restrictions are provided below:
+1. `== 5`: the option value must be equal to 5.
+2. `!= 5`: the option value must be different from 5.
+3. `< 5`: the option value must be less than 5.
+4. `<= 5`: the option value must be less than or equal to 5.
+5. `> 5`: the option value must be greater than 5.
+6. `>= 5`: the option value must be greater than or equal to 5.
+7. `inrange 0 5`: the option value must be within the range from 0 to 5.
+8. `oneof 1 3 6`: the option value must be one of the values: 1, 3 or 6.
+9. `match ^[A-Z][a-z]*$`: the option value must match the regular expression `^[A-Z][a-z]*$`.
+10. `directoryexists`: the option value must be a string representing the path to an existing directory.
+11. `fileexists`: the option value must be a string representing the path to an existing file.
+12. `maxfilesize 10240`: the option value must be a string representing the path to a file whose size is less than or equal to 10240 bytes.
+13. `extension jpg png`: the option value must be a string representing the path to a file whose extension matches either `jpg` or `png`.
+
+Examples of complex restrictions are provided below:
+1. `< -100\nOR > 100\nOR oneof 1 5 7 10\nAND inrange -200 200`.
+2. `fileexists\n&& extension jpg png\n?file must exists and be an image`.
+
+Finally, here is an example of creating an option with a restriction using an attribute:
+
+```cs
+var generator = new ArgumentParserGenerator();
+var parser = new ArgumentParser();
+var config = new CustomParserConfig();
+
+generator.ConfigureParser(parser, config);
+
+parser.Parse(["--width", "1000"]); // config.Width: 1000
+parser.Parse(["--width", "2000"]); // Error
+
+[ParserConfig]
+internal class CustomParserConfig
+{
+    [ValueOption<int>("width", valueRestriction: "> 0\n&& <= 1920\n?width must be in (0; 1920]")]
+    public int Width { get; set; }
+}
+```
 
 ### Group Attributes
 Goups can be configured using `OptionGroupAttribute` attribute. In addition to specifying the group header and description, you should specify the group ID. It is necessary for the correct placement of options, since groups can have the same header. Options that you want to put in the same group must be marked with an attribute with the same ID. You should't specify header and description for all group attributes with same id. It is enough to do this for only one attribute.
@@ -284,7 +364,7 @@ parser.Parse(["--date", "01.01.2025"]);
 
 ## Limitations
 Using attributes in C# imposes a restriction on their argument types. An attribute argument must be a constant value or an array of such values. So the following option configurations cannot be defined directly via attributes:
-- Value restriction.
+- Not common value restriction.
 - Custom converter.
 - Default value for some types.
 - `ValueOption` choices for some types.
