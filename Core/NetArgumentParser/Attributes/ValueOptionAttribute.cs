@@ -31,7 +31,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         string[]? beforeParseChoices = null,
         bool addChoicesToDescription = false,
         bool addBeforeParseChoicesToDescription = false,
-        bool addDefaultValueToDescription = false)
+        bool addDefaultValueToDescription = false,
+        string? valueRestriction = null)
         : this(
             choices,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -46,7 +47,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             beforeParseChoices,
             addChoicesToDescription,
             addBeforeParseChoicesToDescription,
-            addDefaultValueToDescription)
+            addDefaultValueToDescription,
+            valueRestriction)
     {
         DefaultValue = new DefaultOptionValue<T>(defaultValue);
     }
@@ -65,7 +67,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         string[]? beforeParseChoices = null,
         bool addChoicesToDescription = false,
         bool addBeforeParseChoicesToDescription = false,
-        bool addDefaultValueToDescription = false)
+        bool addDefaultValueToDescription = false,
+        string? valueRestriction = null)
         : this(
             choices: null,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -80,7 +83,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             beforeParseChoices,
             addChoicesToDescription,
             addBeforeParseChoicesToDescription,
-            addDefaultValueToDescription)
+            addDefaultValueToDescription,
+            valueRestriction)
     {
     }
 
@@ -98,7 +102,8 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
         string[]? beforeParseChoices = null,
         bool addChoicesToDescription = false,
         bool addBeforeParseChoicesToDescription = false,
-        bool addDefaultValueToDescription = false)
+        bool addDefaultValueToDescription = false,
+        string? valueRestriction = null)
         : base(
             longName ?? throw new ArgumentNullException(nameof(longName)),
             shortName ?? throw new ArgumentNullException(nameof(shortName)),
@@ -118,6 +123,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
 
         Choices = choices;
         BeforeParseChoices = beforeParseChoices;
+        ValueRestriction = CreateValueRestriction(valueRestriction);
     }
 
     public string MetaVariable { get; }
@@ -128,6 +134,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
 
     public IEnumerable<T>? Choices { get; }
     public IEnumerable<string>? BeforeParseChoices { get; }
+    public OptionValueRestriction<T>? ValueRestriction { get; protected set; }
     public DefaultOptionValue<T>? DefaultValue { get; }
 
     protected override IReadOnlyList<Type> ValidPropertyTypes => [typeof(T)];
@@ -153,13 +160,20 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
             Choices,
             BeforeParseChoices,
             DefaultValue,
-            null,
+            ValueRestriction,
             t => propertyInfo.SetValue(source, t));
 
         AddDefaultValueToDescriptionIfNeeded(valueOption);
         AddChoicesToDescriptionIfNeeded(valueOption);
 
         return valueOption;
+    }
+
+    private static OptionValueRestriction<T>? CreateValueRestriction(string? data)
+    {
+        return data is not null && !string.IsNullOrWhiteSpace(data)
+            ? OptionValueRestrictionParser.Parse<T>(data, true)
+            : null;
     }
 
     private void AddDefaultValueToDescriptionIfNeeded(ValueOption<T> valueOption)

@@ -31,7 +31,8 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         string[]? beforeParseChoices = null,
         bool addChoicesToDescription = false,
         bool addBeforeParseChoicesToDescription = false,
-        bool addDefaultValueToDescription = false)
+        bool addDefaultValueToDescription = false,
+        string? valueRestriction = null)
         : base(
             defaultValue,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -47,7 +48,8 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             beforeParseChoices,
             addChoicesToDescription,
             addBeforeParseChoicesToDescription,
-            addDefaultValueToDescription)
+            addDefaultValueToDescription,
+            valueRestriction)
     {
         UseDefaultChoices = useDefaultChoices;
     }
@@ -68,7 +70,8 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
         string[]? beforeParseChoices = null,
         bool addChoicesToDescription = false,
         bool addBeforeParseChoicesToDescription = false,
-        bool addDefaultValueToDescription = false)
+        bool addDefaultValueToDescription = false,
+        string? valueRestriction = null)
         : base(
             choices,
             longName ?? throw new ArgumentNullException(nameof(longName)),
@@ -83,7 +86,8 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             beforeParseChoices,
             addChoicesToDescription,
             addBeforeParseChoicesToDescription,
-            addDefaultValueToDescription)
+            addDefaultValueToDescription,
+            valueRestriction)
     {
         UseDefaultChoices = useDefaultChoices;
     }
@@ -112,7 +116,7 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
             Choices,
             BeforeParseChoices,
             DefaultValue,
-            valueRestriction: null,
+            valueRestriction: ValueRestriction,
             t => propertyInfo.SetValue(source, t));
 
         if (AddBeforeParseChoicesToDescription && BeforeParseChoices is not null && BeforeParseChoices.Any())
