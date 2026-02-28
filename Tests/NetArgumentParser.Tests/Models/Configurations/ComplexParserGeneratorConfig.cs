@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using NetArgumentParser.Attributes;
 using NetArgumentParser.Options.Context;
@@ -25,6 +27,10 @@ internal class ComplexParserGeneratorConfig
     public const bool ModeIsFinal = false;
     public const bool ModeIgnoreCaseInChoices = false;
     public const bool ModeUseDefaultChoices = true;
+    public const bool ModeAddChoicesToDescription = false;
+    public const bool ModeAddBeforeParseChoicesToDescription = false;
+    public const bool ModeAddDefaultValueToDescription = false;
+    public const string? ModeValueRestriction = null;
 
     public const string IgnoreCaseLongName = "ignore-case";
     public const string IgnoreCaseShortName = "i";
@@ -42,6 +48,25 @@ internal class ComplexParserGeneratorConfig
     public const bool InputFilesIsFinal = false;
     public const bool InputFilesIgnoreCaseInChoices = false;
     public const bool InputFilesIgnoreOrderInChoices = false;
+    public const ContextCaptureType InputFilesContextCaptureType = ContextCaptureType.OneOrMore;
+    public const int InputFilesNumberOfItemsToCapture = -1;
+    public const bool InputFilesAddDefaultValueToDescription = false;
+    public const string InputFilesValueRestriction = "";
+
+    public const string NumbersLongName = "numbers";
+    public const string NumbersShortName = "N";
+    public const string NumbersDescription = "numbers description";
+    public const string NumbersMetaVariable = "NUMs";
+    public const bool NumbersIsRequired = false;
+    public const bool NumbersIsHidden = true;
+    public const bool NumbersIsFinal = false;
+    public const bool NumbersIgnoreCaseInChoices = true;
+    public const bool NumbersIgnoreOrderInChoices = true;
+    public const ContextCaptureType NumbersContextCaptureType = ContextCaptureType.Fixed;
+    public const int NumbersNumberOfItemsToCapture = 2;
+    public const bool NumbersAddDefaultValueToDescription = false;
+    public const string? NumbersValueRestrictionMessage = "value is not correct";
+    public const string NumbersValueRestriction = $"< -100\nor >= 100\nand != 500\n?{NumbersValueRestrictionMessage}";
 
     public const string MarginLongName = "margin";
     public const string MarginShortName = "M";
@@ -51,6 +76,10 @@ internal class ComplexParserGeneratorConfig
     public const bool MarginIsHidden = true;
     public const bool MarginIsFinal = false;
     public const bool MarginIgnoreCaseInChoices = false;
+    public const bool MarginAddChoicesToDescription = false;
+    public const bool MarginAddBeforeParseChoicesToDescription = false;
+    public const bool MarginAddDefaultValueToDescription = false;
+    public const string? MarginValueRestriction = "";
 
     public const string AngleLongName = "angle";
     public const string AngleShortName = "a";
@@ -61,6 +90,11 @@ internal class ComplexParserGeneratorConfig
     public const bool AngleIsFinal = false;
     public const bool AngleIgnoreCaseInChoices = false;
     public const double AngleDefaultValue = 45;
+    public const bool AngleAddChoicesToDescription = false;
+    public const bool AngleAddBeforeParseChoicesToDescription = false;
+    public const bool AngleAddDefaultValueToDescription = false;
+    public const string AngleValueRestrictionMessage = null;
+    public const string? AngleValueRestriction = "less 360";
 
     public const string SubcommandsOnlySubcommandName = "subcommands-only";
     public const string SubcommandsOnlySubcommandDescription = "subcommands-only description";
@@ -89,11 +123,20 @@ internal class ComplexParserGeneratorConfig
     public static IReadOnlyList<string> ModeAliases { get; } = [];
     public static IReadOnlyList<string> IgnoreCaseAliases { get; } = ["ig1"];
     public static IReadOnlyList<string> InputFilesAliases { get; } = ["i1", "i2", "i3"];
+    public static IReadOnlyList<string> NumbersAliases { get; } = ["nnn"];
     public static IReadOnlyList<string> MarginAliases { get; } = [];
     public static IReadOnlyList<string> AngleAliases { get; } = [];
 
     public static IReadOnlyList<FileMode> ModeChoices { get; } = [FileMode.Create, FileMode.Open];
     public static IReadOnlyList<double> AngleChoices { get; } = [0, 45, 90, 135, 180];
+
+    public static IReadOnlyList<string> ModeBeforeParseChoices { get; } = [nameof(FileMode.Create), nameof(FileMode.Open)];
+    public static IReadOnlyList<string> MarginBeforeParseChoices { get; } = ["5,10,3,4"];
+    public static IReadOnlyList<string> AngleBeforeParseChoices { get; } = ["0", "45", "90", "135", "180"];
+
+    public static Predicate<double> AngleValueRestrictionPredicate { get; } = t => t < 360;
+    public static Predicate<IList<Number>> NumbersValueRestrictionPredicate { get; } =
+        t => t.All(x => (x < -100 || x >= 100) && x != 500);
 
     [FlagOption("ignored", "i")]
     [OptionGroup(
@@ -128,7 +171,12 @@ internal class ComplexParserGeneratorConfig
         ModeIgnoreCaseInChoices,
         ModeUseDefaultChoices,
         [],
-        [FileMode.Create, FileMode.Open])
+        [FileMode.Create, FileMode.Open],
+        [nameof(FileMode.Create), nameof(FileMode.Open)],
+        ModeAddChoicesToDescription,
+        ModeAddBeforeParseChoicesToDescription,
+        ModeAddDefaultValueToDescription,
+        ModeValueRestriction)
     ]
     [OptionGroup(
         ValueOptionsGroupId,
@@ -165,13 +213,38 @@ internal class ComplexParserGeneratorConfig
         InputFilesIgnoreCaseInChoices,
         InputFilesIgnoreOrderInChoices,
         ["i1", "i2", "i3"],
-        ContextCaptureType.OneOrMore)
+        InputFilesContextCaptureType,
+        InputFilesNumberOfItemsToCapture,
+        InputFilesAddDefaultValueToDescription,
+        InputFilesValueRestriction)
     ]
     [OptionGroup(
         ValueOptionsGroupId,
         ValueOptionsGroupHeader,
         ValueOptionsGroupDescription)]
     public List<string>? InputFiles { get; set; }
+
+    [MultipleValueOption<Number>(
+        NumbersLongName,
+        NumbersShortName,
+        NumbersDescription,
+        NumbersMetaVariable,
+        NumbersIsRequired,
+        NumbersIsHidden,
+        NumbersIsFinal,
+        NumbersIgnoreCaseInChoices,
+        NumbersIgnoreOrderInChoices,
+        ["nnn"],
+        NumbersContextCaptureType,
+        NumbersNumberOfItemsToCapture,
+        NumbersAddDefaultValueToDescription,
+        NumbersValueRestriction)
+    ]
+    [OptionGroup(
+        ValueOptionsGroupId,
+        ValueOptionsGroupHeader,
+        ValueOptionsGroupDescription)]
+    public List<Number>? Numbers { get; set; }
 
     [ValueOption<Margin>(
         MarginLongName,
@@ -182,7 +255,12 @@ internal class ComplexParserGeneratorConfig
         MarginIsHidden,
         MarginIsFinal,
         MarginIgnoreCaseInChoices,
-        [])
+        [],
+        ["5,10,3,4"],
+        MarginAddChoicesToDescription,
+        MarginAddBeforeParseChoicesToDescription,
+        MarginAddDefaultValueToDescription,
+        MarginValueRestriction)
     ]
     [OptionGroup(
         ValueOptionsGroupId,
@@ -201,7 +279,12 @@ internal class ComplexParserGeneratorConfig
         AngleIsFinal,
         AngleIgnoreCaseInChoices,
         [],
-        [0, 45, 90, 135, 180])
+        [0, 45, 90, 135, 180],
+        ["0", "45", "90", "135", "180"],
+        AngleAddChoicesToDescription,
+        AngleAddBeforeParseChoicesToDescription,
+        AngleAddDefaultValueToDescription,
+        AngleValueRestriction)
     ]
     [OptionGroup(
         ValueOptionsGroupId,

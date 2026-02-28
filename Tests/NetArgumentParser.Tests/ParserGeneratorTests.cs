@@ -328,11 +328,17 @@ public class ParserGeneratorTests
 
         generator.ConfigureParser(argumentParser, config);
 
-        argumentParser.AddConverters(true, new ValueConverter<Margin>(t =>
+        var converters = new IValueConverter[]
         {
-            int[] data = t.Split(',').Select(int.Parse).ToArray();
-            return new Margin(data[0], data[1], data[2], data[3]);
-        }));
+            new ValueConverter<Margin>(t =>
+            {
+                int[] data = t.Split(',').Select(int.Parse).ToArray();
+                return new Margin(data[0], data[1], data[2], data[3]);
+            }),
+            new MultipleValueConverter<Number>(Number.Parse)
+        };
+
+        argumentParser.AddConverters(true, converters);
 
         const bool expectedShowHelp = false;
         const bool expectedShowVersion = false;
@@ -340,6 +346,7 @@ public class ParserGeneratorTests
         const FileMode expectedMode = FileMode.Open;
         bool? expectedIgnoreCase = null;
         var expectedInputFiles = new List<string>() { "/file.txt", "relative.mkv" };
+        var expectedNumbers = new List<Number>() { new(100), new(-101) };
         var expectedMargin = new Margin(5, 10, 3, 4);
         const double expectedAngle = 45;
         const bool expectedShowGuide = true;
@@ -359,6 +366,9 @@ public class ParserGeneratorTests
             $"--{ComplexParserGeneratorConfig.InputFilesLongName}",
             expectedInputFiles[0],
             expectedInputFiles[1],
+            $"--{ComplexParserGeneratorConfig.NumbersLongName}",
+            expectedNumbers[0].ToString(),
+            expectedNumbers[1].ToString(),
             $"--{ComplexParserGeneratorConfig.VerbosityLevelLongName}",
             $"--{ComplexParserGeneratorConfig.VerbosityLevelLongName}",
             ComplexParserGeneratorConfig.SubcommandsOnlySubcommandName,
@@ -368,7 +378,7 @@ public class ParserGeneratorTests
         ]);
 
         Assert.Equal(3, result.HandledSubcommands.Count);
-        Assert.Equal(9, result.HandledOptions.Count);
+        Assert.Equal(10, result.HandledOptions.Count);
 
         Assert.Equal(expectedShowHelp, config.ShowHelp);
         Assert.Equal(expectedShowVersion, config.ShowVersion);
@@ -382,6 +392,9 @@ public class ParserGeneratorTests
         Assert.NotNull(config.ComplexSubcommand.InputFiles);
         Assert.Equal(expectedInputFiles, config.ComplexSubcommand.InputFiles);
 
+        Assert.NotNull(config.ComplexSubcommand.Numbers);
+        Assert.Equal(expectedNumbers, config.ComplexSubcommand.Numbers);
+
         Assert.Equal(
             expectedShowGuide,
             config.ComplexSubcommand.SubcommandsOnlySubcommand.Flags.ShowGuide);
@@ -393,6 +406,259 @@ public class ParserGeneratorTests
         Assert.Equal(
             expectedOverwriteDirectory,
             config.ComplexSubcommand.SubcommandsOnlySubcommand.Flags.OverwriteDirectory);
+    }
+
+    [Fact]
+    public void ConfigureParser_AllValueOptionTypes_ValueRestrictionsConfiguredCorrectly()
+    {
+        var generator = new ArgumentParserGenerator();
+        var argumentParser = new ArgumentParser();
+        var config = new OptionValueRestrictionParserGeneratorConfig();
+
+        generator.ConfigureParser(argumentParser, config);
+
+        bool angleOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.AngleLongName,
+            false,
+            out IValueOption<double>? angleOption);
+
+        bool weightOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.WeightLongName,
+            false,
+            out IValueOption<float>? weightOption);
+
+        bool ageOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.AgeLongName,
+            false,
+            out IValueOption<int>? ageOption);
+
+        bool widthOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.WidthLongName,
+            false,
+            out IValueOption<uint>? widthOption);
+
+        bool heightOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.HeightLongName,
+            false,
+            out IValueOption<long>? heightOption);
+
+        bool lengthOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.LengthLongName,
+            false,
+            out IValueOption<ulong>? lengthOption);
+
+        bool verbosityOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.VerbosityLongName,
+            false,
+            out IValueOption<byte>? verbosityOption);
+
+        bool nameOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.NameLongName,
+            false,
+            out IValueOption<string>? nameOption);
+
+        bool phoneOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.PhoneLongName,
+            false,
+            out IValueOption<string>? phoneOption);
+
+        bool outputFilePathOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.OutputFilePathLongName,
+            false,
+            out IValueOption<string>? outputFilePathOption);
+
+        bool modeOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.ModeLongName,
+            false,
+            out IValueOption<FileMode>? modeOption);
+
+        bool numbersOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.NumbersLongName,
+            false,
+            out IValueOption<IList<Number>>? numbersOption);
+
+        Assert.True(angleOptionFound);
+        Assert.True(weightOptionFound);
+        Assert.True(ageOptionFound);
+        Assert.True(widthOptionFound);
+        Assert.True(heightOptionFound);
+        Assert.True(lengthOptionFound);
+        Assert.True(verbosityOptionFound);
+        Assert.True(nameOptionFound);
+        Assert.True(phoneOptionFound);
+        Assert.True(outputFilePathOptionFound);
+        Assert.True(modeOptionFound);
+        Assert.True(numbersOptionFound);
+
+        Assert.NotNull(angleOption);
+        Assert.NotNull(weightOption);
+        Assert.NotNull(ageOption);
+        Assert.NotNull(widthOption);
+        Assert.NotNull(heightOption);
+        Assert.NotNull(lengthOption);
+        Assert.NotNull(verbosityOption);
+        Assert.NotNull(nameOption);
+        Assert.NotNull(phoneOption);
+        Assert.NotNull(outputFilePathOption);
+        Assert.NotNull(modeOption);
+        Assert.NotNull(numbersOption);
+
+        Assert.NotNull(angleOption.ValueRestriction);
+        Assert.NotNull(weightOption.ValueRestriction);
+        Assert.NotNull(ageOption.ValueRestriction);
+        Assert.NotNull(widthOption.ValueRestriction);
+        Assert.NotNull(heightOption.ValueRestriction);
+        Assert.NotNull(lengthOption.ValueRestriction);
+        Assert.NotNull(verbosityOption.ValueRestriction);
+        Assert.NotNull(nameOption.ValueRestriction);
+        Assert.NotNull(phoneOption.ValueRestriction);
+        Assert.NotNull(outputFilePathOption.ValueRestriction);
+        Assert.NotNull(modeOption.ValueRestriction);
+        Assert.NotNull(numbersOption.ValueRestriction);
+
+        const int minValue = -1024;
+        const int maxValue = 1024;
+
+        foreach (int value in Enumerable.Range(minValue, maxValue - minValue + 1))
+        {
+            double valueDouble;
+            float valueFloat;
+            uint valueUInt;
+            long valueLong;
+            ulong valueULong;
+            byte valueByte;
+
+            unchecked
+            {
+                valueDouble = value + 0.5d;
+                valueFloat = value + 0.5f;
+                valueUInt = (uint)(value + minValue);
+                valueLong = value;
+                valueULong = (ulong)(value + minValue);
+                valueByte = (byte)value;
+            }
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.AngleValueRestrictionPredicate.Invoke(valueDouble),
+                angleOption.ValueRestriction.IsValueAllowed.Invoke(valueDouble));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.WeightValueRestrictionPredicate.Invoke(valueFloat),
+                weightOption.ValueRestriction.IsValueAllowed.Invoke(valueFloat));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.AgeValueRestrictionPredicate.Invoke(value),
+                ageOption.ValueRestriction.IsValueAllowed.Invoke(value));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.WidthValueRestrictionPredicate.Invoke(valueUInt),
+                widthOption.ValueRestriction.IsValueAllowed.Invoke(valueUInt));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.HeightValueRestrictionPredicate.Invoke(valueLong),
+                heightOption.ValueRestriction.IsValueAllowed.Invoke(valueLong));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.LengthValueRestrictionPredicate.Invoke(valueULong),
+                lengthOption.ValueRestriction.IsValueAllowed.Invoke(valueULong));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.VerbosityValueRestrictionPredicate.Invoke(valueByte),
+                verbosityOption.ValueRestriction.IsValueAllowed.Invoke(valueByte));
+
+            Number[] numbers = [new(value), new(value + 2)];
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.NumbersValueRestrictionPredicate.Invoke(numbers),
+                numbersOption.ValueRestriction.IsValueAllowed.Invoke(numbers));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.NumbersValueRestrictionPredicate.Invoke([new(value)]),
+                numbersOption.ValueRestriction.IsValueAllowed.Invoke([new(value)]));
+        }
+
+        string[] names =
+        [
+            "John",
+            "max",
+            "BeN",
+            "ALEX",
+            "Emma Smith",
+            "Liam Johnson Williams",
+            "Henry20",
+            "Lucas_Johnson"
+        ];
+
+        foreach (string name in names)
+        {
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.NameValueRestrictionPredicate.Invoke(name),
+                nameOption.ValueRestriction.IsValueAllowed.Invoke(name));
+        }
+
+        string[] phones =
+        [
+            "+1 123 345 67 89",
+            "2 123 345 67 89",
+            "31233456789",
+            "+4 123 456 90",
+            "-5 123 456 90 44",
+            "+6 123 345 67 8D",
+            "+7 777 777 77 77",
+        ];
+
+        foreach (string phone in phones)
+        {
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.PhoneValueRestrictionPredicate.Invoke(phone),
+                phoneOption.ValueRestriction.IsValueAllowed.Invoke(phone));
+        }
+
+        string[] outputFilePaths =
+        [
+            "/home/user/text.txt",
+            "/home/user/my.text.tXt",
+            "/home/user/my.first.text.TXT",
+            "./img.jpg",
+            "./img.Jpg",
+            "./img.JPG",
+            "./img.tiff",
+            "./img.jpeg",
+            "./img.bmp",
+            "D:\\Docs\\doc.pdf",
+            "D:\\Docs\\doc.pdF",
+            "D:\\Docs\\doc.PDF",
+            "D:\\Docs\\doc.odt",
+            "D:\\Docs\\doc.document",
+            "D:\\Docs\\doc.odp",
+            "img.wav",
+            "img.MP3",
+            "img.aVi",
+            "img.mp4",
+            "/home/user/file",
+            "./file",
+            "D:\\Files\\file",
+            "file",
+            "123.123.123"
+        ];
+
+        foreach (string path in outputFilePaths)
+        {
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.OutputFilePathValueRestrictionPredicate.Invoke(path),
+                outputFilePathOption.ValueRestriction.IsValueAllowed.Invoke(path));
+        }
+
+#pragma warning disable CA2263 // Prefer generic overload when type is known
+        FileMode[] fileModes = (FileMode[])Enum.GetValues(typeof(FileMode));
+#pragma warning restore CA2263 // Prefer generic overload when type is known
+
+        foreach (FileMode fileMode in fileModes)
+        {
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.ModeValueRestrictionPredicate.Invoke(fileMode),
+                modeOption.ValueRestriction.IsValueAllowed.Invoke(fileMode));
+        }
     }
 
     private static void VerifyFlagOptionsOnlyParserGeneratorConfigQuantum(ParserQuantum quantum)
@@ -625,7 +891,7 @@ public class ParserGeneratorTests
         });
 
         Assert.NotNull(valueOptions);
-        Assert.Equal(4, valueOptions.Options.Count);
+        Assert.Equal(5, valueOptions.Options.Count);
 
         Assert.Equal(
             ComplexParserGeneratorConfig.ValueOptionsGroupHeader,
@@ -699,7 +965,7 @@ public class ParserGeneratorTests
 
         VerifySubcommandsOnlyParserGeneratorConfigQuantum(subcommandsOnlySubcommand);
 
-        Assert.Equal(6, quantum.Options.Count);
+        Assert.Equal(7, quantum.Options.Count);
 
         ICommonOption? verbosityLevelOption = quantum.Options.FirstOrDefault(t =>
         {
@@ -794,6 +1060,12 @@ public class ParserGeneratorTests
             Assert.Equal(ComplexParserGeneratorConfig.ModeChoices, modeOption.Choices);
         }
 
+        Assert.Equal(
+            ComplexParserGeneratorConfig.ModeBeforeParseChoices,
+            modeOption.BeforeParseChoices);
+
+        Assert.Null(modeOption.ValueRestriction);
+
         ICommonOption? ignoreCaseOption = quantum.Options.FirstOrDefault(t =>
         {
             return t.LongName == ComplexParserGeneratorConfig.IgnoreCaseLongName;
@@ -878,6 +1150,88 @@ public class ParserGeneratorTests
             ComplexParserGeneratorConfig.InputFilesAliases,
             inputFilesOption.Aliases);
 
+        Assert.Equal(
+            ComplexParserGeneratorConfig.InputFilesContextCaptureType,
+            inputFilesOption.ContextCapture.ContextCaptureType);
+
+        Assert.Null(inputFilesOption.ValueRestriction);
+
+        ICommonOption? numbersOptionBase = quantum.Options.FirstOrDefault(t =>
+        {
+            return t.LongName == ComplexParserGeneratorConfig.NumbersLongName;
+        });
+
+        var numbersOption = numbersOptionBase as MultipleValueOption<Number>;
+
+        Assert.NotNull(numbersOption);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersLongName,
+            numbersOption.LongName);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersShortName,
+            numbersOption.ShortName);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersDescription,
+            numbersOption.Description);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersMetaVariable,
+            numbersOption.MetaVariable);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersIsRequired,
+            numbersOption.IsRequired);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersIsHidden,
+            numbersOption.IsHidden);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersIsFinal,
+            numbersOption.IsFinal);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersIgnoreCaseInChoices,
+            numbersOption.IgnoreCaseInChoices);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersIgnoreOrderInChoices,
+            numbersOption.IgnoreOrderInChoices);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersAliases,
+            numbersOption.Aliases);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersContextCaptureType,
+            numbersOption.ContextCapture.ContextCaptureType);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersNumberOfItemsToCapture,
+            numbersOption.ContextCapture.MinNumberOfItemsToCapture);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersNumberOfItemsToCapture,
+            numbersOption.ContextCapture.MaxNumberOfItemsToCapture);
+
+        Assert.NotNull(numbersOption.ValueRestriction);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.NumbersValueRestrictionMessage,
+            numbersOption.ValueRestriction.ValueNotSatisfyRestrictionMessage);
+
+        foreach (int value in Enumerable.Range(-1024, 2048 + 1))
+        {
+            Number[] numbers = [new(value), new(value + 1), new(value + 2)];
+
+            Assert.Equal(
+                ComplexParserGeneratorConfig.NumbersValueRestrictionPredicate.Invoke(numbers),
+                numbersOption.ValueRestriction.IsValueAllowed.Invoke(numbers));
+        }
+
         ICommonOption? marginOptionBase = quantum.Options.FirstOrDefault(t =>
         {
             return t.LongName == ComplexParserGeneratorConfig.MarginLongName;
@@ -922,6 +1276,12 @@ public class ParserGeneratorTests
         Assert.Equal(
             ComplexParserGeneratorConfig.MarginAliases,
             marginOption.Aliases);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.MarginBeforeParseChoices,
+            marginOption.BeforeParseChoices);
+
+        Assert.Null(marginOption.ValueRestriction);
 
         ICommonOption? angleOptionBase = quantum.Options.FirstOrDefault(t =>
         {
@@ -975,6 +1335,23 @@ public class ParserGeneratorTests
         Assert.Equal(
             ComplexParserGeneratorConfig.AngleChoices,
             angleOption.Choices);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.AngleBeforeParseChoices,
+            angleOption.BeforeParseChoices);
+
+        Assert.NotNull(angleOption.ValueRestriction);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.AngleValueRestrictionMessage,
+            angleOption.ValueRestriction.ValueNotSatisfyRestrictionMessage);
+
+        foreach (int angle in Enumerable.Range(-1024, 2048 + 1))
+        {
+            Assert.Equal(
+                ComplexParserGeneratorConfig.AngleValueRestrictionPredicate.Invoke(angle),
+                angleOption.ValueRestriction.IsValueAllowed.Invoke(angle));
+        }
     }
 
     private static void VerifyParseSpecificParserGeneratorConfigQuantum(ParserQuantum quantum)
