@@ -106,7 +106,8 @@ internal class CustomParserConfig
         beforeParseChoices: ["Create", "Open"],
         addChoicesToDescription: false,
         addBeforeParseChoicesToDescription: true,
-        addDefaultValueToDescription: false)
+        addDefaultValueToDescription: false,
+        valueRestriction: null)
     ]
     [OptionGroup("complex-values", "", "")]
     public FileMode Mode { get; set; }
@@ -131,7 +132,9 @@ internal class CustomParserConfig
         isHidden: false,
         isFinal: false,
         aliases: ["input", "input-files"],
-        contextCaptureType: ContextCaptureType.OneOrMore)
+        contextCaptureType: ContextCaptureType.OneOrMore,
+        addDefaultValueToDescription: false,
+        valueRestriction: null)
     ]
     [OptionGroup("complex-values", "Complex value options", "Complex value options descripton")]
     public List<string> InputFiles { get; set; }
@@ -148,7 +151,9 @@ internal class CustomParserConfig
         ignoreOrderInChoices: true,
         aliases: ["ps"],
         contextCaptureType: ContextCaptureType.Fixed,
-        numberOfItemsToCapture: 3)
+        numberOfItemsToCapture: 3,
+        addDefaultValueToDescription: false,
+        valueRestriction: null)
     ]
     [OptionGroup("complex-values", "", "")]
     public List<string> Persons { get; set; }
@@ -161,7 +166,12 @@ internal class CustomParserConfig
         isRequired: false,
         isHidden: false,
         isFinal: false,
-        aliases: [])
+        aliases: [],
+        beforeParseChoices: null,
+        addChoicesToDescription: false,
+        addBeforeParseChoicesToDescription: false,
+        addDefaultValueToDescription: false,
+        valueRestriction: null)
     ]
     [OptionGroup("values", "Value options", "Value options descripton")]
     public Point? Point { get; set; }
@@ -180,7 +190,8 @@ internal class CustomParserConfig
         beforeParseChoices: ["0", "45", "90"],
         addChoicesToDescription: true,
         addBeforeParseChoicesToDescription: false,
-        addDefaultValueToDescription: true)
+        addDefaultValueToDescription: true,
+        valueRestriction: null)
     ]
     [OptionGroup("values", "", "")]
     public double? Angle { get; set; }
