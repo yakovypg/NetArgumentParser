@@ -70,7 +70,7 @@ public class ArgumentParserGenerator
             if (attribute is not null)
             {
                 attribute = optionMap.Keys
-                    .FindOptionGroupAttributeWithBestParameters<OptionGroupAttribute>(attribute.Id);
+                    .FindOptionGroupSingleAttributeWithBestParameters<OptionGroupAttribute>(attribute.Id);
             }
 
             OptionGroup<ICommonOption>? optionGroup = attribute is not null
@@ -96,13 +96,17 @@ public class ArgumentParserGenerator
         ExtendedArgumentNullException.ThrowIfNull(argumentParser, nameof(argumentParser));
         ExtendedArgumentNullException.ThrowIfNull(rootQuantum, nameof(rootQuantum));
 
-        IEnumerable<KeyValuePair<PropertyInfo, ICommonOption>> optionsWithGroup =
+        IEnumerable<KeyValuePair<PropertyInfo, ICommonOption>> optionsWithPropertyInfo =
             rootQuantum.FindOptions(t => t.Key.HasMutuallyExclusiveOptionGroupAttribute(), true);
 
-        var mutuallyExclusiveOptionGroups = optionsWithGroup.GroupBy(t =>
+        var optionInfoWithGroupAttribute = optionsWithPropertyInfo.SelectMany(kv =>
         {
-            return t.Key.GetCustomAttribute<MutuallyExclusiveOptionGroupAttribute>();
+            return kv.Key
+                .GetCustomAttributes<MutuallyExclusiveOptionGroupAttribute>()
+                .Select(attr => new { OptionInfo = kv, GroupAttribute = attr });
         });
+
+        var mutuallyExclusiveOptionGroups = optionInfoWithGroupAttribute.GroupBy(t => t.GroupAttribute);
 
         foreach (var group in mutuallyExclusiveOptionGroups)
         {
@@ -113,13 +117,13 @@ public class ArgumentParserGenerator
 
             MutuallyExclusiveOptionGroupAttribute? attributeWithBestParameters = rootQuantum.Options
                 .Select(t => t.Key)
-                .FindOptionGroupAttributeWithBestParameters<MutuallyExclusiveOptionGroupAttribute>(
+                .FindOptionGroupMultipleAttributeWithBestParameters<MutuallyExclusiveOptionGroupAttribute>(
                     attribute.Id);
 
             if (attributeWithBestParameters is not null)
                 attribute = attributeWithBestParameters;
 
-            IEnumerable<ICommonOption> groupOptions = group.Select(t => t.Value);
+            IEnumerable<ICommonOption> groupOptions = group.Select(t => t.OptionInfo.Value);
 
             _ = argumentParser.AddMutuallyExclusiveOptionGroup(
                 attribute.Header,

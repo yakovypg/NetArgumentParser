@@ -4,7 +4,7 @@ namespace NetArgumentParser.Attributes;
 
 [AttributeUsage(
     AttributeTargets.Property,
-    AllowMultiple = false,
+    AllowMultiple = true,
     Inherited = false)
 ]
 public sealed class MutuallyExclusiveOptionGroupAttribute : OptionGroupBaseAttribute
