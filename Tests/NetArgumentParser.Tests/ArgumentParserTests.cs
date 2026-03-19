@@ -2153,6 +2153,72 @@ public class ArgumentParserTests
     }
 
     [Fact]
+    public void Parse_PairedMutuallyExclusiveOptions_ThrowsException()
+    {
+        var arguments = new string[]
+        {
+            "--scale", "0.5",
+            "-b", "15",
+            "--height", "1080",
+            "-d", "10",
+            "--width", "1920"
+        };
+
+        var scaleOption = new ValueOption<double>("scale", string.Empty);
+        var widthOption = new ValueOption<double>("width", string.Empty);
+        var heightOption = new ValueOption<int>("height", string.Empty);
+
+        var scaleWidthGroupOptions = new List<ICommonOption>() { scaleOption, widthOption };
+        var scaleHeightGroupOptions = new List<ICommonOption>() { scaleOption, heightOption };
+
+        var options = new ICommonOption[]
+        {
+            scaleOption,
+            new ValueOption<double>(string.Empty, "b"),
+            widthOption,
+            new ValueOption<int>(string.Empty, "d"),
+            heightOption
+        };
+
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
+
+        parser.AddOptions(options);
+
+        MutuallyExclusiveOptionGroup<ICommonOption> scaleWidthGroup =
+            parser.AddMutuallyExclusiveOptionGroup("scaleWidth", null, scaleWidthGroupOptions);
+
+        MutuallyExclusiveOptionGroup<ICommonOption> scaleHeightGroup =
+            parser.AddMutuallyExclusiveOptionGroup("scaleHeight", null, scaleHeightGroupOptions);
+
+        void VerifyConflict(ICommonOption expectedExistingOption, ICommonOption expectedNewOption)
+        {
+            var exception = Assert.Throws<MutuallyExclusiveOptionsFoundException>(() =>
+            {
+                _ = parser.Parse(arguments);
+            });
+
+            Assert.Equal(expectedExistingOption, exception.ExistingOption);
+            Assert.Equal(expectedNewOption, exception.NewOption);
+        }
+
+        VerifyConflict(scaleOption, heightOption);
+
+        scaleHeightGroup.RemoveOption(heightOption);
+        parser.ResetOptionsHandledState();
+
+        VerifyConflict(scaleOption, widthOption);
+
+        scaleWidthGroup.RemoveOption(widthOption);
+        parser.ResetOptionsHandledState();
+
+        Exception? ex = Record.Exception(() => parser.Parse(arguments));
+        Assert.Null(ex);
+    }
+
+    [Fact]
     public void Parse_SeveralArguments_ArgumentsParseResultIsCorrect()
     {
         const int marginLeft = 15;

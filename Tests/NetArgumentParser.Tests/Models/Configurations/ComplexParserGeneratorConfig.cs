@@ -39,6 +39,13 @@ internal class ComplexParserGeneratorConfig
     public const bool IgnoreCaseIsHidden = true;
     public const bool IgnoreCaseIsFinal = false;
 
+    public const string IgnoreLocaleLongName = "ignore-locale";
+    public const string IgnoreLocaleShortName = "I";
+    public const string IgnoreLocaleDescription = "ignore-locale description";
+    public const bool IgnoreLocaleIsRequired = false;
+    public const bool IgnoreLocaleIsHidden = true;
+    public const bool IgnoreLocaleIsFinal = false;
+
     public const string InputFilesLongName = "files";
     public const string InputFilesShortName = "f";
     public const string InputFilesDescription = "files description";
@@ -110,9 +117,13 @@ internal class ComplexParserGeneratorConfig
     public const string ValueOptionsGroupHeader = "ValueOptions";
     public const string ValueOptionsGroupDescription = "ValueOptions description";
 
-    public const string MutuallyExclusiveOptionGroupId = "group1Id";
-    public const string MutuallyExclusiveOptionGroupHeader = "group1";
-    public const string MutuallyExclusiveOptionGroupDescription = "group1 d";
+    public const string MutuallyExclusiveOptionGroup1Id = "group1Id";
+    public const string MutuallyExclusiveOptionGroup1Header = "group1";
+    public const string MutuallyExclusiveOptionGroup1Description = "group1 d";
+
+    public const string MutuallyExclusiveOptionGroup2Id = "group2Id";
+    public const string MutuallyExclusiveOptionGroup2Header = "group2";
+    public const string MutuallyExclusiveOptionGroup2Description = "group2 d";
 
     public ComplexParserGeneratorConfig()
     {
@@ -122,6 +133,7 @@ internal class ComplexParserGeneratorConfig
     public static IReadOnlyList<string> VerbosityLevelAliases { get; } = [];
     public static IReadOnlyList<string> ModeAliases { get; } = [];
     public static IReadOnlyList<string> IgnoreCaseAliases { get; } = ["ig1"];
+    public static IReadOnlyList<string> IgnoreLocaleAliases { get; } = ["loc0", "loc1"];
     public static IReadOnlyList<string> InputFilesAliases { get; } = ["i1", "i2", "i3"];
     public static IReadOnlyList<string> NumbersAliases { get; } = ["nnn"];
     public static IReadOnlyList<string> MarginAliases { get; } = [];
@@ -155,9 +167,13 @@ internal class ComplexParserGeneratorConfig
         [])
     ]
     [MutuallyExclusiveOptionGroup(
-        MutuallyExclusiveOptionGroupId,
-        MutuallyExclusiveOptionGroupHeader,
-        MutuallyExclusiveOptionGroupDescription)]
+        MutuallyExclusiveOptionGroup1Id,
+        MutuallyExclusiveOptionGroup1Header,
+        MutuallyExclusiveOptionGroup1Description)]
+    [MutuallyExclusiveOptionGroup(
+        MutuallyExclusiveOptionGroup2Id,
+        MutuallyExclusiveOptionGroup2Header,
+        MutuallyExclusiveOptionGroup2Description)]
     public BigInteger? VerbosityLevel { get; set; }
 
     [EnumValueOption<FileMode>(
@@ -197,10 +213,22 @@ internal class ComplexParserGeneratorConfig
         FlagOptionsGroupHeader,
         FlagOptionsGroupDescription)]
     [MutuallyExclusiveOptionGroup(
-        MutuallyExclusiveOptionGroupId,
-        MutuallyExclusiveOptionGroupHeader,
-        MutuallyExclusiveOptionGroupDescription)]
+        MutuallyExclusiveOptionGroup1Id,
+        MutuallyExclusiveOptionGroup1Header,
+        MutuallyExclusiveOptionGroup1Description)]
     public bool? IgnoreCase { get; set; }
+
+    [FlagOption(
+        IgnoreLocaleLongName,
+        IgnoreLocaleShortName,
+        IgnoreLocaleDescription,
+        IgnoreLocaleIsRequired,
+        IgnoreLocaleIsHidden,
+        IgnoreLocaleIsFinal,
+        ["loc0", "loc1"])]
+    [OptionGroup(FlagOptionsGroupId, "", "")]
+    [MutuallyExclusiveOptionGroup(MutuallyExclusiveOptionGroup2Id, "", "")]
+    public bool? IgnoreLocale { get; set; }
 
     [MultipleValueOption<string>(
         InputFilesLongName,
