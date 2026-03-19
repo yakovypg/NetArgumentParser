@@ -517,6 +517,11 @@ public class ParserGeneratorTests
             false,
             out IValueOption<string>? nullOrWhiteSpaceStringOption);
 
+        bool notNullOrWhiteSpaceStringOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.NotNullOrWhiteSpaceStringLongName,
+            false,
+            out IValueOption<string>? notNullOrWhiteSpaceStringOption);
+
         bool emptyStringOptionFound = argumentParser.FindFirstValueOptionByLongName(
             OptionValueRestrictionParserGeneratorConfig.EmptyStringLongName,
             false,
@@ -551,6 +556,7 @@ public class ParserGeneratorTests
         Assert.True(nullStringOptionFound);
         Assert.True(nullOrEmptyStringOptionFound);
         Assert.True(nullOrWhiteSpaceStringOptionFound);
+        Assert.True(notNullOrWhiteSpaceStringOptionFound);
         Assert.True(emptyStringOptionFound);
         Assert.True(outputFilePathOptionFound);
         Assert.True(modeOptionFound);
@@ -570,6 +576,7 @@ public class ParserGeneratorTests
         Assert.NotNull(nullStringOption);
         Assert.NotNull(nullOrEmptyStringOption);
         Assert.NotNull(nullOrWhiteSpaceStringOption);
+        Assert.NotNull(notNullOrWhiteSpaceStringOption);
         Assert.NotNull(emptyStringOption);
         Assert.NotNull(outputFilePathOption);
         Assert.NotNull(modeOption);
@@ -589,6 +596,7 @@ public class ParserGeneratorTests
         Assert.NotNull(nullStringOption.ValueRestriction);
         Assert.NotNull(nullOrEmptyStringOption.ValueRestriction);
         Assert.NotNull(nullOrWhiteSpaceStringOption.ValueRestriction);
+        Assert.NotNull(notNullOrWhiteSpaceStringOption.ValueRestriction);
         Assert.NotNull(emptyStringOption.ValueRestriction);
         Assert.NotNull(outputFilePathOption.ValueRestriction);
         Assert.NotNull(modeOption.ValueRestriction);
@@ -736,6 +744,10 @@ public class ParserGeneratorTests
             Assert.Equal(
                 OptionValueRestrictionParserGeneratorConfig.NullOrWhiteSpaceStringValueRestrictionPredicate.Invoke(text),
                 nullOrWhiteSpaceStringOption.ValueRestriction.IsValueAllowed.Invoke(text!));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.NotNullOrWhiteSpaceStringValueRestrictionPredicate.Invoke(text),
+                notNullOrWhiteSpaceStringOption.ValueRestriction.IsValueAllowed.Invoke(text!));
 
             Assert.Equal(
                 OptionValueRestrictionParserGeneratorConfig.EmptyStringValueRestrictionPredicate.Invoke(text),
