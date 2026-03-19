@@ -147,7 +147,7 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
     private static OptionValueRestriction<IList<T>>? CreateValueRestriction(string? data)
     {
         return data is not null && !string.IsNullOrWhiteSpace(data)
-            ? OptionValueRestrictionParser.ParseForList<T>(data, true)
+            ? new OptionValueRestrictionParser().ParseForList<T>(data, true)
             : null;
     }
 }

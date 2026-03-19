@@ -8,12 +8,21 @@ using NetArgumentParser.Extensions;
 
 namespace NetArgumentParser.Options.Configuration;
 
-public static class OptionValueRestrictionParser
+public class OptionValueRestrictionParser
 {
     public const string ExpectedFormat = "f1 p1 ...\\nOP f2 p1 ...\\n ...\\n?msg";
-    public const char PartsSeparator = '\n';
-    public const char SubpartsSeparator = ' ';
-    public const char MessageIndicator = '?';
+
+    public OptionValueRestrictionParser(
+        char partsSeparator = '\n',
+        char subpartsSeparator = ' ',
+        char negationIndicator = '!',
+        char messageIndicator = '?')
+    {
+        PartsSeparator = partsSeparator;
+        SubpartsSeparator = subpartsSeparator;
+        NegationIndicator = negationIndicator;
+        MessageIndicator = messageIndicator;
+    }
 
     private enum LogicalOperator
     {
@@ -21,7 +30,12 @@ public static class OptionValueRestrictionParser
         Or
     }
 
-    public static OptionValueRestriction<T> Parse<T>(string data, bool makePredicatesSafe = false)
+    public char PartsSeparator { get; }
+    public char SubpartsSeparator { get; }
+    public char NegationIndicator { get; }
+    public char MessageIndicator { get; }
+
+    public OptionValueRestriction<T> Parse<T>(string data, bool makePredicatesSafe = false)
     {
         ExtendedArgumentException.ThrowIfNullOrWhiteSpace(data, nameof(data));
 
@@ -69,7 +83,7 @@ public static class OptionValueRestrictionParser
         return new OptionValueRestriction<T>(isValueAllowed, valueNotSatisfyRestrictionMessage);
     }
 
-    public static OptionValueRestriction<IList<T>> ParseForList<T>(string data, bool makePredicatesSafe = false)
+    public OptionValueRestriction<IList<T>> ParseForList<T>(string data, bool makePredicatesSafe = false)
     {
         ExtendedArgumentException.ThrowIfNullOrWhiteSpace(data, nameof(data));
 
@@ -95,6 +109,12 @@ public static class OptionValueRestrictionParser
                 return false;
             }
         };
+    }
+
+    private static Predicate<T> NegatePredicate<T>(Predicate<T> predicate)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
+        return t => !predicate(t);
     }
 
     private static Predicate<T> CombinePredicates<T>(List<Predicate<T>> predicates, List<LogicalOperator> connections)
@@ -143,46 +163,6 @@ public static class OptionValueRestrictionParser
 
         logicalOperator = result ?? LogicalOperator.And;
         return result is not null;
-    }
-
-    private static Predicate<T> ParsePredicate<T>(string[] data)
-    {
-        ExtendedArgumentNullException.ThrowIfNull(data, nameof(data));
-
-        if (data.Length == 0)
-        {
-            throw new ArgumentException(
-                $"Recieved data has incorrect format. Expected: {ExpectedFormat}",
-                nameof(data));
-        }
-
-        string name = data[0];
-        string[] parameters = [.. data.Skip(1)];
-
-        return name.ToUpper(CultureInfo.CurrentCulture) switch
-        {
-            "EQUAL" or "==" or "=" => ParseEqualPredicate<T>(parameters),
-            "NOTEQUAL" or "!=" or "<>" => ParseNotEqualPredicate<T>(parameters),
-            "LESS" or "<" => ParseLessPredicate<T>(parameters),
-            "LESSOREQUAL" or "<=" => ParseLessOrEqualPredicate<T>(parameters),
-            "GREATER" or ">" => ParseGreaterPredicate<T>(parameters),
-            "GREATEROREQUAL" or ">=" => ParseGreaterOrEqualPredicate<T>(parameters),
-            "INRANGE" or "MINMAX" => ParseInRangePredicate<T>(parameters),
-            "ONEOF" or "INLIST" => ParseOneOfPredicate<T>(parameters),
-            "MATCH" or "REGEX" => ParseMatchPredicate<T>(parameters),
-            "DEFAULT" => ParseDefaultPredicate<T>(parameters),
-            "NULL" => ParseNullPredicate<T>(parameters),
-            "NULLOREMPTY" => ParseNullOrEmptyPredicate<T>(parameters),
-            "NULLORWHITESPACE" => ParseNullOrWhiteSpacePredicate<T>(parameters),
-            "EMPTY" => ParseEmptyPredicate<T>(parameters),
-            "DIRECTORYEXISTS" or "DIRECTORY" => ParseDirectoryExistsPredicate<T>(parameters),
-            "FILEEXISTS" => ParseFileExistsPredicate<T>(parameters),
-            "MAXFILESIZE" or "MAXSIZE" => ParseMaxFileSizePredicate<T>(parameters),
-            "EXTENSION" or "EXT" => ParseFileExtensionPredicate<T>(parameters),
-            "FILE" => ParseFilePredicate<T>(parameters),
-
-            _ => throw new ArgumentOutOfRangeException(nameof(data), "Unknown predicate name")
-        };
     }
 
     private static Predicate<T> ParseComparePredicate<T>(
@@ -249,17 +229,6 @@ public static class OptionValueRestrictionParser
         DefaultExceptions.ThrowIfEqual(parameters.Length, 0, nameof(parameters.Length));
 
         return value => parameters.Contains(value?.ToString() ?? string.Empty);
-    }
-
-    private static Predicate<T> ParseMatchPredicate<T>(string[] parameters)
-    {
-        ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
-        DefaultExceptions.ThrowIfEqual(parameters.Length, 0, nameof(parameters.Length));
-
-        string pattern = string.Join($"{SubpartsSeparator}", parameters);
-
-        var regex = new Regex(pattern);
-        return value => value is not null && regex.IsMatch(value.ToString() ?? string.Empty);
     }
 
     private static Predicate<T> ParseDefaultPredicate<T>(string[] parameters)
@@ -396,5 +365,62 @@ public static class OptionValueRestrictionParser
         List<LogicalOperator> connections = [LogicalOperator.And];
 
         return CombinePredicates<T>(predicates, connections);
+    }
+
+    private Predicate<T> ParseMatchPredicate<T>(string[] parameters)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
+        DefaultExceptions.ThrowIfEqual(parameters.Length, 0, nameof(parameters.Length));
+
+        string pattern = string.Join($"{SubpartsSeparator}", parameters);
+
+        var regex = new Regex(pattern);
+        return value => value is not null && regex.IsMatch(value.ToString() ?? string.Empty);
+    }
+
+    private Predicate<T> ParsePredicate<T>(string[] data)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(data, nameof(data));
+
+        if (data.Length == 0)
+        {
+            throw new ArgumentException(
+                $"Recieved data has incorrect format. Expected: {ExpectedFormat}",
+                nameof(data));
+        }
+
+        bool shouldNegatePredicate = data.Length > 0 && data[0].StartsWith(NegationIndicator);
+
+        string name = shouldNegatePredicate ? data[0].Substring(1) : data[0];
+        string[] parameters = [.. data.Skip(1)];
+
+        Predicate<T> predicate = name.ToUpper(CultureInfo.CurrentCulture) switch
+        {
+            "EQUAL" or "==" or "=" => ParseEqualPredicate<T>(parameters),
+            "NOTEQUAL" or "!=" or "<>" => ParseNotEqualPredicate<T>(parameters),
+            "LESS" or "<" => ParseLessPredicate<T>(parameters),
+            "LESSOREQUAL" or "<=" => ParseLessOrEqualPredicate<T>(parameters),
+            "GREATER" or ">" => ParseGreaterPredicate<T>(parameters),
+            "GREATEROREQUAL" or ">=" => ParseGreaterOrEqualPredicate<T>(parameters),
+            "INRANGE" or "MINMAX" => ParseInRangePredicate<T>(parameters),
+            "ONEOF" or "INLIST" => ParseOneOfPredicate<T>(parameters),
+            "MATCH" or "REGEX" => ParseMatchPredicate<T>(parameters),
+            "DEFAULT" => ParseDefaultPredicate<T>(parameters),
+            "NULL" => ParseNullPredicate<T>(parameters),
+            "NULLOREMPTY" => ParseNullOrEmptyPredicate<T>(parameters),
+            "NULLORWHITESPACE" => ParseNullOrWhiteSpacePredicate<T>(parameters),
+            "EMPTY" => ParseEmptyPredicate<T>(parameters),
+            "DIRECTORYEXISTS" or "DIRECTORY" => ParseDirectoryExistsPredicate<T>(parameters),
+            "FILEEXISTS" => ParseFileExistsPredicate<T>(parameters),
+            "MAXFILESIZE" or "MAXSIZE" => ParseMaxFileSizePredicate<T>(parameters),
+            "EXTENSION" or "EXT" => ParseFileExtensionPredicate<T>(parameters),
+            "FILE" => ParseFilePredicate<T>(parameters),
+
+            _ => throw new ArgumentOutOfRangeException(nameof(data), "Unknown predicate name")
+        };
+
+        return shouldNegatePredicate
+            ? NegatePredicate(predicate)
+            : predicate;
     }
 }

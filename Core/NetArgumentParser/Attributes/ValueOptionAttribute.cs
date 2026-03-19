@@ -172,7 +172,7 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
     private static OptionValueRestriction<T>? CreateValueRestriction(string? data)
     {
         return data is not null && !string.IsNullOrWhiteSpace(data)
-            ? OptionValueRestrictionParser.Parse<T>(data, true)
+            ? new OptionValueRestrictionParser().Parse<T>(data, true)
             : null;
     }
 
