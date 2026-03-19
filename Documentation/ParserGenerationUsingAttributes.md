@@ -260,7 +260,7 @@ internal class CustomParserConfig
 }
 ```
 
-Attributes for mutually exclusive groups are set in a similar manner. But unlike regular groups, mutually exclusive groups can contain options from different levels of subcommands.
+Attributes for mutually exclusive groups are set in a similar manner using `MutuallyExclusiveOptionGroup` attribute. But unlike regular groups, mutually exclusive groups can contain options from different levels of subcommands. In addition, one property can have multiple `MutuallyExclusiveOptionGroup` attributes.
 
 ```cs
 [ParserConfig]
@@ -274,8 +274,29 @@ internal class CustomParserConfig
     [MutuallyExclusiveOptionGroup("id", "", "")]
     public bool ShowSecondName { get; set; }
 
+    [ValueOption<double>("scale")]
+    [MutuallyExclusiveOptionGroup(
+        $"{nameof(ScaleFactor)}-{nameof(NewWidth)}",
+        $"{nameof(ScaleFactor)}-{nameof(NewWidth)}",
+        $"{nameof(ScaleFactor)} cannot be used with {nameof(NewWidth)}")
+    ]
+    [MutuallyExclusiveOptionGroup(
+        $"{nameof(ScaleFactor)}-{nameof(NewHeight)}",
+        $"{nameof(ScaleFactor)}-{nameof(NewHeight)}",
+        $"{nameof(ScaleFactor)} cannot be used with {nameof(NewHeight)}")
+    ]
+    public double ScaleFactor { get; set; }
+
+    [ValueOption<int>("width")]
+    [MutuallyExclusiveOptionGroup($"{nameof(ScaleFactor)}-{nameof(NewWidth)}", "", "")]
+    public int NewWidth { get; set; }
+
+    [ValueOption<int>("height")]
+    [MutuallyExclusiveOptionGroup($"{nameof(ScaleFactor)}-{nameof(NewHeight)}", "", "")]
+    public int NewHeight { get; set; }
+
     [Subcommand("status", "description")]
-    public StatusSubcommand Status { get; }
+    public StatusSubcommand Status { get; } = new();
 }
 
 internal class StatusSubcommand
@@ -293,27 +314,17 @@ Subcommands can be configured using `SubcommandAttribute` attribute. The corresp
 [ParserConfig]
 internal class CustomParserConfig
 {
-    public CustomParserConfig()
-    {
-        Status = new();
-    }
-
     [Subcommand("status", "description")]
-    public StatusSubcommand Status { get; }
+    public StatusSubcommand Status { get; } = new();
 }
 
 internal class StatusSubcommand
 {
-    public StatusSubcommand()
-    {
-        Update = new();
-    }
-
     [CounterOption("verbosity", "v")]
     public int Verbosity { get; set; }
 
     [Subcommand("update", "description")]
-    public UpdateSubcommand Update { get; }
+    public UpdateSubcommand Update { get; } = new();
 }
 
 internal class UpdateSubcommand
