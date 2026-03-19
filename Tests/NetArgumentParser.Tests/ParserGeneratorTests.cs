@@ -66,37 +66,67 @@ public class ParserGeneratorTests
 
         generator.ConfigureParser(argumentParser, config);
 
-        Assert.Equal(1, argumentParser.MutuallyExclusiveOptionGroups.Count);
+        Assert.Equal(2, argumentParser.MutuallyExclusiveOptionGroups.Count);
 
-        var group = argumentParser.MutuallyExclusiveOptionGroups.FirstOrDefault(t =>
+        var group1 = argumentParser.MutuallyExclusiveOptionGroups.FirstOrDefault(t =>
         {
-            return t.Header == ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroupHeader;
+            return t.Header == ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroup1Header;
         });
 
-        Assert.NotNull(group);
-        Assert.Equal(2, group.Options.Count);
+        Assert.NotNull(group1);
+        Assert.Equal(2, group1.Options.Count);
 
         Assert.Equal(
-            ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroupHeader,
-            group.Header);
+            ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroup1Header,
+            group1.Header);
 
         Assert.Equal(
-            ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroupDescription,
-            group.Description);
+            ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroup1Description,
+            group1.Description);
 
-        ICommonOption? verbosityLevelOption = group.Options.FirstOrDefault(t =>
+        ICommonOption? verbosityLevelOptionFromGroup1 = group1.Options.FirstOrDefault(t =>
         {
             return t.LongName == ComplexParserGeneratorConfig.VerbosityLevelLongName;
         });
 
-        Assert.NotNull(verbosityLevelOption);
+        Assert.NotNull(verbosityLevelOptionFromGroup1);
 
-        ICommonOption? ignoreCaseOption = group.Options.FirstOrDefault(t =>
+        ICommonOption? ignoreCaseOption = group1.Options.FirstOrDefault(t =>
         {
             return t.LongName == ComplexParserGeneratorConfig.IgnoreCaseLongName;
         });
 
         Assert.NotNull(ignoreCaseOption);
+
+        var group2 = argumentParser.MutuallyExclusiveOptionGroups.FirstOrDefault(t =>
+        {
+            return t.Header == ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroup2Header;
+        });
+
+        Assert.NotNull(group2);
+        Assert.Equal(2, group2.Options.Count);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroup2Header,
+            group2.Header);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroup2Description,
+            group2.Description);
+
+        ICommonOption? verbosityLevelOptionFromGroup2 = group2.Options.FirstOrDefault(t =>
+        {
+            return t.LongName == ComplexParserGeneratorConfig.VerbosityLevelLongName;
+        });
+
+        Assert.NotNull(verbosityLevelOptionFromGroup2);
+
+        ICommonOption? ignoreLocaleOption = group2.Options.FirstOrDefault(t =>
+        {
+            return t.LongName == ComplexParserGeneratorConfig.IgnoreLocaleLongName;
+        });
+
+        Assert.NotNull(ignoreLocaleOption);
 
         VerifyComplexParserGeneratorConfigQuantum(argumentParser);
     }
@@ -112,7 +142,7 @@ public class ParserGeneratorTests
 
         VerifyParseSpecificParserGeneratorConfigQuantum(argumentParser);
 
-        Assert.Equal(2, argumentParser.MutuallyExclusiveOptionGroups.Count);
+        Assert.Equal(3, argumentParser.MutuallyExclusiveOptionGroups.Count);
 
         var finalGroup = argumentParser.MutuallyExclusiveOptionGroups.FirstOrDefault(t =>
         {
@@ -141,18 +171,18 @@ public class ParserGeneratorTests
         var complexGroup = argumentParser.MutuallyExclusiveOptionGroups.FirstOrDefault(t =>
         {
             return t.Header == ComplexParserGeneratorConfig
-                .MutuallyExclusiveOptionGroupHeader;
+                .MutuallyExclusiveOptionGroup1Header;
         });
 
         Assert.NotNull(complexGroup);
         Assert.Equal(3, complexGroup.Options.Count);
 
         Assert.Equal(
-            ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroupHeader,
+            ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroup1Header,
             complexGroup.Header);
 
         Assert.Equal(
-            ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroupDescription,
+            ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroup1Description,
             complexGroup.Description);
 
         ICommonOption? showVersionOption = complexGroup.Options.FirstOrDefault(t =>
@@ -868,7 +898,7 @@ public class ParserGeneratorTests
         });
 
         Assert.NotNull(flagOptions);
-        Assert.Equal(1, flagOptions.Options.Count);
+        Assert.Equal(2, flagOptions.Options.Count);
 
         Assert.Equal(
             ComplexParserGeneratorConfig.FlagOptionsGroupHeader,
@@ -884,6 +914,13 @@ public class ParserGeneratorTests
         });
 
         Assert.NotNull(ignoreCaseOptionInFlagOptions);
+
+        ICommonOption? ignoreLocaleOptionInFlagOptions = flagOptions.Options.FirstOrDefault(t =>
+        {
+            return t.LongName == ComplexParserGeneratorConfig.IgnoreLocaleLongName;
+        });
+
+        Assert.NotNull(ignoreLocaleOptionInFlagOptions);
 
         OptionGroup<ICommonOption>? valueOptions = quantum.OptionGroups.FirstOrDefault(t =>
         {
@@ -965,7 +1002,7 @@ public class ParserGeneratorTests
 
         VerifySubcommandsOnlyParserGeneratorConfigQuantum(subcommandsOnlySubcommand);
 
-        Assert.Equal(7, quantum.Options.Count);
+        Assert.Equal(8, quantum.Options.Count);
 
         ICommonOption? verbosityLevelOption = quantum.Options.FirstOrDefault(t =>
         {
@@ -1100,6 +1137,41 @@ public class ParserGeneratorTests
         Assert.Equal(
             ComplexParserGeneratorConfig.IgnoreCaseAliases,
             ignoreCaseOption.Aliases);
+
+        ICommonOption? ignoreLocaleOption = quantum.Options.FirstOrDefault(t =>
+        {
+            return t.LongName == ComplexParserGeneratorConfig.IgnoreLocaleLongName;
+        });
+
+        Assert.NotNull(ignoreLocaleOption);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.IgnoreLocaleLongName,
+            ignoreLocaleOption.LongName);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.IgnoreLocaleShortName,
+            ignoreLocaleOption.ShortName);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.IgnoreLocaleDescription,
+            ignoreLocaleOption.Description);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.IgnoreLocaleIsRequired,
+            ignoreLocaleOption.IsRequired);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.IgnoreLocaleIsHidden,
+            ignoreLocaleOption.IsHidden);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.IgnoreLocaleIsFinal,
+            ignoreLocaleOption.IsFinal);
+
+        Assert.Equal(
+            ComplexParserGeneratorConfig.IgnoreLocaleAliases,
+            ignoreLocaleOption.Aliases);
 
         ICommonOption? inputFilesOptionBase = quantum.Options.FirstOrDefault(t =>
         {

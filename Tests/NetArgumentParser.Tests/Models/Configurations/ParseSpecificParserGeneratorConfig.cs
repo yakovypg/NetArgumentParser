@@ -50,9 +50,9 @@ internal class ParseSpecificParserGeneratorConfig
         ShowVersionIsHidden,
         ["v1"])]
     [MutuallyExclusiveOptionGroup(
-        ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroupId,
-        ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroupHeader,
-        ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroupDescription)]
+        ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroup1Id,
+        ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroup1Header,
+        ComplexParserGeneratorConfig.MutuallyExclusiveOptionGroup1Description)]
     public bool ShowVersion { get; set; }
 
     [Subcommand(ComplexSubcommandName, ComplexSubcommandDescription)]
