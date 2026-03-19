@@ -191,10 +191,16 @@ The following predicates are available:
 7. `inrange` (`minmax`): takes two parameters. The option value must be greater than or equal to the first parameter and less than or equal to the second parameter. The parameter types must be double, and the option value type must have the overloaded `>=` and `<=` operators.
 8. `oneof` (`inlist`): takes one or more parameters. The option value, converted to a string, must equal one of the specified parameters.
 9. `match` (`regex`): takes a single parameter. The option value, converted to a string, must match the specified parameter representing a regular expression. Anything written after the first space will be avaluated as a regular expression, so it can contain spaces.
-10. `directoryexists` (`directory`): takes no parameters. The option value must be a string representing the path to an existing directory.
-11. `fileexists` (`file`): takes no parameters. The option value must be a string representing the path to an existing file.
-12. `maxfilesize` (`maxsize`): takes a single parameter. The option value must be a string representing the path to a file whose size is less than or equal to this parameter (in bytes).
-13. `extension` (`ext`): takes one or more parameters. The option value must be a string representing the path to a file whose extension matches one of the specified parameters. The dot in the file extension is optional, and its case (uppercase or lowercase) doesn't matter.
+10. `default`: takes no parameters. The option value must be the default for corresponding type.
+11. `null`: takes no parameters. The option value must be null.
+12. `nullorempty`: takes no parameters. The option value must be null or empty string.
+13. `nullorwhitespace`: takes no parameters. The option value must be null, an empty string, or a string consisting only of whitespace characters.
+14. `empty`: takes no parameters. The option value must be an empty string.
+15. `directoryexists` (`directory`): takes no parameters. The option value must be a string representing the path to an existing directory.
+16. `fileexists`: takes no parameters. The option value must be a string representing the path to an existing file.
+17. `maxfilesize` (`maxsize`): takes a single parameter. The option value must be a string representing the path to a file whose size is less than or equal to this parameter (in bytes).
+18. `extension` (`ext`): takes one or more parameters. The option value must be a string representing the path to a file whose extension matches one of the specified parameters. The dot in the file extension is optional, and its case (uppercase or lowercase) doesn't matter.
+19. `file`: takes zero or more parameters. The option value must be a string representing the path to an existing file whose extension matches one of the specified parameters. If no parameters are provided, only the file's existence is checked. The dot in the file extension is optional, and its case (uppercase or lowercase) doesn't matter.
 
 Examples of simple restrictions are provided below:
 1. `== 5`: the option value must be equal to 5.
@@ -206,10 +212,16 @@ Examples of simple restrictions are provided below:
 7. `inrange 0 5`: the option value must be within the range from 0 to 5.
 8. `oneof 1 3 6`: the option value must be one of the values: 1, 3 or 6.
 9. `match ^[A-Z][a-z]*$`: the option value must match the regular expression `^[A-Z][a-z]*$`.
-10. `directoryexists`: the option value must be a string representing the path to an existing directory.
-11. `fileexists`: the option value must be a string representing the path to an existing file.
-12. `maxfilesize 10240`: the option value must be a string representing the path to a file whose size is less than or equal to 10240 bytes.
-13. `extension jpg png`: the option value must be a string representing the path to a file whose extension matches either `jpg` or `png`.
+10. `default`: the option value must be the default for corresponding type.
+11. `null`: the option value must be null.
+12. `nullorempty`: the option value must be null or empty string.
+13. `nullorwhitespace`: the option value must be null, an empty string, or a string consisting only of whitespace characters.
+14. `empty`: the option value must be an empty string.
+15. `directoryexists`: the option value must be a string representing the path to an existing directory.
+16. `fileexists`: the option value must be a string representing the path to an existing file.
+17. `maxfilesize 10240`: the option value must be a string representing the path to a file whose size is less than or equal to 10240 bytes.
+18. `extension jpg png`: the option value must be a string representing the path to a file whose extension matches either `jpg` or `png`.
+19. `file mp4 mkv`: the option value must be a string representing the path to an existing file whose extension matches either `mp4` or `mkv`.
 
 Examples of complex restrictions are provided below:
 1. `< -100\nOR > 100\nOR oneof 1 5 7 10\nAND inrange -200 200`.
