@@ -51,7 +51,15 @@ if (helpOptionCandidate is HelpOption helpOption)
     };
 }
 
-_ = parser.Parse(["--help"]);
+try
+{
+    _ = parser.Parse(args);
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+    return;
+}
 
 #pragma warning disable
 [ParserConfig]
@@ -229,7 +237,35 @@ internal class UpdateSubcommand
 {
     [FlagOption("remote", "r")]
     public bool Remote { get; set; }
+
+    [ValueOption<double>("scale")]
+    [MutuallyExclusiveOptionGroup(
+        $"{nameof(ScaleFactor)}-{nameof(NewWidth)}",
+        $"{nameof(ScaleFactor)}-{nameof(NewWidth)}",
+        $"{nameof(ScaleFactor)} cannot be used with {nameof(NewWidth)}")
+    ]
+    [MutuallyExclusiveOptionGroup(
+        $"{nameof(ScaleFactor)}-{nameof(NewHeight)}",
+        $"{nameof(ScaleFactor)}-{nameof(NewHeight)}",
+        $"{nameof(ScaleFactor)} cannot be used with {nameof(NewHeight)}")
+    ]
+    public double ScaleFactor { get; set; }
+
+    [ValueOption<int>("width")]
+    [MutuallyExclusiveOptionGroup($"{nameof(ScaleFactor)}-{nameof(NewWidth)}", "", "")]
+    public int NewWidth { get; set; }
+
+    [ValueOption<int>("height")]
+    [MutuallyExclusiveOptionGroup($"{nameof(ScaleFactor)}-{nameof(NewHeight)}", "", "")]
+    public int NewHeight { get; set; }
 }
 
 internal record Point(double X, double Y, double Z);
 #pragma warning restore
+
+/*
+./NetArgumentParser.Examples.ParserGenerationUsingAttributes
+    --files 1.txt 2.txt 3.txt
+    --mode Create
+    status update --scale 0.5
+*/
