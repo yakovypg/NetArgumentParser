@@ -170,10 +170,16 @@ public static class OptionValueRestrictionParser
             "INRANGE" or "MINMAX" => ParseInRangePredicate<T>(parameters),
             "ONEOF" or "INLIST" => ParseOneOfPredicate<T>(parameters),
             "MATCH" or "REGEX" => ParseMatchPredicate<T>(parameters),
+            "DEFAULT" => ParseDefaultPredicate<T>(parameters),
+            "NULL" => ParseNullPredicate<T>(parameters),
+            "NULLOREMPTY" => ParseNullOrEmptyPredicate<T>(parameters),
+            "NULLORWHITESPACE" => ParseNullOrWhiteSpacePredicate<T>(parameters),
+            "EMPTY" => ParseEmptyPredicate<T>(parameters),
             "DIRECTORYEXISTS" or "DIRECTORY" => ParseDirectoryExistsPredicate<T>(parameters),
-            "FILEEXISTS" or "FILE" => ParseFileExistsPredicate<T>(parameters),
+            "FILEEXISTS" => ParseFileExistsPredicate<T>(parameters),
             "MAXFILESIZE" or "MAXSIZE" => ParseMaxFileSizePredicate<T>(parameters),
             "EXTENSION" or "EXT" => ParseFileExtensionPredicate<T>(parameters),
+            "FILE" => ParseFilePredicate<T>(parameters),
 
             _ => throw new ArgumentOutOfRangeException(nameof(data), "Unknown predicate name")
         };
@@ -256,6 +262,48 @@ public static class OptionValueRestrictionParser
         return value => value is not null && regex.IsMatch(value.ToString() ?? string.Empty);
     }
 
+    private static Predicate<T> ParseDefaultPredicate<T>(string[] parameters)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
+        DefaultExceptions.ThrowIfNotEqual(parameters.Length, 0, nameof(parameters.Length));
+
+        return value => EqualityComparer<T>.Default.Equals(value, default!);
+    }
+
+    private static Predicate<T> ParseNullPredicate<T>(string[] parameters)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
+        DefaultExceptions.ThrowIfNotEqual(parameters.Length, 0, nameof(parameters.Length));
+
+        return value => value is null;
+    }
+
+    private static Predicate<T> ParseNullOrEmptyPredicate<T>(string[] parameters)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
+        DefaultExceptions.ThrowIfNotEqual(parameters.Length, 0, nameof(parameters.Length));
+
+        return value => value is null ||
+            (value is string text && string.IsNullOrEmpty(text));
+    }
+
+    private static Predicate<T> ParseNullOrWhiteSpacePredicate<T>(string[] parameters)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
+        DefaultExceptions.ThrowIfNotEqual(parameters.Length, 0, nameof(parameters.Length));
+
+        return value => value is null ||
+            (value is string text && string.IsNullOrWhiteSpace(text));
+    }
+
+    private static Predicate<T> ParseEmptyPredicate<T>(string[] parameters)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
+        DefaultExceptions.ThrowIfNotEqual(parameters.Length, 0, nameof(parameters.Length));
+
+        return value => value is string text && text.Length == 0;
+    }
+
     private static Predicate<T> ParseDirectoryExistsPredicate<T>(string[] parameters)
     {
         ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
@@ -332,5 +380,21 @@ public static class OptionValueRestrictionParser
                 return false;
             }
         };
+    }
+
+    private static Predicate<T> ParseFilePredicate<T>(string[] parameters)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
+
+        if (parameters.Length == 0)
+            return ParseFileExistsPredicate<T>(parameters);
+
+        Predicate<T> fileExistsPredicate = ParseFileExistsPredicate<T>([]);
+        Predicate<T> fileExtensionPredicate = ParseFileExtensionPredicate<T>(parameters);
+
+        List<Predicate<T>> predicates = [fileExistsPredicate, fileExtensionPredicate];
+        List<LogicalOperator> connections = [LogicalOperator.And];
+
+        return CombinePredicates<T>(predicates, connections);
     }
 }
