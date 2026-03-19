@@ -56,6 +56,9 @@ internal partial class OptionValueRestrictionParserGeneratorConfig
     public const string NullOrWhiteSpaceStringLongName = "NullOrWhiteSpaceString";
     public const string? NullOrWhiteSpaceStringValueRestriction = "nullorwhitespace";
 
+    public const string NotNullOrWhiteSpaceStringLongName = "NotNullOrWhiteSpaceString";
+    public const string? NotNullOrWhiteSpaceStringValueRestriction = "!nullorwhitespace";
+
     public const string EmptyStringLongName = "EmptyString";
     public const string? EmptyStringValueRestriction = "empty";
 
@@ -66,7 +69,7 @@ internal partial class OptionValueRestrictionParserGeneratorConfig
     public const string? ModeValueRestriction = $"oneof {nameof(FileMode.Append)} {nameof(FileMode.Open)}";
 
     public const string NumbersLongName = "Numbers";
-    public const string? NumbersValueRestriction = "< -100\nOR > 100\nOR oneof 1 5 7 10\nAND inrange -200 200";
+    public const string? NumbersValueRestriction = "< -100\nOR > 100\nOR oneof 1 5 7 10\nAND inrange -200 200\nAND !oneof 77 -77 88";
 
     public static Predicate<double> AngleValueRestrictionPredicate { get; } = t => t == 45;
     public static Predicate<float> WeightValueRestrictionPredicate { get; } = t => t != 100;
@@ -94,6 +97,7 @@ internal partial class OptionValueRestrictionParserGeneratorConfig
     public static Predicate<string?> NullStringValueRestrictionPredicate { get; } = t => t is null;
     public static Predicate<string?> NullOrEmptyStringValueRestrictionPredicate { get; } = string.IsNullOrEmpty;
     public static Predicate<string?> NullOrWhiteSpaceStringValueRestrictionPredicate { get; } = string.IsNullOrWhiteSpace;
+    public static Predicate<string?> NotNullOrWhiteSpaceStringValueRestrictionPredicate { get; } = t => !string.IsNullOrWhiteSpace(t);
     public static Predicate<string?> EmptyStringValueRestrictionPredicate { get; } = t => t is not null && t.Length == 0;
 
     public static Predicate<string> OutputFilePathValueRestrictionPredicate { get; } = t =>
@@ -123,7 +127,8 @@ internal partial class OptionValueRestrictionParserGeneratorConfig
         static bool Greater(Number t) => t > 100;
         static bool OneOf(Number t) => new List<double>() { 1, 5, 7, 10 }.Any(x => t == x);
         static bool InRange(Number t) => t >= -200 && t <= 200;
-        static bool CombinedPredicate(Number t) => (Less(t) || Greater(t) || OneOf(t)) && InRange(t);
+        static bool NotOneOf(Number t) => !new List<double>() { 77, -77, 88 }.Any(x => t == x);
+        static bool CombinedPredicate(Number t) => (Less(t) || Greater(t) || OneOf(t)) && InRange(t) && NotOneOf(t);
 
         return t.All(CombinedPredicate);
     };
@@ -211,6 +216,12 @@ internal partial class OptionValueRestrictionParserGeneratorConfig
         valueRestriction: NullOrWhiteSpaceStringValueRestriction)
     ]
     public string? NullOrWhiteSpaceString { get; set; }
+
+    [ValueOption<string>(
+        NotNullOrWhiteSpaceStringLongName,
+        valueRestriction: NotNullOrWhiteSpaceStringValueRestriction)
+    ]
+    public string? NotNullOrWhiteSpaceString { get; set; }
 
     [ValueOption<string>(
         EmptyStringLongName,
