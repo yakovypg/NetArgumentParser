@@ -3,6 +3,7 @@ This is the TODO file where you can find some features and content that need to 
 
 ## Features
 - [ ] Come up with new features.
+- [ ] Add support of `--`.
 - [ ] Add mutually inclusive groups.
 - [ ] Add the ability to sort options (by name, by weight, etc) in application description generator.
 - [ ] Add XML documentation.
