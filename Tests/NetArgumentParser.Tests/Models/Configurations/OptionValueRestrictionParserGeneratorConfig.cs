@@ -41,6 +41,24 @@ internal partial class OptionValueRestrictionParserGeneratorConfig
     public const string PhoneLongName = "Phone";
     public const string? PhoneValueRestriction = $"match {PhonePattern}";
 
+    public const string DefaultValueTypeLongName = "DefaultValueType";
+    public const string? DefaultValueTypeValueRestriction = "default";
+
+    public const string DefaultReferenceTypeLongName = "DefaultReferenceType";
+    public const string? DefaultReferenceTypeValueRestriction = "default";
+
+    public const string NullStringLongName = "NullString";
+    public const string? NullStringValueRestriction = "null";
+
+    public const string NullOrEmptyStringLongName = "NullOrEmptyString";
+    public const string? NullOrEmptyStringValueRestriction = "nullorempty";
+
+    public const string NullOrWhiteSpaceStringLongName = "NullOrWhiteSpaceString";
+    public const string? NullOrWhiteSpaceStringValueRestriction = "nullorwhitespace";
+
+    public const string EmptyStringLongName = "EmptyString";
+    public const string? EmptyStringValueRestriction = "empty";
+
     public const string OutputFilePathLongName = "OutputFilePath";
     public const string? OutputFilePathValueRestriction = "extension jpg .png GiF";
 
@@ -50,7 +68,6 @@ internal partial class OptionValueRestrictionParserGeneratorConfig
     public const string NumbersLongName = "Numbers";
     public const string? NumbersValueRestriction = "< -100\nOR > 100\nOR oneof 1 5 7 10\nAND inrange -200 200";
 
-#pragma warning disable SYSLIB1045 // Use GeneratedRegexAttribute to generate the regular expression implementation at compile time
     public static Predicate<double> AngleValueRestrictionPredicate { get; } = t => t == 45;
     public static Predicate<float> WeightValueRestrictionPredicate { get; } = t => t != 100;
     public static Predicate<int> AgeValueRestrictionPredicate { get; } = t => t < 20;
@@ -58,9 +75,26 @@ internal partial class OptionValueRestrictionParserGeneratorConfig
     public static Predicate<long> HeightValueRestrictionPredicate { get; } = t => t > 22;
     public static Predicate<ulong> LengthValueRestrictionPredicate { get; } = t => t >= 23;
     public static Predicate<byte> VerbosityValueRestrictionPredicate { get; } = t => t >= 0 && t <= 4;
+
+#pragma warning disable SYSLIB1045 // Use GeneratedRegexAttribute to generate the regular expression implementation at compile time
     public static Predicate<string> NameValueRestrictionPredicate { get; } = t => new Regex(NamePattern).IsMatch(t);
     public static Predicate<string> PhoneValueRestrictionPredicate { get; } = t => new Regex(PhonePattern).IsMatch(t);
 #pragma warning restore SYSLIB1045 // Use GeneratedRegexAttribute to generate the regular expression implementation at compile time
+
+    public static Predicate<Point> DefaultValueTypeValueRestrictionPredicate { get; } = t =>
+    {
+        return EqualityComparer<Point>.Default.Equals(t, default);
+    };
+
+    public static Predicate<string?> DefaultReferenceTypeValueRestrictionPredicate { get; } = t =>
+    {
+        return EqualityComparer<string?>.Default.Equals(t, default);
+    };
+
+    public static Predicate<string?> NullStringValueRestrictionPredicate { get; } = t => t is null;
+    public static Predicate<string?> NullOrEmptyStringValueRestrictionPredicate { get; } = string.IsNullOrEmpty;
+    public static Predicate<string?> NullOrWhiteSpaceStringValueRestrictionPredicate { get; } = string.IsNullOrWhiteSpace;
+    public static Predicate<string?> EmptyStringValueRestrictionPredicate { get; } = t => t is not null && t.Length == 0;
 
     public static Predicate<string> OutputFilePathValueRestrictionPredicate { get; } = t =>
     {
@@ -147,6 +181,42 @@ internal partial class OptionValueRestrictionParserGeneratorConfig
         valueRestriction: PhoneValueRestriction)
     ]
     public string? Phone { get; set; }
+
+    [ValueOption<Point>(
+        DefaultValueTypeLongName,
+        valueRestriction: DefaultValueTypeValueRestriction)
+    ]
+    public Point DefaultValueType { get; set; }
+
+    [ValueOption<string>(
+        DefaultReferenceTypeLongName,
+        valueRestriction: DefaultReferenceTypeValueRestriction)
+    ]
+    public string? DefaultReferenceType { get; set; }
+
+    [ValueOption<string>(
+        NullStringLongName,
+        valueRestriction: NullStringValueRestriction)
+    ]
+    public string? NullString { get; set; }
+
+    [ValueOption<string>(
+        NullOrEmptyStringLongName,
+        valueRestriction: NullOrEmptyStringValueRestriction)
+    ]
+    public string? NullOrEmptyString { get; set; }
+
+    [ValueOption<string>(
+        NullOrWhiteSpaceStringLongName,
+        valueRestriction: NullOrWhiteSpaceStringValueRestriction)
+    ]
+    public string? NullOrWhiteSpaceString { get; set; }
+
+    [ValueOption<string>(
+        EmptyStringLongName,
+        valueRestriction: EmptyStringValueRestriction)
+    ]
+    public string? EmptyString { get; set; }
 
     [ValueOption<string>(
         OutputFilePathLongName,

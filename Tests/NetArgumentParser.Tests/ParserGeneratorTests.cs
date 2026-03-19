@@ -492,6 +492,36 @@ public class ParserGeneratorTests
             false,
             out IValueOption<string>? phoneOption);
 
+        bool defaultValueTypeOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.DefaultValueTypeLongName,
+            false,
+            out IValueOption<Point>? defaultValueTypeOption);
+
+        bool defaultReferenceTypeOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.DefaultReferenceTypeLongName,
+            false,
+            out IValueOption<string>? defaultReferenceTypeOption);
+
+        bool nullStringOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.NullStringLongName,
+            false,
+            out IValueOption<string>? nullStringOption);
+
+        bool nullOrEmptyStringOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.NullOrEmptyStringLongName,
+            false,
+            out IValueOption<string>? nullOrEmptyStringOption);
+
+        bool nullOrWhiteSpaceStringOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.NullOrWhiteSpaceStringLongName,
+            false,
+            out IValueOption<string>? nullOrWhiteSpaceStringOption);
+
+        bool emptyStringOptionFound = argumentParser.FindFirstValueOptionByLongName(
+            OptionValueRestrictionParserGeneratorConfig.EmptyStringLongName,
+            false,
+            out IValueOption<string>? emptyStringOption);
+
         bool outputFilePathOptionFound = argumentParser.FindFirstValueOptionByLongName(
             OptionValueRestrictionParserGeneratorConfig.OutputFilePathLongName,
             false,
@@ -516,6 +546,12 @@ public class ParserGeneratorTests
         Assert.True(verbosityOptionFound);
         Assert.True(nameOptionFound);
         Assert.True(phoneOptionFound);
+        Assert.True(defaultValueTypeOptionFound);
+        Assert.True(defaultReferenceTypeOptionFound);
+        Assert.True(nullStringOptionFound);
+        Assert.True(nullOrEmptyStringOptionFound);
+        Assert.True(nullOrWhiteSpaceStringOptionFound);
+        Assert.True(emptyStringOptionFound);
         Assert.True(outputFilePathOptionFound);
         Assert.True(modeOptionFound);
         Assert.True(numbersOptionFound);
@@ -529,6 +565,12 @@ public class ParserGeneratorTests
         Assert.NotNull(verbosityOption);
         Assert.NotNull(nameOption);
         Assert.NotNull(phoneOption);
+        Assert.NotNull(defaultValueTypeOption);
+        Assert.NotNull(defaultReferenceTypeOption);
+        Assert.NotNull(nullStringOption);
+        Assert.NotNull(nullOrEmptyStringOption);
+        Assert.NotNull(nullOrWhiteSpaceStringOption);
+        Assert.NotNull(emptyStringOption);
         Assert.NotNull(outputFilePathOption);
         Assert.NotNull(modeOption);
         Assert.NotNull(numbersOption);
@@ -542,6 +584,12 @@ public class ParserGeneratorTests
         Assert.NotNull(verbosityOption.ValueRestriction);
         Assert.NotNull(nameOption.ValueRestriction);
         Assert.NotNull(phoneOption.ValueRestriction);
+        Assert.NotNull(defaultValueTypeOption.ValueRestriction);
+        Assert.NotNull(defaultReferenceTypeOption.ValueRestriction);
+        Assert.NotNull(nullStringOption.ValueRestriction);
+        Assert.NotNull(nullOrEmptyStringOption.ValueRestriction);
+        Assert.NotNull(nullOrWhiteSpaceStringOption.ValueRestriction);
+        Assert.NotNull(emptyStringOption.ValueRestriction);
         Assert.NotNull(outputFilePathOption.ValueRestriction);
         Assert.NotNull(modeOption.ValueRestriction);
         Assert.NotNull(numbersOption.ValueRestriction);
@@ -642,6 +690,56 @@ public class ParserGeneratorTests
             Assert.Equal(
                 OptionValueRestrictionParserGeneratorConfig.PhoneValueRestrictionPredicate.Invoke(phone),
                 phoneOption.ValueRestriction.IsValueAllowed.Invoke(phone));
+        }
+
+        for (int x = -10; x <= 10; ++x)
+        {
+            for (int y = -10; y <= 10; ++y)
+            {
+                var point = new Point(x, y);
+
+                Assert.Equal(
+                    OptionValueRestrictionParserGeneratorConfig
+                        .DefaultValueTypeValueRestrictionPredicate.Invoke(point),
+                    defaultValueTypeOption.ValueRestriction.IsValueAllowed.Invoke(point));
+            }
+        }
+
+        string?[] texts =
+        [
+            null,
+            default,
+            string.Empty,
+            "+1 123 345 67 89",
+            "31233456789",
+            "-a bbbb cDe45 67 8D",
+            ".",
+            " ",
+            "      ",
+            "      a     "
+        ];
+
+        foreach (string? text in texts)
+        {
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.DefaultReferenceTypeValueRestrictionPredicate.Invoke(text),
+                defaultReferenceTypeOption.ValueRestriction.IsValueAllowed.Invoke(text!));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.NullStringValueRestrictionPredicate.Invoke(text),
+                nullStringOption.ValueRestriction.IsValueAllowed.Invoke(text!));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.NullOrEmptyStringValueRestrictionPredicate.Invoke(text),
+                nullOrEmptyStringOption.ValueRestriction.IsValueAllowed.Invoke(text!));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.NullOrWhiteSpaceStringValueRestrictionPredicate.Invoke(text),
+                nullOrWhiteSpaceStringOption.ValueRestriction.IsValueAllowed.Invoke(text!));
+
+            Assert.Equal(
+                OptionValueRestrictionParserGeneratorConfig.EmptyStringValueRestrictionPredicate.Invoke(text),
+                emptyStringOption.ValueRestriction.IsValueAllowed.Invoke(text!));
         }
 
         string[] outputFilePaths =
