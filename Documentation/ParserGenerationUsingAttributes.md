@@ -179,6 +179,8 @@ logical_operator predicateK_name parameter1 ... parameterM
 
 In other words, a string consists of one or more predicates, each separated by a newline character `\n`. Following the predicate name, its parameters are listed. A logical connective (`AND` or `OR`) may precede the predicate name; if omitted, it defaults to `AND`. A line that begins with the `?` character specifies a message to be displayed if the option value doesn't satisfy the restriction. However, this message can be omitted.
 
+In addition, you can negate predicate. To do this, place `!` before the predicate name.
+
 It is also important to note that parentheses are not supported, and logical connectives will be evaluated in the order in which they are specified. Thus, `x OR y AND z` will actually be interpreted as `(x OR y) AND z`. Additionally, logical connectives have aliases: for `OR`, they are `||` and `|`, while for `AND`, they are `&&` and `&`.
 
 The following predicates are available:
@@ -210,11 +212,11 @@ Examples of simple restrictions are provided below:
 5. `> 5`: the option value must be greater than 5.
 6. `>= 5`: the option value must be greater than or equal to 5.
 7. `inrange 0 5`: the option value must be within the range from 0 to 5.
-8. `oneof 1 3 6`: the option value must be one of the values: 1, 3 or 6.
+8. `oneof 1 3 6`: the option value must be one of: 1, 3 or 6.
 9. `match ^[A-Z][a-z]*$`: the option value must match the regular expression `^[A-Z][a-z]*$`.
 10. `default`: the option value must be the default for corresponding type.
 11. `null`: the option value must be null.
-12. `nullorempty`: the option value must be null or empty string.
+12. `nullorempty`: the option value must be null or an empty string.
 13. `nullorwhitespace`: the option value must be null, an empty string, or a string consisting only of whitespace characters.
 14. `empty`: the option value must be an empty string.
 15. `directoryexists`: the option value must be a string representing the path to an existing directory.
@@ -223,8 +225,12 @@ Examples of simple restrictions are provided below:
 18. `extension jpg png`: the option value must be a string representing the path to a file whose extension matches either `jpg` or `png`.
 19. `file mp4 mkv`: the option value must be a string representing the path to an existing file whose extension matches either `mp4` or `mkv`.
 
+Examples of restrictions with negation are provided below:
+1. `!oneof 1 3 6`: the option value mustn't be one of: 1, 3 or 6.
+2. `!nullorempty`: the option value mustn't be null or an empty string.
+
 Examples of complex restrictions are provided below:
-1. `< -100\nOR > 100\nOR oneof 1 5 7 10\nAND inrange -200 200`.
+1. `< -100\nOR > 100\nOR oneof 1 5 7 10\nAND inrange -200 200\nAND !oneof 77 -77 88`.
 2. `fileexists\n&& extension jpg png\n?file must exists and be an image`.
 
 Finally, here is an example of creating an option with a restriction using an attribute:
