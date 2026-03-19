@@ -13,8 +13,8 @@ public interface IValueOption<T> : ICommonOption, IValueOptionDescriptionDesigne
     string MetaVariable { get; }
 
     IReadOnlyCollection<T> Choices { get; }
-    DefaultOptionValue<T>? DefaultValue { get; }
-    OptionValueRestriction<T>? ValueRestriction { get; }
+    DefaultOptionValue<T>? DefaultValue { get; set; }
+    OptionValueRestriction<T>? ValueRestriction { get; set; }
     IValueConverter<T>? Converter { get; set; }
 
     void HandleDefaultValue();
