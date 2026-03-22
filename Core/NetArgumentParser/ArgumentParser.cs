@@ -6,7 +6,7 @@ using NetArgumentParser.Informing;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Collections;
 using NetArgumentParser.Options.Utils;
-using NetArgumentParser.Options.Utils.Verifiers;
+using NetArgumentParser.Options.Verifiers;
 using NetArgumentParser.Subcommands;
 using NetArgumentParser.Visitors;
 

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetArgumentParser.Options.Utils.Verifiers;
+namespace NetArgumentParser.Options.Verifiers;
 
 internal static class ReuiredOptionVerifier
 {

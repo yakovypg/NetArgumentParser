@@ -5,7 +5,7 @@ using NetArgumentParser.Converters;
 using NetArgumentParser.Generators;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Collections;
-using NetArgumentParser.Subcommands.Utils.Verifiers;
+using NetArgumentParser.Subcommands.Verifiers;
 
 namespace NetArgumentParser.Subcommands;
 

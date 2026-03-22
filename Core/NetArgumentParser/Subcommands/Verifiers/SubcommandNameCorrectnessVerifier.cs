@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace NetArgumentParser.Subcommands.Utils.Verifiers;
+namespace NetArgumentParser.Subcommands.Verifiers;
 
 internal static partial class CommandNameCorrectnessVerifier
 {
