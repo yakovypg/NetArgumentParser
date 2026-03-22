@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetArgumentParser.Subcommands.Utils.Verifiers;
+namespace NetArgumentParser.Subcommands.Verifiers;
 
 internal sealed class SubcommandNameUniquenessVerifier
 {

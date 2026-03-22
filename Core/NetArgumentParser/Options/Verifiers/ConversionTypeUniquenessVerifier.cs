@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NetArgumentParser.Converters;
 
-namespace NetArgumentParser.Options.Utils.Verifiers;
+namespace NetArgumentParser.Options.Verifiers;
 
 internal sealed class ConversionTypeUniquenessVerifier
 {

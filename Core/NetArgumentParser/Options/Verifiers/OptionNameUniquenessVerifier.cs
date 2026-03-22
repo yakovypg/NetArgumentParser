@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetArgumentParser.Options.Utils.Verifiers;
+namespace NetArgumentParser.Options.Verifiers;
 
 internal sealed class OptionNameUniquenessVerifier
 {

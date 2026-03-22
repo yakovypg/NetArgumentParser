@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace NetArgumentParser.Options.Utils.Verifiers;
+namespace NetArgumentParser.Options.Verifiers;
 
 internal static partial class OptionNameCorrectnessVerifier
 {

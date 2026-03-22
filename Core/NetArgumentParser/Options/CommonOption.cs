@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NetArgumentParser.Configuration;
 using NetArgumentParser.Options.Context;
-using NetArgumentParser.Options.Utils.Verifiers;
+using NetArgumentParser.Options.Verifiers;
 
 namespace NetArgumentParser.Options;
 
