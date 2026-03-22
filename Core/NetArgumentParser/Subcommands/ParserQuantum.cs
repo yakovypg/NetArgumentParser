@@ -18,17 +18,21 @@ public class ParserQuantum : IOptionSetOrganizer, ISubcommandContainer
 
     private ITextWriter? _outputWriter;
 
-    public ParserQuantum()
+    public ParserQuantum(string name)
     {
+        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
+
         _optionSet = new OptionSet();
         _optionGroups = [new OptionGroup<ICommonOption>("Options:", string.Empty, _optionSet)];
         _subcommands = [];
         _nameUniquenessVerifier = new SubcommandNameUniquenessVerifier(_subcommands);
 
+        Name = name;
         UseDefaultHelpOption = true;
         UsageStartTerm = string.Empty;
     }
 
+    public string Name { get; }
     public string UsageStartTerm { get; set; }
     public bool UseDefaultHelpOption { get; set; }
 

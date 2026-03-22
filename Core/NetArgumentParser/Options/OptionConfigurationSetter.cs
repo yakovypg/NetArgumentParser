@@ -29,10 +29,14 @@ public class OptionConfigurationSetter : IOptionConfigurationSetter
     {
         ExtendedArgumentNullException.ThrowIfNull(parser, nameof(parser));
 
-        foreach (Subcommand subcommand in parser.Subcommands)
+        IEnumerable<ParserQuantum> parserQuantums = parser.Subcommands
+            .Cast<ParserQuantum>()
+            .Concat([parser]);
+
+        foreach (ParserQuantum parserQuantum in parserQuantums)
         {
             bool hasConfigurationProviders = OptionConfigurationProviders.TryGetValue(
-                subcommand.Name,
+                parserQuantum.Name,
                 out List<IOptionConfigurationProvider>? configurationProviders);
 
             if (!hasConfigurationProviders || configurationProviders is null)
@@ -40,7 +44,7 @@ public class OptionConfigurationSetter : IOptionConfigurationSetter
 
             foreach (IOptionConfigurationProvider configurationProvider in configurationProviders)
             {
-                configurationProvider.ConfigureOptions(subcommand);
+                configurationProvider.ConfigureOptions(parserQuantum);
             }
         }
     }
