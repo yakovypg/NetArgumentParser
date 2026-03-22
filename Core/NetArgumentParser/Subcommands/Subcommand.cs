@@ -5,17 +5,14 @@ namespace NetArgumentParser.Subcommands;
 public class Subcommand : ParserQuantum, ISubcommand
 {
     internal Subcommand(string name, string description)
+        : base(name ?? throw new ArgumentNullException(nameof(name)))
     {
-        ExtendedArgumentNullException.ThrowIfNull(name, nameof(name));
         ExtendedArgumentNullException.ThrowIfNull(description, nameof(description));
-
-        Name = name;
         Description = description;
     }
 
     public event EventHandler<EventArgs>? Handled;
 
-    public string Name { get; }
     public string Description { get; }
     public bool IsHandled { get; protected set; }
 

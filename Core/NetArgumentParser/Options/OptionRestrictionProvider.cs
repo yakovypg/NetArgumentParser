@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NetArgumentParser.Options.Configuration;
 using NetArgumentParser.Subcommands;
 
@@ -17,30 +18,58 @@ public abstract class OptionRestrictionProvider : OptionConfigurationProvider
     }
 
     protected static void AddRestriction<T>(
-        Subcommand subcommand,
+        ParserQuantum parserQuantum,
         string optionLongName,
         Predicate<T> isValueAllowed,
         string? valueNotSatisfuRestrictionMessage = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
+        ExtendedArgumentNullException.ThrowIfNull(parserQuantum, nameof(parserQuantum));
         ExtendedArgumentNullException.ThrowIfNull(optionLongName, nameof(optionLongName));
         ExtendedArgumentNullException.ThrowIfNull(isValueAllowed, nameof(isValueAllowed));
 
         AddRestriction(
-            subcommand,
+            parserQuantum,
             optionLongName,
             new OptionValueRestriction<T>(isValueAllowed, valueNotSatisfuRestrictionMessage));
     }
 
     protected static void AddRestriction<T>(
-        Subcommand subcommand,
+        ParserQuantum parserQuantum,
         string optionLongName,
         OptionValueRestriction<T>? valueRestriction)
     {
-        ExtendedArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
+        ExtendedArgumentNullException.ThrowIfNull(parserQuantum, nameof(parserQuantum));
         ExtendedArgumentNullException.ThrowIfNull(optionLongName, nameof(optionLongName));
 
-        IValueOption<T> foundOption = FindOption<T>(subcommand, optionLongName);
+        IValueOption<T> foundOption = FindValueOption<T>(parserQuantum, optionLongName);
         foundOption.ValueRestriction = valueRestriction;
+    }
+
+    protected static void AddRestrictionToMultipleValueOption<T>(
+        ParserQuantum parserQuantum,
+        string optionLongName,
+        Predicate<IList<T>> isValueAllowed,
+        string? valueNotSatisfuRestrictionMessage = null)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(parserQuantum, nameof(parserQuantum));
+        ExtendedArgumentNullException.ThrowIfNull(optionLongName, nameof(optionLongName));
+        ExtendedArgumentNullException.ThrowIfNull(isValueAllowed, nameof(isValueAllowed));
+
+        AddRestriction(
+            parserQuantum,
+            optionLongName,
+            isValueAllowed,
+            valueNotSatisfuRestrictionMessage);
+    }
+
+    protected static void AddRestrictionToMultipleValueOption<T>(
+        ParserQuantum parserQuantum,
+        string optionLongName,
+        OptionValueRestriction<IList<T>>? valueRestriction)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(parserQuantum, nameof(parserQuantum));
+        ExtendedArgumentNullException.ThrowIfNull(optionLongName, nameof(optionLongName));
+
+        AddRestriction(parserQuantum, optionLongName, valueRestriction);
     }
 }

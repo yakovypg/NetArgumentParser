@@ -4,5 +4,5 @@ namespace NetArgumentParser.Options;
 
 public interface IOptionConfigurationProvider
 {
-    void ConfigureOptions(Subcommand subcommand);
+    void ConfigureOptions(ParserQuantum subcommand);
 }

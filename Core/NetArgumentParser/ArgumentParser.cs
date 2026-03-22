@@ -22,7 +22,9 @@ public class ArgumentParser : ParserQuantum
     public ArgumentParser(
         IDescriptionGenerator? descriptionGenerator = null,
         ITextWriter? outputWriter = null,
-        Func<Subcommand, IDescriptionGenerator>? subcommandDescriptionGeneratorCreator = null)
+        Func<Subcommand, IDescriptionGenerator>? subcommandDescriptionGeneratorCreator = null,
+        string name = nameof(ArgumentParser))
+        : base(name ?? throw new ArgumentNullException(nameof(name)))
     {
         _mutuallyExclusiveOptionGroups = [];
         _programName = string.Empty;

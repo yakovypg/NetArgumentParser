@@ -5,43 +5,41 @@ using System.Runtime.Serialization;
 namespace NetArgumentParser.Subcommands;
 
 [Serializable]
-public class SubcommandConfiguredIncorrectlyException : Exception
+public class ParserQuantumConfiguredIncorrectlyException : Exception
 {
-    public SubcommandConfiguredIncorrectlyException()
+    public ParserQuantumConfiguredIncorrectlyException()
         : this(GetDefaultMessage()) { }
 
-    public SubcommandConfiguredIncorrectlyException(string? message)
+    public ParserQuantumConfiguredIncorrectlyException(string? message)
         : base(message ?? GetDefaultMessage()) { }
 
-    public SubcommandConfiguredIncorrectlyException(string? message, Exception? innerException)
+    public ParserQuantumConfiguredIncorrectlyException(string? message, Exception? innerException)
         : base(message ?? GetDefaultMessage(), innerException) { }
 
-    public SubcommandConfiguredIncorrectlyException(string? message, ISubcommand subcommand)
-        : this(message ?? GetDefaultMessage(subcommand), subcommand, null) { }
+    public ParserQuantumConfiguredIncorrectlyException(string? message, string parserQuantumName)
+        : this(message ?? GetDefaultMessage(parserQuantumName), parserQuantumName, null) { }
 
-    public SubcommandConfiguredIncorrectlyException(
+    public ParserQuantumConfiguredIncorrectlyException(
         string? message,
-        ISubcommand subcommand,
+        string parserQuantumName,
         Exception? innerException)
-        : base(message ?? GetDefaultMessage(subcommand), innerException)
+        : base(message ?? GetDefaultMessage(parserQuantumName), innerException)
     {
-        Subcommand = subcommand;
+        ParserQuantumName = parserQuantumName;
     }
 
 #if NET8_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
 #endif
-    private SubcommandConfiguredIncorrectlyException(SerializationInfo info, StreamingContext context)
+    private ParserQuantumConfiguredIncorrectlyException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
         ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
-
-        Subcommand = (ISubcommand?)info.GetValue(nameof(Subcommand), typeof(ISubcommand))
-            ?? default;
+        ParserQuantumName = info.GetString(nameof(ParserQuantumName));
     }
 
-    public ISubcommand? Subcommand { get; private set; }
+    public string? ParserQuantumName { get; private set; }
 
 #if NET8_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -51,16 +49,15 @@ public class SubcommandConfiguredIncorrectlyException : Exception
     {
         ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
 
-        info.AddValue(nameof(Subcommand), Subcommand, typeof(ISubcommand));
+        info.AddValue(nameof(ParserQuantumName), ParserQuantumName, typeof(string));
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(ISubcommand? subcommand = null)
+    private static string GetDefaultMessage(string? parserQuantumName = null)
     {
-        string subcommandName = subcommand is not null
-            ? $" {subcommand.Name}"
-            : string.Empty;
+        if (!string.IsNullOrEmpty(parserQuantumName))
+            parserQuantumName = $" {parserQuantumName}";
 
-        return $"Subcommand{subcommandName} is configured incorrectly.";
+        return $"Parser quantum{parserQuantumName} is configured incorrectly.";
     }
 }
