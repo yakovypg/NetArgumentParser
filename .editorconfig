@@ -22,6 +22,14 @@ dotnet_diagnostic.IDE0057.severity = none
 [*.cs]
 dotnet_diagnostic.IDE0290.severity = none
 
+# SYSLIB1045: Use GeneratedRegexAttribute to generate the regular expression implementation at compile time
+[*.cs]
+dotnet_diagnostic.SYSLIB1045.severity = none
+
+# CA1019: Define accessors for attribute arguments
+[*.cs]
+dotnet_diagnostic.CA1019.severity = none
+
 # CA1031: Do not catch general exception types
 [*.cs]
 dotnet_diagnostic.CA1031.severity = none
@@ -41,3 +49,7 @@ dotnet_diagnostic.CA1707.severity = none
 # CA1813: Avoid unsealed attributes
 [*.cs]
 dotnet_diagnostic.CA1813.severity = none
+
+# CA2263: Prefer generic overload when type is known
+[*.cs]
+dotnet_diagnostic.CA2263.severity = none
