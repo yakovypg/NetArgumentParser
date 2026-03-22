@@ -15,7 +15,6 @@ namespace NetArgumentParser.Attributes;
 ]
 public class ValueOptionAttribute<T> : CommonOptionAttribute
 {
-#pragma warning disable CA1019 // Define accessors for attribute arguments
     public ValueOptionAttribute(
         T defaultValue,
         string longName,
@@ -52,7 +51,6 @@ public class ValueOptionAttribute<T> : CommonOptionAttribute
     {
         DefaultValue = new DefaultOptionValue<T>(defaultValue);
     }
-#pragma warning restore CA1019 // Define accessors for attribute arguments
 
     public ValueOptionAttribute(
         string longName,

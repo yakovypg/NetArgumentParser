@@ -79,10 +79,8 @@ internal partial class OptionValueRestrictionParserGeneratorConfig
     public static Predicate<ulong> LengthValueRestrictionPredicate { get; } = t => t >= 23;
     public static Predicate<byte> VerbosityValueRestrictionPredicate { get; } = t => t >= 0 && t <= 4;
 
-#pragma warning disable SYSLIB1045 // Use GeneratedRegexAttribute to generate the regular expression implementation at compile time
     public static Predicate<string> NameValueRestrictionPredicate { get; } = t => new Regex(NamePattern).IsMatch(t);
     public static Predicate<string> PhoneValueRestrictionPredicate { get; } = t => new Regex(PhonePattern).IsMatch(t);
-#pragma warning restore SYSLIB1045 // Use GeneratedRegexAttribute to generate the regular expression implementation at compile time
 
     public static Predicate<Point> DefaultValueTypeValueRestrictionPredicate { get; } = t =>
     {

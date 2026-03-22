@@ -14,7 +14,6 @@ namespace NetArgumentParser.Attributes;
 public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
     where T : struct, Enum
 {
-#pragma warning disable CA1019 // Define accessors for attribute arguments
     public EnumValueOptionAttribute(
         T defaultValue,
         string longName,
@@ -53,7 +52,6 @@ public class EnumValueOptionAttribute<T> : ValueOptionAttribute<T>
     {
         UseDefaultChoices = useDefaultChoices;
     }
-#pragma warning restore CA1019 // Define accessors for attribute arguments
 
     public EnumValueOptionAttribute(
         string longName,
