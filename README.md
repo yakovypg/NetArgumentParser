@@ -7,7 +7,7 @@
   <a href="https://github.com/yakovypg/NetArgumentParser/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-GPLv3-darkyellow.svg" alt="license" />
   </a>
-  <img src="https://img.shields.io/badge/Version-1.0.7-red.svg" alt="version" />
+  <img src="https://img.shields.io/badge/Version-1.0.8-red.svg" alt="version" />
   <img src="https://img.shields.io/badge/C%23-12.0-blue" alt="csharp" />
 </p>
 
