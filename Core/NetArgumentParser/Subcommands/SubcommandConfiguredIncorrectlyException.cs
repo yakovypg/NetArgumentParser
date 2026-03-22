@@ -1,0 +1,66 @@
+using System;
+using System.ComponentModel;
+using System.Runtime.Serialization;
+
+namespace NetArgumentParser.Subcommands;
+
+[Serializable]
+public class SubcommandConfiguredIncorrectlyException : Exception
+{
+    public SubcommandConfiguredIncorrectlyException()
+        : this(GetDefaultMessage()) { }
+
+    public SubcommandConfiguredIncorrectlyException(string? message)
+        : base(message ?? GetDefaultMessage()) { }
+
+    public SubcommandConfiguredIncorrectlyException(string? message, Exception? innerException)
+        : base(message ?? GetDefaultMessage(), innerException) { }
+
+    public SubcommandConfiguredIncorrectlyException(string? message, ISubcommand subcommand)
+        : this(message ?? GetDefaultMessage(subcommand), subcommand, null) { }
+
+    public SubcommandConfiguredIncorrectlyException(
+        string? message,
+        ISubcommand subcommand,
+        Exception? innerException)
+        : base(message ?? GetDefaultMessage(subcommand), innerException)
+    {
+        Subcommand = subcommand;
+    }
+
+#if NET8_0_OR_GREATER
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
+    private SubcommandConfiguredIncorrectlyException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+
+        Subcommand = (ISubcommand?)info.GetValue(nameof(Subcommand), typeof(ISubcommand))
+            ?? default;
+    }
+
+    public ISubcommand? Subcommand { get; private set; }
+
+#if NET8_0_OR_GREATER
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This API supports obsolete formatter-based serialization. It should not be called or extended by application code.", DiagnosticId = "SYSLIB0051", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+#endif
+    public override void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(info, nameof(info));
+
+        info.AddValue(nameof(Subcommand), Subcommand, typeof(ISubcommand));
+        base.GetObjectData(info, context);
+    }
+
+    private static string GetDefaultMessage(ISubcommand? subcommand = null)
+    {
+        string subcommandName = subcommand is not null
+            ? $" {subcommand.Name}"
+            : string.Empty;
+
+        return $"Subcommand{subcommandName} is configured incorrectly.";
+    }
+}
