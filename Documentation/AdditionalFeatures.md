@@ -5,6 +5,7 @@
 *    [Negative Numbers & Scientific Notation](#negative-numbers--scientific-notation)
 *    [Use `option=value` Syntax](#use-optionvalue-syntax)
 *    [Parse Known Arguments](#parse-known-arguments)
+*    [Parse Arguments Multiple Times](#parse-arguments-multiple-times)
 *    [Skip Arguments](#skip-arguments)
 *    [Getting Info About Handled Options And Subcommands](#getting-info-about-handled-options-and-subcommands)
 *    [Add Default Value To Description](#add-default-value-to-description)
@@ -75,6 +76,39 @@ parser.AddOptions(option);
 
 parser.ParseKnownArguments(new string[] { "-v", "10", "-a" }, out List<string> extraArguments);
 // extraArguments: [10, -a]
+```
+
+## Parse Arguments Multiple Times
+You can parse arguments multiple times using a single instance of `ArgumentParser`. When you call the `Parse()` or `ParseKnownArguments()` methods, it automatically invokes the `ResetOptionsHandledState()` and `ResetSubcommandsHandledState()` methods, so you don't need to call them manually.
+
+```cs
+int angle = 0;
+int width = 0;
+int height = 0;
+
+var options = new ICommonOption[]
+{
+    new ValueOption<int>("angle", afterValueParsingAction: t => angle = t),
+    new ValueOption<int>("width", afterValueParsingAction: t => width = t),
+    new ValueOption<int>("height", afterValueParsingAction: t => height = t)
+};
+
+var parser = new ArgumentParser();
+parser.AddOptions(options);
+
+_ = parser.Parse(["--angle", "1", "--width", "2", "--height", "3"]);
+PrintSummary("=== Parse 1 ===");
+
+_ = parser.Parse(["--angle", "4", "--width", "5", "--height", "6"]);
+PrintSummary("\n=== Parse 2 ===");
+
+void PrintSummary(string name)
+{
+    Console.WriteLine(name);
+    Console.WriteLine($"Angle: {angle}");
+    Console.WriteLine($"Width: {width}");
+    Console.WriteLine($"Height: {height}");
+}
 ```
 
 ## Skip Arguments
