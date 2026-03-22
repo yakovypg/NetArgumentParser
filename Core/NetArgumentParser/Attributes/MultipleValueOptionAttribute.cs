@@ -15,7 +15,6 @@ namespace NetArgumentParser.Attributes;
 ]
 public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
 {
-#pragma warning disable CA1019 // Define accessors for attribute arguments
     public MultipleValueOptionAttribute(
         T[] defaultValue,
         string longName,
@@ -85,7 +84,6 @@ public class MultipleValueOptionAttribute<T> : ValueOptionAttribute<IList<T>>
         ContextCapture = CreateContextCapture(contextCaptureType, numberOfItemsToCapture);
         ValueRestriction = CreateValueRestriction(valueRestriction);
     }
-#pragma warning restore CA1019 // Define accessors for attribute arguments
 
     public bool IgnoreOrderInChoices { get; }
     public IContextCapture? ContextCapture { get; }

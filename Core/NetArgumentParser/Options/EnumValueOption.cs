@@ -10,8 +10,6 @@ namespace NetArgumentParser.Options;
 public class EnumValueOption<T> : ValueOption<T>
     where T : struct, Enum
 {
-#pragma warning disable SA1118 // Parameter should not span multiple lines
-#pragma warning disable CA2263 // Prefer generic overload when type is known
     public EnumValueOption(
         string longName,
         string shortName = "",
@@ -50,8 +48,6 @@ public class EnumValueOption<T> : ValueOption<T>
             new FixedContextCapture(1))
     {
     }
-#pragma warning restore CA2263 // Prefer generic overload when type is known
-#pragma warning restore SA1118 // Parameter should not span multiple lines
 
     protected override IValueConverter<T> GetDefaultConverter()
     {

@@ -789,9 +789,7 @@ public class ParserGeneratorTests
                 outputFilePathOption.ValueRestriction.IsValueAllowed.Invoke(path));
         }
 
-#pragma warning disable CA2263 // Prefer generic overload when type is known
         FileMode[] fileModes = (FileMode[])Enum.GetValues(typeof(FileMode));
-#pragma warning restore CA2263 // Prefer generic overload when type is known
 
         foreach (FileMode fileMode in fileModes)
         {
@@ -1197,9 +1195,7 @@ public class ParserGeneratorTests
         if (ComplexParserGeneratorConfig.ModeUseDefaultChoices
             && ComplexParserGeneratorConfig.ModeChoices is null)
         {
-#pragma warning disable CA2263 // Prefer generic overload when type is known
             FileMode[] expectedChoices = (FileMode[])Enum.GetValues(typeof(FileMode));
-#pragma warning restore CA2263 // Prefer generic overload when type is known
             Assert.True(expectedChoices.ScrambledEquals(modeOption.Choices));
         }
         else
