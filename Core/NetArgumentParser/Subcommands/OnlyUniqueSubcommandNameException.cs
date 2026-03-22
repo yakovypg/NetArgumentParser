@@ -7,16 +7,17 @@ namespace NetArgumentParser.Subcommands;
 [Serializable]
 public class OnlyUniqueSubcommandNameException : Exception
 {
-    public OnlyUniqueSubcommandNameException() { }
+    public OnlyUniqueSubcommandNameException()
+        : this(GetDefaultMessage()) { }
 
     public OnlyUniqueSubcommandNameException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public OnlyUniqueSubcommandNameException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public OnlyUniqueSubcommandNameException(string? message, string subcommandName)
-        : this(message, subcommandName, null) { }
+        : this(message ?? GetDefaultMessage(subcommandName), subcommandName, null) { }
 
     public OnlyUniqueSubcommandNameException(
         string? message,
@@ -53,9 +54,11 @@ public class OnlyUniqueSubcommandNameException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(string subcommandName)
+    private static string GetDefaultMessage(string? subcommandName = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(subcommandName, nameof(subcommandName));
-        return $"Subcommand name '{subcommandName}' is already in use.";
+        if (!string.IsNullOrEmpty(subcommandName))
+            subcommandName = $" '{subcommandName}'";
+
+        return $"Subcommand name{subcommandName} is already in use.";
     }
 }

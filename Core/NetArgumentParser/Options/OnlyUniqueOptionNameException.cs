@@ -7,16 +7,17 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class OnlyUniqueOptionNameException : Exception
 {
-    public OnlyUniqueOptionNameException() { }
+    public OnlyUniqueOptionNameException()
+        : this(GetDefaultMessage()) { }
 
     public OnlyUniqueOptionNameException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public OnlyUniqueOptionNameException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public OnlyUniqueOptionNameException(string? message, string optionName)
-        : this(message, optionName, null) { }
+        : this(message ?? GetDefaultMessage(optionName), optionName, null) { }
 
     public OnlyUniqueOptionNameException(
         string? message,
@@ -53,9 +54,11 @@ public class OnlyUniqueOptionNameException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(string optionName)
+    private static string GetDefaultMessage(string? optionName = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(optionName, nameof(optionName));
-        return $"Option name '{optionName}' is already in use.";
+        if (!string.IsNullOrEmpty(optionName))
+            optionName = $" '{optionName}'";
+
+        return $"Option name{optionName} is already in use.";
     }
 }

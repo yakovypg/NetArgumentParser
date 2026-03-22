@@ -8,16 +8,17 @@ namespace NetArgumentParser.Generators;
 [Serializable]
 public class NullSubcommandConfigException : Exception
 {
-    public NullSubcommandConfigException() { }
+    public NullSubcommandConfigException()
+        : this(GetDefaultMessage()) { }
 
     public NullSubcommandConfigException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public NullSubcommandConfigException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public NullSubcommandConfigException(string? message, PropertyInfo subcommandConfig)
-        : this(message, subcommandConfig, null) { }
+        : this(message ?? GetDefaultMessage(subcommandConfig), subcommandConfig, null) { }
 
     public NullSubcommandConfigException(
         string? message,
@@ -57,9 +58,12 @@ public class NullSubcommandConfigException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(PropertyInfo subcommandConfig)
+    private static string GetDefaultMessage(PropertyInfo? subcommandConfig = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(subcommandConfig, nameof(subcommandConfig));
-        return $"Subcommand configuration '{subcommandConfig.Name}' is null.";
+        string subcommandConfigPresenter = subcommandConfig is not null
+            ? $" '{subcommandConfig.Name}'"
+            : string.Empty;
+
+        return $"Subcommand configuration{subcommandConfigPresenter} is null.";
     }
 }

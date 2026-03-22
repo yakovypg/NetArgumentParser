@@ -7,19 +7,20 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class MutuallyExclusiveOptionsFoundException : Exception
 {
-    public MutuallyExclusiveOptionsFoundException() { }
+    public MutuallyExclusiveOptionsFoundException()
+        : this(GetDefaultMessage()) { }
 
     public MutuallyExclusiveOptionsFoundException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public MutuallyExclusiveOptionsFoundException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public MutuallyExclusiveOptionsFoundException(
         string? message,
         ICommonOption newOption,
         ICommonOption existingOption)
-        : this(message, newOption, existingOption, null) { }
+        : this(message ?? GetDefaultMessage(newOption, existingOption), newOption, existingOption, null) { }
 
     public MutuallyExclusiveOptionsFoundException(
         string? message,
@@ -64,11 +65,18 @@ public class MutuallyExclusiveOptionsFoundException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(ICommonOption newOption, ICommonOption existingOption)
+    private static string GetDefaultMessage(
+        ICommonOption? newOption = null,
+        ICommonOption? existingOption = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(newOption, nameof(newOption));
-        ExtendedArgumentNullException.ThrowIfNull(existingOption, nameof(existingOption));
+        string newOptionPresenter = newOption is not null
+            ? $"Option '{newOption}'"
+            : "Some option";
 
-        return $"Option '{newOption}' not allowed with option '{existingOption}'.";
+        string existingOptionPresenter = existingOption is not null
+            ? $"option '{existingOption}'"
+            : "other option";
+
+        return $"{newOptionPresenter} not allowed with {existingOptionPresenter}.";
     }
 }

@@ -7,16 +7,17 @@ namespace NetArgumentParser.Subcommands;
 [Serializable]
 public class IncorrectSubcommandNameException : Exception
 {
-    public IncorrectSubcommandNameException() { }
+    public IncorrectSubcommandNameException()
+        : this(GetDefaultMessage()) { }
 
     public IncorrectSubcommandNameException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public IncorrectSubcommandNameException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public IncorrectSubcommandNameException(string? message, string subcommandName)
-        : this(message, subcommandName, null) { }
+        : this(message ?? GetDefaultMessage(subcommandName), subcommandName, null) { }
 
     public IncorrectSubcommandNameException(
         string? message,
@@ -53,9 +54,11 @@ public class IncorrectSubcommandNameException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(string subcommandName)
+    private static string GetDefaultMessage(string? subcommandName = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(subcommandName, nameof(subcommandName));
-        return $"Subcommand name '{subcommandName}' is not correct.";
+        if (!string.IsNullOrEmpty(subcommandName))
+            subcommandName = $" '{subcommandName}'";
+
+        return $"Subcommand name{subcommandName} is not correct.";
     }
 }

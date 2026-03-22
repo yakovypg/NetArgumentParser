@@ -7,16 +7,17 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class RequiredOptionNotSpecifiedException : Exception
 {
-    public RequiredOptionNotSpecifiedException() { }
+    public RequiredOptionNotSpecifiedException()
+        : this(GetDefaultMessage()) { }
 
     public RequiredOptionNotSpecifiedException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public RequiredOptionNotSpecifiedException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public RequiredOptionNotSpecifiedException(string? message, ICommonOption option)
-        : this(message, option, null) { }
+        : this(message ?? GetDefaultMessage(option), option, null) { }
 
     public RequiredOptionNotSpecifiedException(
         string? message,
@@ -53,9 +54,12 @@ public class RequiredOptionNotSpecifiedException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(ICommonOption option)
+    private static string GetDefaultMessage(ICommonOption? option = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
-        return $"Required option '{option}' not specified.";
+        string optionPresenter = option is not null
+            ? $" '{option}'"
+            : string.Empty;
+
+        return $"Required option{optionPresenter} not specified.";
     }
 }

@@ -8,16 +8,17 @@ namespace NetArgumentParser.Generators;
 [Serializable]
 public class CannotCreateOptionException : Exception
 {
-    public CannotCreateOptionException() { }
+    public CannotCreateOptionException()
+        : this(GetDefaultMessage()) { }
 
     public CannotCreateOptionException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public CannotCreateOptionException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public CannotCreateOptionException(string? message, PropertyInfo optionConfig)
-        : this(message, optionConfig, null) { }
+        : this(message ?? GetDefaultMessage(optionConfig), optionConfig, null) { }
 
     public CannotCreateOptionException(
         string? message,
@@ -54,9 +55,12 @@ public class CannotCreateOptionException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(PropertyInfo optionConfig)
+    private static string GetDefaultMessage(PropertyInfo? optionConfig = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(optionConfig, nameof(optionConfig));
-        return $"Cannot create option using '{optionConfig.Name}' configuration.";
+        const string message = "Cannot create option";
+
+        return optionConfig is not null
+            ? $"{message} using '{optionConfig.Name}' configuration."
+            : $"{message}.";
     }
 }

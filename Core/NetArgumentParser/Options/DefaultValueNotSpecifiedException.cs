@@ -7,16 +7,17 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class DefaultValueNotSpecifiedException : Exception
 {
-    public DefaultValueNotSpecifiedException() { }
+    public DefaultValueNotSpecifiedException()
+        : this(GetDefaultMessage()) { }
 
     public DefaultValueNotSpecifiedException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public DefaultValueNotSpecifiedException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public DefaultValueNotSpecifiedException(string? message, ICommonOption option)
-        : this(message, option, null) { }
+        : this(message ?? GetDefaultMessage(option), option, null) { }
 
     public DefaultValueNotSpecifiedException(
         string? message,
@@ -53,9 +54,12 @@ public class DefaultValueNotSpecifiedException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(ICommonOption option)
+    private static string GetDefaultMessage(ICommonOption? option = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
-        return $"Default value isn't specified for option '{option}'.";
+        string optionPresenter = option is not null
+            ? $" '{option}'"
+            : string.Empty;
+
+        return $"Default value isn't specified for option{optionPresenter}.";
     }
 }

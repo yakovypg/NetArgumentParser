@@ -7,10 +7,11 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class OptionSetNotBuiltException : Exception
 {
-    public OptionSetNotBuiltException() { }
+    public OptionSetNotBuiltException()
+        : this(GetDefaultMessage()) { }
 
     public OptionSetNotBuiltException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public OptionSetNotBuiltException(string? message, Exception? innerException)
         : base(message ?? GetDefaultMessage(), innerException) { }

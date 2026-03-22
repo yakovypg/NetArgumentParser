@@ -10,16 +10,17 @@ public class OptionValueNotRecognizedException : Exception
 {
     private readonly string[]? _optionValue;
 
-    public OptionValueNotRecognizedException() { }
+    public OptionValueNotRecognizedException()
+        : this(GetDefaultMessage()) { }
 
     public OptionValueNotRecognizedException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public OptionValueNotRecognizedException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public OptionValueNotRecognizedException(string? message, string[] optionValue)
-        : this(message, optionValue, null) { }
+        : this(message ?? GetDefaultMessage(optionValue), optionValue, null) { }
 
     public OptionValueNotRecognizedException(
         string? message,
@@ -56,11 +57,12 @@ public class OptionValueNotRecognizedException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(string[] optionValue)
+    private static string GetDefaultMessage(string[]? optionValue = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
+        string optionValuePresenter = optionValue is not null
+            ? $" '{string.Join(" ", optionValue)}'"
+            : string.Empty;
 
-        string value = string.Join(" ", optionValue);
-        return $"Option value '{value}' not recognized.";
+        return $"Option value{optionValuePresenter} not recognized.";
     }
 }
