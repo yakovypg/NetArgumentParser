@@ -159,7 +159,8 @@ public class ArgumentParser : ParserQuantum
         DynamicOptionInteractor.HandleDefaultValueBySuitableOptions(allOptions);
         ReuiredOptionVerifier.VerifyRequiredOptionsIsHandled(allOptions);
 
-        ResetOptionsHandledState();
+        ResetOptionsHandledState(true);
+        ResetSubcommandsHandledState(true);
 
         return new ParseArgumentsResult(handledOptions, handledSubcommands);
     }
