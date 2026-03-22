@@ -7,16 +7,17 @@ namespace NetArgumentParser.Converters;
 [Serializable]
 public class DefaultConverterNotFoundException : Exception
 {
-    public DefaultConverterNotFoundException() { }
+    public DefaultConverterNotFoundException()
+        : this(GetDefaultMessage()) { }
 
     public DefaultConverterNotFoundException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public DefaultConverterNotFoundException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public DefaultConverterNotFoundException(string? message, Type outputType)
-        : this(message, outputType, null) { }
+        : this(message ?? GetDefaultMessage(outputType), outputType, null) { }
 
     public DefaultConverterNotFoundException(
         string? message,
@@ -53,9 +54,12 @@ public class DefaultConverterNotFoundException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(Type outputType)
+    private static string GetDefaultMessage(Type? outputType = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(outputType, nameof(outputType));
-        return $"Default converter for type '{outputType.Name}' not found.";
+        string outputTypePresenter = outputType is not null
+            ? $" for type '{outputType.Name}'"
+            : string.Empty;
+
+        return $"Default converter{outputTypePresenter} not found.";
     }
 }

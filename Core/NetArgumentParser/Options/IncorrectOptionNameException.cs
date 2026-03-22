@@ -7,16 +7,17 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class IncorrectOptionNameException : Exception
 {
-    public IncorrectOptionNameException() { }
+    public IncorrectOptionNameException()
+        : this(GetDefaultMessage()) { }
 
     public IncorrectOptionNameException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public IncorrectOptionNameException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public IncorrectOptionNameException(string? message, string optionName)
-        : this(message, optionName, null) { }
+        : this(message ?? GetDefaultMessage(optionName), optionName, null) { }
 
     public IncorrectOptionNameException(
         string? message,
@@ -53,9 +54,11 @@ public class IncorrectOptionNameException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(string optionName)
+    private static string GetDefaultMessage(string? optionName = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(optionName, nameof(optionName));
-        return $"Option name '{optionName}' is not correct.";
+        if (!string.IsNullOrEmpty(optionName))
+            optionName = $" {optionName}";
+
+        return $"Option name'{optionName}' is not correct.";
     }
 }

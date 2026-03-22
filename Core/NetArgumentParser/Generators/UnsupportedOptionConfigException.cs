@@ -8,16 +8,17 @@ namespace NetArgumentParser.Generators;
 [Serializable]
 public class UnsupportedOptionConfigException : Exception
 {
-    public UnsupportedOptionConfigException() { }
+    public UnsupportedOptionConfigException()
+        : this(GetDefaultMessage()) { }
 
     public UnsupportedOptionConfigException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public UnsupportedOptionConfigException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public UnsupportedOptionConfigException(string? message, PropertyInfo optionConfig)
-        : this(message, optionConfig, null) { }
+        : this(message ?? GetDefaultMessage(optionConfig), optionConfig, null) { }
 
     public UnsupportedOptionConfigException(
         string? message,
@@ -54,9 +55,12 @@ public class UnsupportedOptionConfigException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(PropertyInfo optionConfig)
+    private static string GetDefaultMessage(PropertyInfo? optionConfig = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(optionConfig, nameof(optionConfig));
-        return $"Option configuration '{optionConfig.Name}' isn't supported.";
+        string optionConfigPresenter = optionConfig is not null
+            ? $" '{optionConfig.Name}'"
+            : string.Empty;
+
+        return $"Option configuration{optionConfigPresenter} isn't supported.";
     }
 }

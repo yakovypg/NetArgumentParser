@@ -8,16 +8,17 @@ namespace NetArgumentParser.Generators;
 [Serializable]
 public class UnsupportedParserConfigException : Exception
 {
-    public UnsupportedParserConfigException() { }
+    public UnsupportedParserConfigException()
+        : this(GetDefaultMessage()) { }
 
     public UnsupportedParserConfigException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public UnsupportedParserConfigException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public UnsupportedParserConfigException(string? message, object config)
-        : this(message, config, null) { }
+        : this(message ?? GetDefaultMessage(config), config, null) { }
 
     public UnsupportedParserConfigException(
         string? message,
@@ -54,14 +55,19 @@ public class UnsupportedParserConfigException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(object config)
+    private static string GetDefaultMessage(object? config = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(config, nameof(config));
-
-        string? configObjectName = config.GetType().FullName;
+        string? configObjectName = config?.GetType().FullName;
         string? necessaryAttributeName = typeof(ParserConfigAttribute).FullName;
 
-        return $"Config '{configObjectName}' isn't supported. " +
-               $"It must be marked by {necessaryAttributeName} attribute.";
+        string configObjectNamePresenter = !string.IsNullOrEmpty(configObjectName)
+            ? $" '{configObjectName}'"
+            : string.Empty;
+
+        string message = $"Config{configObjectNamePresenter} isn't supported.";
+
+        return !string.IsNullOrEmpty(necessaryAttributeName)
+            ? $"{message} It must be marked by {necessaryAttributeName} attribute."
+            : message;
     }
 }

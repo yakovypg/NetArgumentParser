@@ -11,19 +11,24 @@ public class OptionValueNotSatisfyChoicesException : Exception
     private readonly string[]? _optionValue;
     private readonly string[]? _allowedValues;
 
-    public OptionValueNotSatisfyChoicesException() { }
+    public OptionValueNotSatisfyChoicesException()
+        : this(GetDefaultMessage()) { }
 
     public OptionValueNotSatisfyChoicesException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public OptionValueNotSatisfyChoicesException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public OptionValueNotSatisfyChoicesException(
         string? message,
         string[] optionValue,
         string[] allowedValues)
-        : this(message, optionValue, allowedValues, null) { }
+        : this(
+            message ?? GetDefaultMessage(optionValue, allowedValues),
+            optionValue,
+            allowedValues,
+            null) { }
 
     public OptionValueNotSatisfyChoicesException(
         string? message,
@@ -69,15 +74,20 @@ public class OptionValueNotSatisfyChoicesException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(string[] optionValue, string[] allowedValues)
+    private static string GetDefaultMessage(string[]? optionValue = null, string[]? allowedValues = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
-        ExtendedArgumentNullException.ThrowIfNull(allowedValues, nameof(allowedValues));
+        string optionValuePresenter = optionValue is not null
+            ? $" '{string.Join(" ", optionValue)}'"
+            : string.Empty;
 
-        string optionValuePresenter = string.Join(", ", optionValue);
-        string allowedValuesPresenter = string.Join(", ", allowedValues);
+        string allowedValuesPresenter = allowedValues is not null
+            ? string.Join(", ", allowedValues)
+            : string.Empty;
 
-        return $"Option value '{optionValuePresenter}' not allowed. " +
-               "It must be one of {" + allowedValuesPresenter + "}.";
+        string message = $"Option value{optionValuePresenter} not allowed.";
+
+        return !string.IsNullOrEmpty(allowedValuesPresenter)
+            ? message + " It must be one of { " + allowedValuesPresenter + " }."
+            : message;
     }
 }

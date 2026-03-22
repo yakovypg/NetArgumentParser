@@ -7,16 +7,17 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class OptionAlreadyHandledException : Exception
 {
-    public OptionAlreadyHandledException() { }
+    public OptionAlreadyHandledException()
+        : this(GetDefaultMessage()) { }
 
     public OptionAlreadyHandledException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public OptionAlreadyHandledException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public OptionAlreadyHandledException(string? message, ICommonOption option)
-        : this(message, option, null) { }
+        : this(message ?? GetDefaultMessage(option), option, null) { }
 
     public OptionAlreadyHandledException(
         string? message,
@@ -53,9 +54,12 @@ public class OptionAlreadyHandledException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(ICommonOption option)
+    private static string GetDefaultMessage(ICommonOption? option = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
-        return $"Option '{option}' has already been handled.";
+        string optionPresenter = option is not null
+            ? $" '{option}'"
+            : string.Empty;
+
+        return $"Option{optionPresenter} has already been handled.";
     }
 }

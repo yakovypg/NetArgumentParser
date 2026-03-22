@@ -7,16 +7,17 @@ namespace NetArgumentParser.Subcommands;
 [Serializable]
 public class SubcommandAlreadyHandledException : Exception
 {
-    public SubcommandAlreadyHandledException() { }
+    public SubcommandAlreadyHandledException()
+        : this(GetDefaultMessage()) { }
 
     public SubcommandAlreadyHandledException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public SubcommandAlreadyHandledException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public SubcommandAlreadyHandledException(string? message, ISubcommand subcommand)
-        : this(message, subcommand, null) { }
+        : this(message ?? GetDefaultMessage(subcommand), subcommand, null) { }
 
     public SubcommandAlreadyHandledException(
         string? message,
@@ -53,9 +54,12 @@ public class SubcommandAlreadyHandledException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(ISubcommand subcommand)
+    private static string GetDefaultMessage(ISubcommand? subcommand = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(subcommand, nameof(subcommand));
-        return $"Subcommand '{subcommand}' has already been handled.";
+        string subcommandPresenter = subcommand is not null
+            ? $" '{subcommand}'"
+            : string.Empty;
+
+        return $"Subcommand{subcommandPresenter} has already been handled.";
     }
 }

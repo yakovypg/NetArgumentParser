@@ -8,16 +8,17 @@ namespace NetArgumentParser.Options.Context;
 [Serializable]
 public class ContextCaptureNotRecognizedException : Exception
 {
-    public ContextCaptureNotRecognizedException() { }
+    public ContextCaptureNotRecognizedException()
+        : this(GetDefaultMessage()) { }
 
     public ContextCaptureNotRecognizedException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public ContextCaptureNotRecognizedException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public ContextCaptureNotRecognizedException(string? message, double minValue, double maxValue)
-        : this(message, minValue, maxValue, null) { }
+        : this(message ?? GetDefaultMessage(minValue, maxValue), minValue, maxValue, null) { }
 
     public ContextCaptureNotRecognizedException(
         string? message,
@@ -60,8 +61,15 @@ public class ContextCaptureNotRecognizedException : Exception
         base.GetObjectData(info, context);
     }
 
+    private static string GetDefaultMessage(bool addDot = true)
+    {
+        const string message = "Failed to recognize context capture";
+        return addDot ? $"{message}." : message;
+    }
+
     private static string GetDefaultMessage(double minValue, double maxValue)
     {
-        return $"Failed to recognize context capture from '{(minValue, maxValue)}' tuple.";
+        string message = GetDefaultMessage(false);
+        return $"{message} from '{(minValue, maxValue)}' tuple.";
     }
 }

@@ -7,16 +7,17 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class ArgumentValueNotRecognizedException : Exception
 {
-    public ArgumentValueNotRecognizedException() { }
+    public ArgumentValueNotRecognizedException()
+        : this(GetDefaultMessage()) { }
 
     public ArgumentValueNotRecognizedException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public ArgumentValueNotRecognizedException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public ArgumentValueNotRecognizedException(string? message, string argument)
-        : this(message, argument, null) { }
+        : this(message ?? GetDefaultMessage(argument), argument, null) { }
 
     public ArgumentValueNotRecognizedException(
         string? message,
@@ -53,9 +54,11 @@ public class ArgumentValueNotRecognizedException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(string argument)
+    private static string GetDefaultMessage(string? argument = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(argument, nameof(argument));
-        return $"Value of the argument {argument} not recognized.";
+        if (!string.IsNullOrEmpty(argument))
+            argument = $" {argument}";
+
+        return $"Value of the argument{argument} not recognized.";
     }
 }

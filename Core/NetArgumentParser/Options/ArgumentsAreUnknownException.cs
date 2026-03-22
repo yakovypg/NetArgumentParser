@@ -10,16 +10,17 @@ public class ArgumentsAreUnknownException : Exception
 {
     private readonly string[]? _arguments;
 
-    public ArgumentsAreUnknownException() { }
+    public ArgumentsAreUnknownException()
+        : this(GetDefaultMessage()) { }
 
     public ArgumentsAreUnknownException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public ArgumentsAreUnknownException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public ArgumentsAreUnknownException(string? message, string[] arguments)
-        : this(message, arguments, null) { }
+        : this(message ?? GetDefaultMessage(arguments), arguments, null) { }
 
     public ArgumentsAreUnknownException(
         string? message,
@@ -56,11 +57,12 @@ public class ArgumentsAreUnknownException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(string[] arguments)
+    private static string GetDefaultMessage(string[]? arguments = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+        string argumentsPresenter = arguments is not null
+            ? $" {string.Join(", ", arguments)}"
+            : string.Empty;
 
-        string argumentsPresenter = string.Join(" ", arguments);
-        return $"Arguments {argumentsPresenter} are unknown.";
+        return $"Arguments{argumentsPresenter} are unknown.";
     }
 }

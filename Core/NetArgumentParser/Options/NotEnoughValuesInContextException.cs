@@ -10,26 +10,27 @@ public class NotEnoughValuesInContextException : Exception
 {
     private readonly string[]? _context;
 
-    public NotEnoughValuesInContextException() { }
+    public NotEnoughValuesInContextException()
+        : this(GetDefaultMessage()) { }
 
     public NotEnoughValuesInContextException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public NotEnoughValuesInContextException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public NotEnoughValuesInContextException(
         string? message,
         string[] context,
         int numberOfNecessaryValues)
-        : this(message, context, numberOfNecessaryValues, null) { }
+        : this(message ?? GetDefaultMessage(context), context, numberOfNecessaryValues, null) { }
 
     public NotEnoughValuesInContextException(
         string? message,
         string[] context,
         int numberOfNecessaryValues,
         Exception? innerException)
-        : base(message ?? GetDefaultMessage(), innerException)
+        : base(message ?? GetDefaultMessage(context), innerException)
     {
         ExtendedArgumentNullException.ThrowIfNull(context, nameof(context));
 
@@ -67,8 +68,12 @@ public class NotEnoughValuesInContextException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage()
+    private static string GetDefaultMessage(string[]? context = null)
     {
-        return "There are not enough values in the context.";
+        const string message = "There are not enough values in the context";
+
+        return context is not null
+            ? $"{message}: {string.Join(" ", context)}"
+            : $"{message}.";
     }
 }

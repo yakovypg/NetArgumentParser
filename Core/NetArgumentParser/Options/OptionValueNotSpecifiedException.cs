@@ -7,16 +7,17 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class OptionValueNotSpecifiedException : Exception
 {
-    public OptionValueNotSpecifiedException() { }
+    public OptionValueNotSpecifiedException()
+        : this(GetDefaultMessage()) { }
 
     public OptionValueNotSpecifiedException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public OptionValueNotSpecifiedException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public OptionValueNotSpecifiedException(string? message, string optionName)
-        : this(message, optionName, null) { }
+        : this(message ?? GetDefaultMessage(optionName), optionName, null) { }
 
     public OptionValueNotSpecifiedException(
         string? message,
@@ -53,9 +54,11 @@ public class OptionValueNotSpecifiedException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(string optionName)
+    private static string GetDefaultMessage(string? optionName = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(optionName, nameof(optionName));
-        return $"Value for option '{optionName}' is not specified.";
+        if (!string.IsNullOrEmpty(optionName))
+            optionName = $" '{optionName}'";
+
+        return $"Value for option{optionName} is not specified.";
     }
 }

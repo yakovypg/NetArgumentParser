@@ -7,10 +7,11 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class ChoicesAlreadyAddedToDescriptionException : Exception
 {
-    public ChoicesAlreadyAddedToDescriptionException() { }
+    public ChoicesAlreadyAddedToDescriptionException()
+        : this(GetDefaultMessage()) { }
 
     public ChoicesAlreadyAddedToDescriptionException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public ChoicesAlreadyAddedToDescriptionException(string? message, Exception? innerException)
         : base(message ?? GetDefaultMessage(), innerException) { }

@@ -10,16 +10,17 @@ public class OptionValueNotSatisfyRestrictionException : Exception
 {
     private readonly string[]? _optionValue;
 
-    public OptionValueNotSatisfyRestrictionException() { }
+    public OptionValueNotSatisfyRestrictionException()
+        : this(GetDefaultMessage()) { }
 
     public OptionValueNotSatisfyRestrictionException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public OptionValueNotSatisfyRestrictionException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public OptionValueNotSatisfyRestrictionException(string? message, string[] optionValue)
-        : this(message, optionValue, null) { }
+        : this(message ?? GetDefaultMessage(optionValue), optionValue, null) { }
 
     public OptionValueNotSatisfyRestrictionException(
         string? message,
@@ -56,11 +57,12 @@ public class OptionValueNotSatisfyRestrictionException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(string[] optionValue)
+    private static string GetDefaultMessage(string[]? optionValue = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(optionValue, nameof(optionValue));
+        string optionValuePresenter = optionValue is not null
+            ? $" '{string.Join(" ", optionValue)}'"
+            : string.Empty;
 
-        string value = string.Join(" ", optionValue);
-        return $"Option value '{value}' doesn't satisfy the restriction.";
+        return $"Option value{optionValuePresenter} doesn't satisfy the restriction.";
     }
 }

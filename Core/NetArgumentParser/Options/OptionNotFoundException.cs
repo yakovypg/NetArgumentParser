@@ -7,16 +7,17 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class OptionNotFoundException : Exception
 {
-    public OptionNotFoundException() { }
+    public OptionNotFoundException()
+        : this(GetDefaultMessage()) { }
 
     public OptionNotFoundException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public OptionNotFoundException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
     public OptionNotFoundException(string? message, string optionName)
-        : this(message, optionName, null) { }
+        : this(message ?? GetDefaultMessage(optionName), optionName, null) { }
 
     public OptionNotFoundException(
         string? message,
@@ -53,9 +54,11 @@ public class OptionNotFoundException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(string optionName)
+    private static string GetDefaultMessage(string? optionName = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(optionName, nameof(optionName));
-        return $"Option with name '{optionName}' not found.";
+        if (!string.IsNullOrEmpty(optionName))
+            optionName = $" '{optionName}'";
+
+        return $"Option with name{optionName} not found.";
     }
 }

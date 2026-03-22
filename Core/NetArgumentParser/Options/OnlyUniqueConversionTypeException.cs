@@ -7,16 +7,17 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class OnlyUniqueConversionTypeException : Exception
 {
-    public OnlyUniqueConversionTypeException() { }
+    public OnlyUniqueConversionTypeException()
+        : this(GetDefaultMessage()) { }
 
     public OnlyUniqueConversionTypeException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public OnlyUniqueConversionTypeException(string? message, Exception? innerException)
-        : base(message, innerException) { }
+        : base(message ?? GetDefaultMessage(), innerException) { }
 
-    public OnlyUniqueConversionTypeException(string? message, Type outputType)
-        : this(message, outputType, null) { }
+    public OnlyUniqueConversionTypeException(string? message, Type conversionType)
+        : this(message ?? GetDefaultMessage(conversionType), conversionType, null) { }
 
     public OnlyUniqueConversionTypeException(
         string? message,
@@ -53,9 +54,12 @@ public class OnlyUniqueConversionTypeException : Exception
         base.GetObjectData(info, context);
     }
 
-    private static string GetDefaultMessage(Type conversionType)
+    private static string GetDefaultMessage(Type? conversionType = null)
     {
-        ExtendedArgumentNullException.ThrowIfNull(conversionType, nameof(conversionType));
-        return $"Conversion type '{conversionType.Name}' is already in use.";
+        string conversionTypePresenter = conversionType is not null
+            ? $" '{conversionType.Name}'"
+            : string.Empty;
+
+        return $"Conversion type{conversionTypePresenter} is already in use.";
     }
 }

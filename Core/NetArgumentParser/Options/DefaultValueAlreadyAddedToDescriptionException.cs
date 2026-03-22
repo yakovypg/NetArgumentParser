@@ -7,10 +7,11 @@ namespace NetArgumentParser.Options;
 [Serializable]
 public class DefaultValueAlreadyAddedToDescriptionException : Exception
 {
-    public DefaultValueAlreadyAddedToDescriptionException() { }
+    public DefaultValueAlreadyAddedToDescriptionException()
+        : this(GetDefaultMessage()) { }
 
     public DefaultValueAlreadyAddedToDescriptionException(string? message)
-        : base(message) { }
+        : base(message ?? GetDefaultMessage()) { }
 
     public DefaultValueAlreadyAddedToDescriptionException(string? message, Exception? innerException)
         : base(message ?? GetDefaultMessage(), innerException) { }
