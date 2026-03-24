@@ -14,14 +14,13 @@
     <RepositoryUrl>https://github.com/yakovypg/NetArgumentParser</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <!--<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>-->
+    <!--<PackageLicenseFile>LICENSE</PackageLicenseFile>-->
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <RequireLicenseAcceptance>true</RequireLicenseAcceptance>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../LICENSE" Pack="true" PackagePath="" />
     <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
