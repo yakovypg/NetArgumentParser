@@ -185,6 +185,8 @@ var option = new ValueOption<int>("angle", "a",
     defaultValue: new DefaultOptionValue<int>(60));
 ```
 
+Note that the default value for options in subcommands is set only if the corresponding subcommand is handled.
+
 ### Value Restrictions
 You can specify a restriction for option values. For example, you can limit the value only positive numbers. Value restrictions is only available for value options.
 
@@ -218,6 +220,8 @@ var option = new ValueOption<int>("angle", "a",
     description: "angle by which you want to rotate the image",
     isRequired: true);
 ```
+
+Note that required options in subcommands are verified only if the corresponding subcommand is handled.
 
 ### Hidden Options And Aliases
 Sometimes you need to hide an option from being used when printing command-line help. For example, to gradually refuse a deprecated argument name without breaking backwards compatibility. You can make the option hidden as follows:
