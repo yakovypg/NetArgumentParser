@@ -1286,7 +1286,7 @@ public class ArgumentParserSubcommandTests
     }
 
     [Fact]
-    public void Parse_HelpnOption_ArgumentsParseResultIsCorrect()
+    public void Parse_HelpOption_ArgumentsParseResultIsCorrect()
     {
         const string subcommand1Name = "subcommand1";
         const string subcommand2Name = "subcommand2";
@@ -1795,6 +1795,114 @@ public class ArgumentParserSubcommandTests
         Assert.Equal(1, result.HandledOptions.Count);
         Assert.Equal(expectedFinalOption, result.HandledOptions.First());
 
+        Assert.Equal(1, result.HandledSubcommands.Count);
+        Assert.Equal(subcommand1, result.HandledSubcommands.First());
+    }
+
+    [Fact]
+    public void Parse_RequiredOptions_ArgumentsParseResultIsCorrect()
+    {
+        const string subcommand1Name = "subcommand1";
+        const string subcommand2Name = "subcommand2";
+
+        double angle = default;
+        double width = default;
+        StringSplitOptions splitOption = default;
+        List<string>? files = default;
+
+        var arguments = new string[]
+        {
+            "-v",
+            "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
+            subcommand1Name,
+            "--angle", "100.5",
+            "-f", "file1", "file2", "file3"
+        };
+
+        var options = new ICommonOption[]
+        {
+            new FlagOption(
+                "verbose",
+                "v",
+                isRequired: true),
+
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
+                isRequired: false,
+                afterValueParsingAction: t => splitOption = t),
+
+            new ValueOption<double>(
+                "width",
+                "w",
+                isRequired: false,
+                afterValueParsingAction: t => width = t)
+        };
+
+        var subcommand1Options = new ICommonOption[]
+        {
+            new ValueOption<double>(
+                "angle",
+                "a",
+                isRequired: true,
+                afterValueParsingAction: t => angle = t),
+
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
+                isRequired: false,
+                afterValueParsingAction: t => splitOption = t),
+
+            new MultipleValueOption<string>(
+                "files",
+                "f",
+                isRequired: true,
+                contextCapture: new ZeroOrMoreContextCapture(),
+                afterValueParsingAction: t => files = [..t])
+        };
+
+        var subcommand2Options = new ICommonOption[]
+        {
+            new FlagOption(
+                "verbose",
+                "v",
+                isRequired: true),
+
+            new ValueOption<double>(
+                "angle",
+                "a",
+                isRequired: false,
+                afterValueParsingAction: t => angle = t),
+
+            new EnumValueOption<StringSplitOptions>(
+                "split-option",
+                "s",
+                isRequired: true,
+                afterValueParsingAction: t => splitOption = t),
+
+            new MultipleValueOption<string>(
+                "files",
+                "f",
+                isRequired: true,
+                contextCapture: new ZeroOrMoreContextCapture(),
+                afterValueParsingAction: t => files = [..t])
+        };
+
+        var parser = new ArgumentParser()
+        {
+            UseDefaultHelpOption = false
+        };
+
+        Subcommand subcommand1 = parser.AddSubcommand(subcommand1Name, string.Empty);
+        subcommand1.AddOptions(subcommand1Options);
+
+        Subcommand subcommand2 = parser.AddSubcommand(subcommand2Name, string.Empty);
+        subcommand2.AddOptions(subcommand2Options);
+
+        parser.AddOptions(options);
+        ParseArgumentsResult result = parser.ParseKnownArguments(arguments, out _);
+
+        Assert.Equal(4, result.HandledOptions.Count);
         Assert.Equal(1, result.HandledSubcommands.Count);
         Assert.Equal(subcommand1, result.HandledSubcommands.First());
     }
