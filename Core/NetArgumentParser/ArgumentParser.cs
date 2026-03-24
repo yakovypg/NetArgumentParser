@@ -154,10 +154,11 @@ public class ArgumentParser : ParserQuantum
         argumentsVisitor.VisitArguments(adaptedArguments);
         extraArguments = visitorExtraArguments;
 
-        IList<ICommonOption> allOptions = GetAllOptions();
+        IEnumerable<ICommonOption> handledSubcommandOptions = handledSubcommands.SelectMany(t => t.Options);
+        IEnumerable<ICommonOption> postProcessingOptions = Options.Concat(handledSubcommandOptions);
 
-        DynamicOptionInteractor.HandleDefaultValueBySuitableOptions(allOptions);
-        ReuiredOptionVerifier.VerifyRequiredOptionsIsHandled(allOptions);
+        DynamicOptionInteractor.HandleDefaultValueBySuitableOptions(postProcessingOptions);
+        ReuiredOptionVerifier.VerifyRequiredOptionsIsHandled(postProcessingOptions);
 
         ResetOptionsHandledState(true);
         ResetSubcommandsHandledState(true);
