@@ -32,7 +32,7 @@ var parser = new ArgumentParser()
 
 var nameOption = new ValueOption<string>("name", "n", afterValueParsingAction: t => resultValues.Name = t)
 {
-    Converter = new ValueConverter<string>(t => t.ToUpper(CultureInfo.CurrentCulture))
+    Converter = new ValueConverter<string>(t => t.ToUpperInvariant())
 };
 
 var nickOption = new ValueOption<string>("nick", afterValueParsingAction: t => resultValues.Name = t);

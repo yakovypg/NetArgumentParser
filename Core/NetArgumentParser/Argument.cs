@@ -12,7 +12,7 @@ namespace NetArgumentParser;
 
 public class Argument
 {
-    private const StringComparison _defaultStringComparison = StringComparison.CurrentCulture;
+    private const StringComparison _defaultStringComparison = StringComparison.Ordinal;
 
     public Argument(string argument, bool recognizeSlashAsOption = false)
     {

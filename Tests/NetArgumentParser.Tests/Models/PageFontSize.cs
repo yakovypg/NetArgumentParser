@@ -31,8 +31,8 @@ internal readonly struct PageFontSize : IEquatable<PageFontSize>
                 nameof(data));
         }
 
-        int pageNumber = int.Parse(parts[0], CultureInfo.CurrentCulture);
-        double fontSize = double.Parse(parts[1], CultureInfo.CurrentCulture);
+        int pageNumber = int.Parse(parts[0], CultureInfo.InvariantCulture);
+        double fontSize = double.Parse(parts[1], CultureInfo.InvariantCulture);
 
         return new PageFontSize(pageNumber, fontSize);
     }

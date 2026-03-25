@@ -154,7 +154,7 @@ public class OptionValueRestrictionParser
     {
         ExtendedArgumentException.ThrowIfNullOrWhiteSpace(data, nameof(data));
 
-        LogicalOperator? result = data.ToUpper(CultureInfo.CurrentCulture) switch
+        LogicalOperator? result = data.ToUpperInvariant() switch
         {
             "AND" or "&&" or "&" => LogicalOperator.And,
             "OR" or "||" or "|" => LogicalOperator.Or,
@@ -172,7 +172,7 @@ public class OptionValueRestrictionParser
         ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
         DefaultExceptions.ThrowIfNotEqual(parameters.Length, 1, nameof(parameters.Length));
 
-        double rhs = double.Parse(parameters[0], CultureInfo.CurrentCulture);
+        double rhs = double.Parse(parameters[0], CultureInfo.InvariantCulture);
         return value => value is null || compareFunc(value, rhs);
     }
 
@@ -217,8 +217,8 @@ public class OptionValueRestrictionParser
         ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
         DefaultExceptions.ThrowIfNotEqual(parameters.Length, 2, nameof(parameters.Length));
 
-        dynamic minValue = double.Parse(parameters[0], CultureInfo.CurrentCulture);
-        dynamic maxValue = double.Parse(parameters[1], CultureInfo.CurrentCulture);
+        dynamic minValue = double.Parse(parameters[0], CultureInfo.InvariantCulture);
+        dynamic maxValue = double.Parse(parameters[1], CultureInfo.InvariantCulture);
 
         return value => value is null || (value >= minValue && value <= maxValue);
     }
@@ -294,7 +294,7 @@ public class OptionValueRestrictionParser
         ExtendedArgumentNullException.ThrowIfNull(parameters, nameof(parameters));
         DefaultExceptions.ThrowIfNotEqual(parameters.Length, 1, nameof(parameters.Length));
 
-        dynamic maxFileSizeInBytes = long.Parse(parameters[0], CultureInfo.CurrentCulture);
+        dynamic maxFileSizeInBytes = long.Parse(parameters[0], CultureInfo.InvariantCulture);
 
         return value =>
         {
@@ -324,11 +324,11 @@ public class OptionValueRestrictionParser
         {
             const string periodPrefix = ".";
 
-            string extension = t.StartsWith(periodPrefix, StringComparison.CurrentCulture)
+            string extension = t.StartsWith(periodPrefix, StringComparison.Ordinal)
                 ? t
                 : $"{periodPrefix}{t}";
 
-            return extension.ToUpper(CultureInfo.CurrentCulture);
+            return extension.ToUpperInvariant();
         });
 
         return value =>
@@ -340,7 +340,7 @@ public class OptionValueRestrictionParser
             {
                 string fileExtension = Path
                     .GetExtension(filePath)
-                    .ToUpper(CultureInfo.CurrentCulture);
+                    .ToUpperInvariant();
 
                 return allowedExtensions.Contains(fileExtension);
             }
@@ -394,7 +394,7 @@ public class OptionValueRestrictionParser
         string name = shouldNegatePredicate ? data[0].Substring(1) : data[0];
         string[] parameters = [.. data.Skip(1)];
 
-        Predicate<T> predicate = name.ToUpper(CultureInfo.CurrentCulture) switch
+        Predicate<T> predicate = name.ToUpperInvariant() switch
         {
             "EQUAL" or "==" or "=" => ParseEqualPredicate<T>(parameters),
             "NOTEQUAL" or "!=" or "<>" => ParseNotEqualPredicate<T>(parameters),

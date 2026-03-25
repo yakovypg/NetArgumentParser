@@ -54,7 +54,7 @@ public class ArgumentParserSubcommandTests
             "--date", dateTimeValue,
             "-m", leftMargin, topMargin, rightMargin, bottomMargin,
             expectedExtraArguments[4],
-            "-a", angleValue.ToString(CultureInfo.CurrentCulture),
+            "-a", angleValue.ToString(CultureInfo.InvariantCulture),
             expectedExtraArguments[5]
         };
 
@@ -127,14 +127,14 @@ public class ArgumentParserSubcommandTests
         _ = parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         var expectedMargin = new Margin(
-            int.Parse(leftMargin, CultureInfo.CurrentCulture),
-            int.Parse(topMargin, CultureInfo.CurrentCulture),
-            int.Parse(rightMargin, CultureInfo.CurrentCulture),
-            int.Parse(bottomMargin, CultureInfo.CurrentCulture));
+            int.Parse(leftMargin, CultureInfo.InvariantCulture),
+            int.Parse(topMargin, CultureInfo.InvariantCulture),
+            int.Parse(rightMargin, CultureInfo.InvariantCulture),
+            int.Parse(bottomMargin, CultureInfo.InvariantCulture));
 
         Assert.True(savaLog);
         Assert.Equal(expectedSplitOptions, splitOption);
-        Assert.Equal(DateTime.Parse(dateTimeValue, CultureInfo.CurrentCulture), recievedDateTime);
+        Assert.Equal(DateTime.Parse(dateTimeValue, CultureInfo.InvariantCulture), recievedDateTime);
         Assert.Equal(expectedMargin, margin);
         Assert.Equal(expectedAngle, angle);
 
@@ -176,14 +176,14 @@ public class ArgumentParserSubcommandTests
         {
             expectedExtraArguments[0],
             expectedExtraArguments[1],
-            "-A", angleValue.ToString(CultureInfo.CurrentCulture),
+            "-A", angleValue.ToString(CultureInfo.InvariantCulture),
             expectedExtraArguments[2],
             subcommand2Name,
             expectedExtraArguments[3],
-            "-W", widthValue.ToString(CultureInfo.CurrentCulture),
+            "-W", widthValue.ToString(CultureInfo.InvariantCulture),
             subsubcommand2Name,
             expectedExtraArguments[4],
-            "-H", heightValue.ToString(CultureInfo.CurrentCulture),
+            "-H", heightValue.ToString(CultureInfo.InvariantCulture),
             expectedExtraArguments[5]
         };
 
@@ -356,17 +356,17 @@ public class ArgumentParserSubcommandTests
         {
             expectedExtraArguments[0],
             expectedExtraArguments[1],
-            "-A", angleValue.ToString(CultureInfo.CurrentCulture),
+            "-A", angleValue.ToString(CultureInfo.InvariantCulture),
             expectedExtraArguments[2],
             subcommand2Name,
             expectedExtraArguments[3],
-            "-W", widthValue.ToString(CultureInfo.CurrentCulture),
+            "-W", widthValue.ToString(CultureInfo.InvariantCulture),
             subsubcommand3Name,
             expectedExtraArguments[4],
-            "-H", heightValue.ToString(CultureInfo.CurrentCulture),
+            "-H", heightValue.ToString(CultureInfo.InvariantCulture),
             expectedExtraArguments[5],
             subsubsubcommand1Name,
-            "-O", opacityValue.ToString(CultureInfo.CurrentCulture),
+            "-O", opacityValue.ToString(CultureInfo.InvariantCulture),
             expectedExtraArguments[6]
         };
 
@@ -987,7 +987,7 @@ public class ArgumentParserSubcommandTests
             subcommand1Name,
             "--angle", "100.5",
             subcommand2Name,
-            "--final", expectedfinalOptionValue.ToString(CultureInfo.CurrentCulture),
+            "--final", expectedfinalOptionValue.ToString(CultureInfo.InvariantCulture),
             "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
@@ -1639,7 +1639,7 @@ public class ArgumentParserSubcommandTests
             subcommand1Name,
             "--angle", "100.5",
             subcommand2Name,
-            "--final", expectedFinalOptionValue.ToString(CultureInfo.CurrentCulture),
+            "--final", expectedFinalOptionValue.ToString(CultureInfo.InvariantCulture),
             "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             subcommand3Name,
             "--final", "123",
@@ -1938,14 +1938,14 @@ public class ArgumentParserSubcommandTests
         {
             extraArguments[0],
             extraArguments[1],
-            "-A", angleValue.ToString(CultureInfo.CurrentCulture),
+            "-A", angleValue.ToString(CultureInfo.InvariantCulture),
             extraArguments[2],
             subcommand2Name,
             extraArguments[3],
-            "-W", widthValue.ToString(CultureInfo.CurrentCulture),
+            "-W", widthValue.ToString(CultureInfo.InvariantCulture),
             subsubcommand2Name,
             extraArguments[4],
-            "-H", heightValue.ToString(CultureInfo.CurrentCulture),
+            "-H", heightValue.ToString(CultureInfo.InvariantCulture),
             extraArguments[5]
         };
 

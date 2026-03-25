@@ -137,7 +137,7 @@ public class MultipleValueOption<T> : ValueOption<IList<T>>
 
             return choices.Any(t =>
             {
-                var stringComparer = new StringEqualityComparer(StringComparison.OrdinalIgnoreCase);
+                var stringComparer = new StringEqualityComparer(StringComparison.CurrentCultureIgnoreCase);
                 return enumerableComparer.Invoke(t, castedValue!, stringComparer);
             });
         }

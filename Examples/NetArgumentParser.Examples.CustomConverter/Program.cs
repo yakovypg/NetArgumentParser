@@ -1,14 +1,13 @@
 using System;
-using System.Globalization;
 using NetArgumentParser;
 using NetArgumentParser.Converters;
 using NetArgumentParser.Options;
 
 var toUpperStringConverter = new ValueConverter<string>(
-    t => t.ToUpper(CultureInfo.CurrentCulture));
+    t => t.ToUpperInvariant());
 
 var toLowerStringConverter = new ValueConverter<string>(
-    t => t.ToLower(CultureInfo.CurrentCulture));
+    t => t.ToUpperInvariant());
 
 string firstName = string.Empty;
 string secondName = string.Empty;

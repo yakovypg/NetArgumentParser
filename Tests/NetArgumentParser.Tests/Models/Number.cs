@@ -67,6 +67,6 @@ internal readonly struct Number : IEquatable<Number>
 
     public override string ToString()
     {
-        return Value.ToString(CultureInfo.CurrentCulture);
+        return Value.ToString(CultureInfo.InvariantCulture);
     }
 }
