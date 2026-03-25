@@ -387,7 +387,7 @@ public class ParserGeneratorTests
         [
             ParseSpecificParserGeneratorConfig.ComplexSubcommandName,
             $"--{ComplexParserGeneratorConfig.AngleLongName}",
-            expectedAngle.ToString(CultureInfo.CurrentCulture),
+            expectedAngle.ToString(CultureInfo.InvariantCulture),
             $"--{ComplexParserGeneratorConfig.VerbosityLevelLongName}",
             $"-{ComplexParserGeneratorConfig.MarginShortName}",
             expectedMargin.ToString(),

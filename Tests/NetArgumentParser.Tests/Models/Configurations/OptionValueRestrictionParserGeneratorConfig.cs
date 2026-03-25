@@ -104,7 +104,7 @@ internal partial class OptionValueRestrictionParserGeneratorConfig
 
         try
         {
-            string extension = Path.GetExtension(t).ToUpper(CultureInfo.InvariantCulture);
+            string extension = Path.GetExtension(t).ToUpperInvariant();
             return allowedExtensions.Contains(extension);
         }
         catch

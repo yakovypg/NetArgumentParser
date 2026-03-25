@@ -190,20 +190,20 @@ public class ArgumentParserTests
         _ = parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         Assert.Equal(bool.Parse(boolValue), recievedBool);
-        Assert.Equal(byte.Parse(byteValue, CultureInfo.CurrentCulture), recievedByte);
+        Assert.Equal(byte.Parse(byteValue, CultureInfo.InvariantCulture), recievedByte);
         Assert.Equal(char.Parse(charValue), recievedChar);
-        Assert.Equal(DateTime.Parse(dateTimeValue, CultureInfo.CurrentCulture), recievedDateTime);
-        Assert.Equal(decimal.Parse(decimalValue, CultureInfo.CurrentCulture), recievedDecimal);
-        Assert.Equal(double.Parse(doubleValue, CultureInfo.CurrentCulture), recievedDouble);
-        Assert.Equal(short.Parse(shortValue, CultureInfo.CurrentCulture), recievedShort);
-        Assert.Equal(int.Parse(intValue, CultureInfo.CurrentCulture), recievedInt);
-        Assert.Equal(long.Parse(longValue, CultureInfo.CurrentCulture), recievedLong);
-        Assert.Equal(sbyte.Parse(sbyteValue, CultureInfo.CurrentCulture), recievedSByte);
-        Assert.Equal(float.Parse(floatValue, CultureInfo.CurrentCulture), recievedFloat);
+        Assert.Equal(DateTime.Parse(dateTimeValue, CultureInfo.InvariantCulture), recievedDateTime);
+        Assert.Equal(decimal.Parse(decimalValue, CultureInfo.InvariantCulture), recievedDecimal);
+        Assert.Equal(double.Parse(doubleValue, CultureInfo.InvariantCulture), recievedDouble);
+        Assert.Equal(short.Parse(shortValue, CultureInfo.InvariantCulture), recievedShort);
+        Assert.Equal(int.Parse(intValue, CultureInfo.InvariantCulture), recievedInt);
+        Assert.Equal(long.Parse(longValue, CultureInfo.InvariantCulture), recievedLong);
+        Assert.Equal(sbyte.Parse(sbyteValue, CultureInfo.InvariantCulture), recievedSByte);
+        Assert.Equal(float.Parse(floatValue, CultureInfo.InvariantCulture), recievedFloat);
         Assert.Equal(stringValue, recievedString);
-        Assert.Equal(ushort.Parse(ushortValue, CultureInfo.CurrentCulture), recievedUShort);
-        Assert.Equal(uint.Parse(uintValue, CultureInfo.CurrentCulture), recievedUInt);
-        Assert.Equal(ulong.Parse(ulongValue, CultureInfo.CurrentCulture), recievedULong);
+        Assert.Equal(ushort.Parse(ushortValue, CultureInfo.InvariantCulture), recievedUShort);
+        Assert.Equal(uint.Parse(uintValue, CultureInfo.InvariantCulture), recievedUInt);
+        Assert.Equal(ulong.Parse(ulongValue, CultureInfo.InvariantCulture), recievedULong);
 
         Assert.Empty(extraArguments);
     }
@@ -264,14 +264,14 @@ public class ArgumentParserTests
         _ = parser.ParseKnownArguments(arguments, out IList<string> extraArguments);
 
         var expectedMargin = new Margin(
-            int.Parse(leftMargin, CultureInfo.CurrentCulture),
-            int.Parse(topMargin, CultureInfo.CurrentCulture),
-            int.Parse(rightMargin, CultureInfo.CurrentCulture),
-            int.Parse(bottomMargin, CultureInfo.CurrentCulture));
+            int.Parse(leftMargin, CultureInfo.InvariantCulture),
+            int.Parse(topMargin, CultureInfo.InvariantCulture),
+            int.Parse(rightMargin, CultureInfo.InvariantCulture),
+            int.Parse(bottomMargin, CultureInfo.InvariantCulture));
 
         var expectedPoint = new Point(
-            double.Parse(pointX, CultureInfo.CurrentCulture),
-            double.Parse(pointY, CultureInfo.CurrentCulture));
+            double.Parse(pointX, CultureInfo.InvariantCulture),
+            double.Parse(pointY, CultureInfo.InvariantCulture));
 
         List<string> expectedFiles = [file1, file2, file3];
 
@@ -302,7 +302,7 @@ public class ArgumentParserTests
         var arguments = new string[]
         {
             "-m", $"{leftMargin},{topMargin},{rightMargin},{bottomMargin}",
-            "-a", inputAngle.ToString(CultureInfo.CurrentCulture),
+            "-a", inputAngle.ToString(CultureInfo.InvariantCulture),
             "-p", $"({pointX};{pointY})"
         };
 
@@ -332,7 +332,7 @@ public class ArgumentParserTests
             }),
 
             new ValueConverter<int>(
-                t => Math.Abs(int.Parse(t, CultureInfo.CurrentCulture)))
+                t => Math.Abs(int.Parse(t, CultureInfo.InvariantCulture)))
         };
 
         var parser = new ArgumentParser()
@@ -488,7 +488,7 @@ public class ArgumentParserTests
         var arguments = new string[]
         {
             "-n", expectedName,
-            "-w", expectedWidth.ToString(CultureInfo.CurrentCulture)
+            "-w", expectedWidth.ToString(CultureInfo.InvariantCulture)
         };
 
         var options = new ICommonOption[]
@@ -1272,7 +1272,7 @@ public class ArgumentParserTests
 
         var arguments = new string[]
         {
-            "-A", expectedAngle.ToString(CultureInfo.CurrentCulture),
+            "-A", expectedAngle.ToString(CultureInfo.InvariantCulture),
             "--binding", expectedBindMode.ToString()
         };
 
@@ -1531,7 +1531,7 @@ public class ArgumentParserTests
         var arguments = new string[]
         {
             "/l",
-            "/W", expectedWidth.ToString(CultureInfo.CurrentCulture),
+            "/W", expectedWidth.ToString(CultureInfo.InvariantCulture),
             "/Split", expectedSplitOption.ToString(),
             "--files", file1, file2, file3, file4
         };
@@ -2005,7 +2005,7 @@ public class ArgumentParserTests
         {
             "-v",
             "--angle", "100.5",
-            "--final", expectedFinalOptionValue.ToString(CultureInfo.CurrentCulture),
+            "--final", expectedFinalOptionValue.ToString(CultureInfo.InvariantCulture),
             "-s", StringSplitOptions.RemoveEmptyEntries.ToString(),
             "-f", "file1", "file2", "file3"
         };
@@ -2287,7 +2287,7 @@ public class ArgumentParserTests
             longName: "abs-angle")
         {
             Converter = new ValueConverter<double>(
-                t => Math.Abs(double.Parse(t, CultureInfo.CurrentCulture)))
+                t => Math.Abs(double.Parse(t, CultureInfo.InvariantCulture)))
         };
 
         var usedOptions = new ICommonOption[]
@@ -2457,7 +2457,7 @@ public class ArgumentParserTests
             afterValueParsingAction: t => absAngle = t)
         {
             Converter = new ValueConverter<double>(
-                t => Math.Abs(double.Parse(t, CultureInfo.CurrentCulture)))
+                t => Math.Abs(double.Parse(t, CultureInfo.InvariantCulture)))
         };
 
         var options = new ICommonOption[]

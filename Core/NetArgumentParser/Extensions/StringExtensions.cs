@@ -96,11 +96,14 @@ internal static class StringExtensions
         return RemoveLineBreakFromEnd(text, Environment.NewLine);
     }
 
-    internal static string RemoveLineBreakFromEnd(this string text, string lineBreak)
+    internal static string RemoveLineBreakFromEnd(
+        this string text,
+        string lineBreak,
+        StringComparison comparisonType = _defaultComparisonType)
     {
         ExtendedArgumentNullException.ThrowIfNull(text, nameof(text));
 
-        while (text.EndsWith(lineBreak, StringComparison.Ordinal))
+        while (text.EndsWith(lineBreak, comparisonType))
         {
             int lineBreakLength = lineBreak.Length;
             text = text.Remove(text.Length - lineBreakLength);

@@ -326,7 +326,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         string prefferedName = GetPrefferedName();
 
         char[] transformedName = prefferedName
-            .Select(t => char.IsLetter(t) ? char.ToUpper(t, CultureInfo.CurrentCulture) : '_')
+            .Select(t => char.IsLetter(t) ? char.ToUpperInvariant(t) : '_')
             .ToArray();
 
         return new string(transformedName);
@@ -393,7 +393,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         if (IgnoreCaseInChoices && typeof(T) == typeof(string))
         {
             IEnumerable<string> choices = _choices.Cast<string>();
-            StringEqualityComparer comparer = new(StringComparison.OrdinalIgnoreCase);
+            StringEqualityComparer comparer = new(StringComparison.CurrentCultureIgnoreCase);
 
             return choices.Contains(value as string, comparer);
         }
@@ -409,8 +409,8 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
             return true;
 
         StringComparison stringComparison = IgnoreCaseInChoices
-            ? StringComparison.OrdinalIgnoreCase
-            : StringComparison.Ordinal;
+            ? StringComparison.CurrentCultureIgnoreCase
+            : StringComparison.CurrentCulture;
 
         var comparer = new StringEqualityComparer(stringComparison);
 
