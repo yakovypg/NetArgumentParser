@@ -1,5 +1,5 @@
 # Printing Help
-Argument parser uses description generator to geterate command-line help. If you don't specify it, the default generator will be used.
+Argument parser uses description generator to geterate command-line help. If you do not specify it, the default generator will be used.
 
 ## Table of Contents
 *    [Add Program Information](#add-program-information)

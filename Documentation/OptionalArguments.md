@@ -36,7 +36,7 @@ parser.Parse(new string[] { "--verbose" });
 ### Help Option
 **Help option** is a special final flag option whose default action is to print the help and exit the program.
 
-This option is automatically added to the option set, so you don't have to add it explicitly:
+This option is automatically added to the option set, so you do not have to add it explicitly:
 
 ```cs
 var parser = new ArgumentParser();
@@ -75,7 +75,7 @@ parser.Parse(new string[] { "--help" });
 ### Version Option
 **Version option** is a special final flag option whose default action is to print the version information and exit the program.
 
-This option is automatically added to the option set, so you don't have to add it explicitly:
+This option is automatically added to the option set, so you do not have to add it explicitly:
 
 ```cs
 var parser = new ArgumentParser();
@@ -131,7 +131,7 @@ parser.Parse(new string[] { "-VVVV", "-V" });
 ```
 
 ## Value Options
-**Value options** are options with value. The value type can be anything. However, for types that don't have a default converter, you will need to add a [custom converter](CustomConverters.md).
+**Value options** are options with value. The value type can be anything. However, for types that do not have a default converter, you will need to add a [custom converter](CustomConverters.md).
 
 Here is an example of creating value option and using it in the parser:
 
@@ -150,7 +150,7 @@ parser.Parse(new string[] { "--angle", "45" });
 ```
 
 ### Multiple Value Options
-**Multiple value options** are options whose value is a list. The single value type can be anything. However, for types that don't have a default converter, you will need to add a [custom converter](CustomConverters.md).
+**Multiple value options** are options whose value is a list. The single value type can be anything. However, for types that do not have a default converter, you will need to add a [custom converter](CustomConverters.md).
 
 Here is an example of creating multiple value option and using it in the parser:
 
@@ -191,7 +191,7 @@ parser.Parse(new string[] { "--split-option", "TrimEntries" });
 ```
 
 ## Final Options
-**Final options** are options that are handled before all others. After the final option is handled, the remaining options (including final ones) aren't handled. Examples of final options are help option and version option.
+**Final options** are options that are handled before all others. After the final option is handled, the remaining options (including final ones) are not handled. Examples of final options are help option and version option.
 
 Note that options of any type can be final. To make an option final, you need to set the corresponding value to the `isFinal` parameter of the option constructor.
 

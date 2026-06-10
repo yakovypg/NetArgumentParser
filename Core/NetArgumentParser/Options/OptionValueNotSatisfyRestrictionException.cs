@@ -63,6 +63,6 @@ public class OptionValueNotSatisfyRestrictionException : Exception
             ? $" '{string.Join(" ", optionValue)}'"
             : string.Empty;
 
-        return $"Option value{optionValuePresenter} doesn't satisfy the restriction.";
+        return $"Option value{optionValuePresenter} does not satisfy the restriction.";
     }
 }

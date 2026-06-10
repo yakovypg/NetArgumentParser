@@ -64,7 +64,7 @@ public class UnsupportedParserConfigException : Exception
             ? $" '{configObjectName}'"
             : string.Empty;
 
-        string message = $"Config{configObjectNamePresenter} isn't supported.";
+        string message = $"Config{configObjectNamePresenter} is not supported.";
 
         return !string.IsNullOrEmpty(necessaryAttributeName)
             ? $"{message} It must be marked by {necessaryAttributeName} attribute."

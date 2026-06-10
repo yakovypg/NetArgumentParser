@@ -61,6 +61,6 @@ public class UnsupportedOptionConfigException : Exception
             ? $" '{optionConfig.Name}'"
             : string.Empty;
 
-        return $"Option configuration{optionConfigPresenter} isn't supported.";
+        return $"Option configuration{optionConfigPresenter} is not supported.";
     }
 }

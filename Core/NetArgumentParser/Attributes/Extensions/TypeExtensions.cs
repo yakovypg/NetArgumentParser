@@ -30,7 +30,7 @@ internal static class TypeExtensions
 
         if (instance is null)
         {
-            string message = $"{type.FullName} doesn't support creation of its instance.";
+            string message = $"{type.FullName} does not support creation of its instance.";
             throw new ArgumentException(message, nameof(type));
         }
 

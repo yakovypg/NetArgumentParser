@@ -41,7 +41,7 @@ string[] argumentsWithError =
     "file",
 ];
 
-parser.Parse(argumentsWithError); // Error: Option value 'file' doesn't satisfy the restriction
+parser.Parse(argumentsWithError); // Error: Option value 'file' does not satisfy the restriction
 */
 
 string parsedFiles = string.Join(" ", config.CustomSubcommand.Files);

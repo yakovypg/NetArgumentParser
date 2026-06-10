@@ -41,7 +41,7 @@ var parser = new ArgumentParser()
 **Double minus options** are options like `--version`. Support of double minus options is enabled by default and cannot be disabled.
 
 ### Slash Options
-**Slash options** are options like `/v` or `/version`. Support of slash options isn't enabled by default. You can enable it the same way as in the following example:
+**Slash options** are options like `/v` or `/version`. Support of slash options is not enabled by default. You can enable it the same way as in the following example:
 
 ```cs
 var parser = new ArgumentParser()
@@ -50,7 +50,7 @@ var parser = new ArgumentParser()
 };
 ```
 
-Please note that you won't be able to pass Linux-style absolute paths (e.g. `/home/user/Downloads/file.txt`) as arguments after doing this, as they will be handled as options. The same applies to other arguments starting with a slash.
+Please note that you wo not be able to pass Linux-style absolute paths (e.g. `/home/user/Downloads/file.txt`) as arguments after doing this, as they will be handled as options. The same applies to other arguments starting with a slash.
 
 ### Custom Option View
 You can change assignmnet character, slash option prefix and short named (short minus) option prefix. To do this, you need to specify a specific value in the corresponding property of class `SpecialCharacters`. You can do it the same way as in the following example:
@@ -69,7 +69,7 @@ This configuration will be applied to all existing parsers.
 **NetArgumentParser** supports many configurations for options.
 
 ### Names and Description
-You can specify long name, short name and description of the option. Please note that you can omit (pass empty string to do it) a long name or a short name, but you can't skip both of them.
+You can specify long name, short name and description of the option. Please note that you can omit (pass empty string to do it) a long name or a short name, but you ca not skip both of them.
 
 ```cs
 var verboseOption = new FlagOption("verbose", "v", "be verbose");
@@ -177,7 +177,7 @@ var firstNameOption = new ValueOption<string>(
 ```
 
 ### Default Value
-You can specify a default value for the option. In this case, if the input argument list doesn't contain a matching argument, the option will be assigned its default value. Default value is only available for value options.
+You can specify a default value for the option. In this case, if the input argument list does not contain a matching argument, the option will be assigned its default value. Default value is only available for value options.
 
 ```cs
 var option = new ValueOption<int>("angle", "a",
@@ -202,7 +202,7 @@ var enumValueOption = new EnumValueOption<StringSplitOptions>("options", "o",
     valueRestriction: new OptionValueRestriction<StringSplitOptions>(t => t != StringSplitOptions.None));
 ```
 
-You can also specify a message to be shown if the value doesn't satisfy the restriction:
+You can also specify a message to be shown if the value does not satisfy the restriction:
 
 ```cs
 var restriction = new OptionValueRestriction<int>(t => t > 0, "angle must be greater than zero");
@@ -213,7 +213,7 @@ var valueOption = new ValueOption<int>("angle", "a",
 ```
 
 ### Required Options
-You can indicate that the option is required. In this case, if the input argument list doesn't contain a matching argument, an exception will be thrown.
+You can indicate that the option is required. In this case, if the input argument list does not contain a matching argument, an exception will be thrown.
 
 ```cs
 var option = new ValueOption<int>("angle", "a",

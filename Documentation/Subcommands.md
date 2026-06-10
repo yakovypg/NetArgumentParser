@@ -40,7 +40,7 @@ subcommandGroup.AddOptions(new FlagOption("debug", afterHandlingAction: () => de
 ```
 
 ### Default Help Option
-By default, subcommands are supplied with standard help option. However, you can specify that help option isn't needed. To do this, you can set the appropriate value for property `UseDefaultHelpOption` or add your own help option.
+By default, subcommands are supplied with standard help option. However, you can specify that help option is not needed. To do this, you can set the appropriate value for property `UseDefaultHelpOption` or add your own help option.
 
 ```cs
 var parser = new ArgumentParser();
