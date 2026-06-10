@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="Core/NetArgumentParser/NetArgumentParser.csproj" />
+  </Folder>
+  <Folder Name="/Examples/">
+    <Project Path="Examples/NetArgumentParser.Examples.AddChoicesToDescription/NetArgumentParser.Examples.AddChoicesToDescription.csproj" />
+    <Project Path="Examples/NetArgumentParser.Examples.AllUseCases/NetArgumentParser.Examples.AllUseCases.csproj" />
+    <Project Path="Examples/NetArgumentParser.Examples.ComplexFurtherConfigureOption/NetArgumentParser.Examples.ComplexFurtherConfigureOption.csproj" />
+    <Project Path="Examples/NetArgumentParser.Examples.CustomConverter/NetArgumentParser.Examples.CustomConverter.csproj" />
+    <Project Path="Examples/NetArgumentParser.Examples.FurtherConfigureOption/NetArgumentParser.Examples.FurtherConfigureOption.csproj" />
+    <Project Path="Examples/NetArgumentParser.Examples.OptionalArguments/NetArgumentParser.Examples.OptionalArguments.csproj" />
+    <Project Path="Examples/NetArgumentParser.Examples.ParseArgumentsMultipleTimes/NetArgumentParser.Examples.ParseArgumentsMultipleTimes.csproj" />
+    <Project Path="Examples/NetArgumentParser.Examples.ParserGenerationUsingAttributes/NetArgumentParser.Examples.ParserGenerationUsingAttributes.csproj" />
+    <Project Path="Examples/NetArgumentParser.Examples.PrintingHelp/NetArgumentParser.Examples.PrintingHelp.csproj" />
+    <Project Path="Examples/NetArgumentParser.Examples.Simple/NetArgumentParser.Examples.Simple.csproj" />
+    <Project Path="Examples/NetArgumentParser.Examples.Subcommands/NetArgumentParser.Examples.Subcommands.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/NetArgumentParser.Tests/NetArgumentParser.Tests.csproj" />
+  </Folder>
+</Solution>
