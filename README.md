@@ -12,7 +12,7 @@
 </p>
 
 ## About
-**NetArgumentParser** is a cross-platform, free and open source library for parsing command-line options, arguments and subcommands. This library contains the main features of popular argument parsers such as `argparse`, as well as many of its own.
+**NetArgumentParser** is a cross-platform, free, open source library for parsing command-line options, arguments and subcommands. This library contains the main features of popular argument parsers such as `argparse`, as well as many of its own.
 
 **NetArgumentParser** supports many frameworks, so you can use it in most of your projects. Moreover, you can find clear examples of using this library [here](Examples).
 
@@ -23,8 +23,8 @@
 ## Table of contents
 *    [Main Features](#main-features)
 *    [Quick Start](#quick-start)
-     *    [Build Project](#build-project)
-     *    [Test Project](#test-project)
+     *    [Build From Source](#build-from-source)
+     *    [Run Tests](#run-tests)
      *    [Connect Project](#connect-project)
 *    [Documentation](#documentation)
 *    [Development](#development)
@@ -49,15 +49,15 @@ Many other features with examples you can find in [documentation](#documentation
 ## Quick Start
 To start working with the library you need to [connect](#connect-project) it to your project. If you are going to connect a library cloned from a repository, you may want to [build](#build-project) and [test](#test-project) it before doing so.
 
-### Build Project
-You can [build](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build) the library with the following command, which should be run from the root of the library project.
-```
+### Build From Source
+To [build](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build) the library, run the following command from the project root.
+```bash
 dotnet build
 ```
 
-### Test Project
-You can [test](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test) the library with the following command, which should be run from the root of the library project.
-```
+### Run Tests
+To [test](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test) the library, run the following command from the project root.
+```bash
 dotnet test
 ```
 
