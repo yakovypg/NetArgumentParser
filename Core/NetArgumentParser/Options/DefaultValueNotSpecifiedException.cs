@@ -60,6 +60,6 @@ public class DefaultValueNotSpecifiedException : Exception
             ? $" '{option}'"
             : string.Empty;
 
-        return $"Default value isn't specified for option{optionPresenter}.";
+        return $"Default value is not specified for option{optionPresenter}.";
     }
 }

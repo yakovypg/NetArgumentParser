@@ -247,7 +247,7 @@ public class ArgumentParser : ParserQuantum
         {
             if (!isFinalOptionHandled)
             {
-                // Don't handle subcommand here
+                // Do not handle subcommand here
                 // e.Subcommand.Handle();
                 handledSubcommands.Add(e.Subcommand);
             }

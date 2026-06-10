@@ -191,7 +191,7 @@ record PageFontSize(int PageNumber, int FontSize)
 All rules regarding the visibility level, adding converters, and using them in subcommands, as well as others, are the same as for the value converter.
 
 ### Enum Value Converter
-To create an enum value converter for type T, you don't need any special functions. You only need to pass a flag indicating whether the converter should ignore case in the input string.
+To create an enum value converter for type T, you do not need any special functions. You only need to pass a flag indicating whether the converter should ignore case in the input string.
 
 Here is an example of creating enum value converter and using it in the parser:
 

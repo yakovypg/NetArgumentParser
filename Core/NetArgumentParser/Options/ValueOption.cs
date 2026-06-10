@@ -90,7 +90,7 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
             && _choices.Count > 0
             && !_choices.Contains(defaultValue.Value))
         {
-            throw new ArgumentException("Choices don't contain default value.", nameof(defaultValue));
+            throw new ArgumentException("Choices do not contain default value.", nameof(defaultValue));
         }
 
         if (valueRestriction is not null)

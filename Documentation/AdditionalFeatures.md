@@ -34,7 +34,7 @@ parser.Parse(new string[] { "--offset", "-45", "--angle", "-1e-1" });
 ```
 
 ## Use `option=value` Syntax
-**NetArgumentParser** supports `option=value` syntax. Please note that this syntax doesn't combine with the ability to capture multiple values.
+**NetArgumentParser** supports `option=value` syntax. Please note that this syntax does not combine with the ability to capture multiple values.
 
 ```cs
 int? angle = null;
@@ -62,7 +62,7 @@ parser.ParseKnownArguments(
 ```
 
 ## Parse Known Arguments
-Sometimes a program may need to parse only part of the command-line arguments and pass the remaining arguments to another program. In this case, the `ParseKnownArguments` function may be useful. It works in much the same way as the `Parse` function, except that it doesn't throw an exception if there are additional arguments. Instead, it allows you to get a list of the extra arguments.
+Sometimes a program may need to parse only part of the command-line arguments and pass the remaining arguments to another program. In this case, the `ParseKnownArguments` function may be useful. It works in much the same way as the `Parse` function, except that it does not throw an exception if there are additional arguments. Instead, it allows you to get a list of the extra arguments.
 
 ```cs
 bool verbose = false;
@@ -79,7 +79,7 @@ parser.ParseKnownArguments(new string[] { "-v", "10", "-a" }, out List<string> e
 ```
 
 ## Parse Arguments Multiple Times
-You can parse arguments multiple times using a single instance of `ArgumentParser`. When you call the `Parse()` or `ParseKnownArguments()` methods, it automatically invokes the `ResetOptionsHandledState()` and `ResetSubcommandsHandledState()` methods, so you don't need to call them manually.
+You can parse arguments multiple times using a single instance of `ArgumentParser`. When you call the `Parse()` or `ParseKnownArguments()` methods, it automatically invokes the `ResetOptionsHandledState()` and `ResetSubcommandsHandledState()` methods, so you do not need to call them manually.
 
 ```cs
 int angle = 0;
@@ -265,9 +265,9 @@ widthOption.AddBeforeParseChoicesToDescription(
 Console.WriteLine(widthOption.Description);
 ```
 
-Note that you can add only one type of choices to description. So you can't call `AddChoicesToDescription()` method after after you have already called method `AddBeforeParseChoicesToDescription()`, or vice versa.
+Note that you can add only one type of choices to description. So you ca not call `AddChoicesToDescription()` method after after you have already called method `AddBeforeParseChoicesToDescription()`, or vice versa.
 
-All value options implement interface `IValueOptionDescriptionDesigner`, so if you don't want to manually call method `AddChoicesToDescription()` or `AddBeforeParseChoicesToDescription()` for each option, you can get all options from parser using `GetAllOptions()` method, filter them and then use a loop.
+All value options implement interface `IValueOptionDescriptionDesigner`, so if you do not want to manually call method `AddChoicesToDescription()` or `AddBeforeParseChoicesToDescription()` for each option, you can get all options from parser using `GetAllOptions()` method, filter them and then use a loop.
 
 ```cs
 var angleOption = new ValueOption<int>(

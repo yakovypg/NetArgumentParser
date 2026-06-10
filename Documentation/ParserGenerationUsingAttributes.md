@@ -165,7 +165,7 @@ internal class CustomParserConfig
 internal record Point(double X, double Y, double Z);
 ```
 
-Note that attributes allow you to add default value, choices and before parse choices to the option description (if the corresponding option supports it) using `addDefaultValueToDescription`, `addChoicesToDescription`, and `addBeforeParseChoicesToDescription` parameters, so you don't need to find the generated options to do this.
+Note that attributes allow you to add default value, choices and before parse choices to the option description (if the corresponding option supports it) using `addDefaultValueToDescription`, `addChoicesToDescription`, and `addBeforeParseChoicesToDescription` parameters, so you do not need to find the generated options to do this.
 
 #### Add value restriction
 You can add a common value restriction using `valueRestriction` parameter. This is specified through a string that will be converted into an actual restriction by a special parser. The format of this string is as follows:
@@ -177,7 +177,7 @@ logical_operator predicateK_name parameter1 ... parameterM
 ?value_not_satisfy_restriction_message
 ```
 
-In other words, a string consists of one or more predicates, each separated by a newline character `\n`. Following the predicate name, its parameters are listed. A logical connective (`AND` or `OR`) may precede the predicate name; if omitted, it defaults to `AND`. A line that begins with the `?` character specifies a message to be displayed if the option value doesn't satisfy the restriction. However, this message can be omitted.
+In other words, a string consists of one or more predicates, each separated by a newline character `\n`. Following the predicate name, its parameters are listed. A logical connective (`AND` or `OR`) may precede the predicate name; if omitted, it defaults to `AND`. A line that begins with the `?` character specifies a message to be displayed if the option value does not satisfy the restriction. However, this message can be omitted.
 
 In addition, you can negate predicate. To do this, place `!` before the predicate name.
 
@@ -201,8 +201,8 @@ The following predicates are available:
 15. `directoryexists` (`directory`): takes no parameters. The option value must be a string representing the path to an existing directory.
 16. `fileexists`: takes no parameters. The option value must be a string representing the path to an existing file.
 17. `maxfilesize` (`maxsize`): takes a single parameter. The option value must be a string representing the path to a file whose size is less than or equal to this parameter (in bytes).
-18. `extension` (`ext`): takes one or more parameters. The option value must be a string representing the path to a file whose extension matches one of the specified parameters. The dot in the file extension is optional, and its case (uppercase or lowercase) doesn't matter.
-19. `file`: takes zero or more parameters. The option value must be a string representing the path to an existing file whose extension matches one of the specified parameters. If no parameters are provided, only the file's existence is checked. The dot in the file extension is optional, and its case (uppercase or lowercase) doesn't matter.
+18. `extension` (`ext`): takes one or more parameters. The option value must be a string representing the path to a file whose extension matches one of the specified parameters. The dot in the file extension is optional, and its case (uppercase or lowercase) does not matter.
+19. `file`: takes zero or more parameters. The option value must be a string representing the path to an existing file whose extension matches one of the specified parameters. If no parameters are provided, only the file's existence is checked. The dot in the file extension is optional, and its case (uppercase or lowercase) does not matter.
 
 Examples of simple restrictions are provided below:
 1. `== 5`: the option value must be equal to 5.
@@ -226,8 +226,8 @@ Examples of simple restrictions are provided below:
 19. `file mp4 mkv`: the option value must be a string representing the path to an existing file whose extension matches either `mp4` or `mkv`.
 
 Examples of restrictions with negation are provided below:
-1. `!oneof 1 3 6`: the option value mustn't be one of: 1, 3 or 6.
-2. `!nullorempty`: the option value mustn't be null or an empty string.
+1. `!oneof 1 3 6`: the option value must not be one of: 1, 3 or 6.
+2. `!nullorempty`: the option value must not be null or an empty string.
 
 Examples of complex restrictions are provided below:
 1. `< -100\nOR > 100\nOR oneof 1 5 7 10\nAND inrange -200 200\nAND !oneof 77 -77 88`.
@@ -559,4 +559,4 @@ public class CustomSubcommand
 }
 ```
 
-Note the line `var parser = new ArgumentParser(name: CustomParserConfig.ParserName);`. We assign a custom name to the `ArgumentParser` because `OptionConfigurationSetter` expects a dictionary that uses parser quantum names as keys. You can omit this name if you don't need a configuration for root options or you want to use the parser's default name, which is equal to `nameof(ArgumentParser)`.
+Note the line `var parser = new ArgumentParser(name: CustomParserConfig.ParserName);`. We assign a custom name to the `ArgumentParser` because `OptionConfigurationSetter` expects a dictionary that uses parser quantum names as keys. You can omit this name if you do not need a configuration for root options or you want to use the parser's default name, which is equal to `nameof(ArgumentParser)`.
