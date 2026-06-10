@@ -185,6 +185,10 @@ public class ValueOption<T> : CommonOption, IValueOption<T>
         {
             defaultValueString = nullPresenter;
         }
+        else if (DefaultValue.Value is string defaultValueText)
+        {
+            defaultValueString = defaultValueText;
+        }
         else if (DefaultValue.Value is IEnumerable defaultValueEnumerable)
         {
             defaultValueString = ExtendedString.JoinWithExpand(
