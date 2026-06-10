@@ -24,7 +24,7 @@ Let's consider this step-by-step instructions for creating a sample project and 
 ```
 cd ~/Repos
 ```
-- Step 2: Create folder for your project and go to it.
+- Step 2: Create folder for your project and move to it.
 ```
 mkdir MyProject && cd MyProject
 ```
@@ -48,7 +48,7 @@ mkdir Vendor && cd Vendor
 ```
 git clone https://github.com/yakovypg/NetArgumentParser.git
 ```
-- Step 8: Go back to the root folder.
+- Step 8: Move back to the root folder.
 ```
 cd ..
 ```
@@ -56,7 +56,7 @@ cd ..
 ```
 dotnet sln add Vendor/NetArgumentParser/Core/NetArgumentParser
 ```
-- Step 10: Go to your project folder.
+- Step 10: Move to your project folder.
 ```
 cd MyProject
 ```
