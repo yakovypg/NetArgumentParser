@@ -151,7 +151,7 @@ public class ParserGeneratorTests
         });
 
         Assert.NotNull(finalGroup);
-        Assert.Equal(1, finalGroup.Options.Count);
+        Assert.Single(finalGroup.Options);
 
         Assert.Equal(
             ParseSpecificParserGeneratorConfig.MutuallyExclusiveFinalOptionGroupHeader,
@@ -241,7 +241,7 @@ public class ParserGeneratorTests
 
         generator.ConfigureParser(argumentParser, config);
 
-        Assert.Equal(1, argumentParser.MutuallyExclusiveOptionGroups.Count);
+        Assert.Single(argumentParser.MutuallyExclusiveOptionGroups);
 
         MutuallyExclusiveOptionGroup<ICommonOption> group =
             argumentParser.MutuallyExclusiveOptionGroups[0];
@@ -307,7 +307,7 @@ public class ParserGeneratorTests
         ]);
 
         Assert.Empty(result.HandledSubcommands);
-        Assert.Equal(1, result.HandledOptions.Count);
+        Assert.Single(result.HandledOptions);
 
         Assert.True(config.ShowHelp);
         Assert.False(config.ShowVersion);
@@ -340,7 +340,7 @@ public class ParserGeneratorTests
         ]);
 
         Assert.Empty(result.HandledSubcommands);
-        Assert.Equal(1, result.HandledOptions.Count);
+        Assert.Single(result.HandledOptions);
 
         Assert.False(config.ShowHelp);
         Assert.True(config.ShowVersion);
@@ -805,7 +805,7 @@ public class ParserGeneratorTests
 
         Assert.Empty(quantum.Subcommands);
 
-        Assert.Equal(1, quantum.OptionGroups.Count);
+        Assert.Single(quantum.OptionGroups);
         Assert.Equal(quantum.DefaultGroup, quantum.OptionGroups[0]);
 
         Assert.Equal(3, quantum.Options.Count);
@@ -922,7 +922,7 @@ public class ParserGeneratorTests
 
         Assert.Empty(quantum.Options);
 
-        Assert.Equal(1, quantum.OptionGroups.Count);
+        Assert.Single(quantum.OptionGroups);
         Assert.Equal(quantum.DefaultGroup, quantum.OptionGroups[0]);
 
         Assert.Equal(3, quantum.Subcommands.Count);
@@ -991,7 +991,7 @@ public class ParserGeneratorTests
         });
 
         Assert.NotNull(defaultGroup);
-        Assert.Equal(1, defaultGroup.Options.Count);
+        Assert.Single(defaultGroup.Options);
 
         ICommonOption? verbosityLevelOptionInDefaultGroup = defaultGroup.Options.FirstOrDefault(t =>
         {
@@ -1536,10 +1536,10 @@ public class ParserGeneratorTests
     {
         ExtendedArgumentNullException.ThrowIfNull(quantum, nameof(quantum));
 
-        Assert.Equal(1, quantum.OptionGroups.Count);
+        Assert.Single(quantum.OptionGroups);
         Assert.Equal(quantum.DefaultGroup, quantum.OptionGroups[0]);
 
-        Assert.Equal(1, quantum.Subcommands.Count);
+        Assert.Single(quantum.Subcommands);
 
         Subcommand? complexSubcommand = quantum.Subcommands.FirstOrDefault(t =>
         {
@@ -1622,7 +1622,7 @@ public class ParserGeneratorTests
         Assert.Empty(quantum.Subcommands);
         Assert.Empty(quantum.Options);
 
-        Assert.Equal(1, quantum.OptionGroups.Count);
+        Assert.Single(quantum.OptionGroups);
         Assert.Equal(quantum.DefaultGroup, quantum.OptionGroups[0]);
     }
 }

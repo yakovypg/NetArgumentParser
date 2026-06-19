@@ -28,7 +28,8 @@ public class OptionValueNotSatisfyChoicesException : Exception
             message ?? GetDefaultMessage(optionValue, allowedValues),
             optionValue,
             allowedValues,
-            null) { }
+            null)
+    { }
 
     public OptionValueNotSatisfyChoicesException(
         string? message,
