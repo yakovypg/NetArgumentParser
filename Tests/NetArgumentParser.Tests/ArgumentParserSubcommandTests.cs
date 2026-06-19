@@ -1445,10 +1445,10 @@ public class ArgumentParserSubcommandTests
 
         Assert.True(help);
 
-        Assert.Equal(1, result.HandledOptions.Count);
+        Assert.Single(result.HandledOptions);
         Assert.Equal(expectedHelpOption, result.HandledOptions.First());
 
-        Assert.Equal(1, result.HandledSubcommands.Count);
+        Assert.Single(result.HandledSubcommands);
         Assert.Equal(subcommand1, result.HandledSubcommands.First());
     }
 
@@ -1612,10 +1612,10 @@ public class ArgumentParserSubcommandTests
 
         Assert.True(version);
 
-        Assert.Equal(1, result.HandledOptions.Count);
+        Assert.Single(result.HandledOptions);
         Assert.Equal(expectedVersionOption, result.HandledOptions.First());
 
-        Assert.Equal(1, result.HandledSubcommands.Count);
+        Assert.Single(result.HandledSubcommands);
         Assert.Equal(subcommand1, result.HandledSubcommands.First());
     }
 
@@ -1792,10 +1792,10 @@ public class ArgumentParserSubcommandTests
 
         Assert.Equal(expectedFinalOptionValue, finalOptionValue);
 
-        Assert.Equal(1, result.HandledOptions.Count);
+        Assert.Single(result.HandledOptions);
         Assert.Equal(expectedFinalOption, result.HandledOptions.First());
 
-        Assert.Equal(1, result.HandledSubcommands.Count);
+        Assert.Single(result.HandledSubcommands);
         Assert.Equal(subcommand1, result.HandledSubcommands.First());
     }
 
@@ -1903,7 +1903,7 @@ public class ArgumentParserSubcommandTests
         ParseArgumentsResult result = parser.ParseKnownArguments(arguments, out _);
 
         Assert.Equal(4, result.HandledOptions.Count);
-        Assert.Equal(1, result.HandledSubcommands.Count);
+        Assert.Single(result.HandledSubcommands);
         Assert.Equal(subcommand1, result.HandledSubcommands.First());
     }
 
