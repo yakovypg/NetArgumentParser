@@ -264,8 +264,8 @@ internal record Point(double X, double Y, double Z);
 #pragma warning restore
 
 /*
-./NetArgumentParser.Examples.ParserGenerationUsingAttributes
-    --files 1.txt 2.txt 3.txt
-    --mode Create
+./NetArgumentParser.Examples.ParserGenerationUsingAttributes \
+    --files 1.txt 2.txt 3.txt \
+    --mode Create \
     status update --scale 0.5
 */

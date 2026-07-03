@@ -141,3 +141,14 @@ internal sealed class ResultValues
     public string? Name { get; set; }
 }
 #pragma warning restore
+
+/*
+./NetArgumentParser.Examples.OptionalArguments \
+    --legacy-verbose \
+    --quick \
+    --input ./NetArgumentParser.Examples.OptionalArguments.dll \
+    --date 2026 03 05 \
+    -a 180 \
+    -V -V -V \
+    --nick "my nickname"
+*/
