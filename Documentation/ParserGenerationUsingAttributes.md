@@ -6,6 +6,7 @@ You can generate `ArgumentParser` using special class provided parser configurat
      *    [Configuration Attributes](#configuration-attributes)
      *    [Option Attributes](#option-attributes)
           *    [Add value restriction](#add-value-restriction)
+     *    [Option Mark Attributes](#option-mark-attributes)
      *    [Group Attributes](#group-attributes)
      *    [Subcommand Attributes](#subcommand-attributes)
 *    [Argument Parser Generation](#argument-parser-generation)
@@ -250,6 +251,75 @@ internal class CustomParserConfig
 {
     [ValueOption<int>("width", valueRestriction: "> 0\n&& <= 1920\n?width must be in (0; 1920]")]
     public int Width { get; set; }
+}
+```
+
+### Option Mark Attributes
+Options can be marked with the `OptionMark` attribute. It can be useful if you want to separate some options for future configuration. For example, suppose you want to configure options for storing paths. You can mark the corresponding options as follows.
+```cs
+[ParserConfig]
+internal class CustomParserConfig
+{
+    [ValueOption<string>("input")]
+    [OptionMark("path")]
+    public string? InputFilePath { get; set; }
+}
+```
+
+You can see that the `OptionMark` attribute with the name `path` was used. Next, you can get all marked options using a `ConfigureParser()` overload, find the right option(s) by name, and then configure found options as you wish.
+
+```cs
+var generator = new ArgumentParserGenerator();
+var parser = new ArgumentParser();
+var config = new CustomParserConfig();
+
+generator.ConfigureParser(parser, config, out IList<OptionMark> optionMarks);
+IEnumerable<OptionMark> pathOptionMarks = optionMarks.Where(t => t.Name == "path");
+
+foreach (OptionMark optionMark in pathOptionMarks)
+{
+    if (optionMark.Option is ValueOption<string> pathOption)
+        pathOption.Converter = new ValueConverter<string>(Path.GetFullPath);
+}
+
+[ParserConfig]
+internal class CustomParserConfig
+{
+    [ValueOption<string>("input")]
+    [OptionMark("path")]
+    public string? InputFilePath { get; set; }
+}
+```
+
+For convenience, you can create a class with option mark names, or create a class inherited from `OptionMarkAttribute`. It should also be noted that one option can have multiple marks.
+
+```cs
+internal static class OptionMarkNames
+{
+    public const string UppercaseDescription = nameof(UppercaseDescription);
+}
+
+[AttributeUsage(
+    AttributeTargets.Property,
+    AllowMultiple = false,
+    Inherited = true)
+]
+internal sealed class FilePathOptionMarkAttribute : OptionMarkAttribute
+{
+    public const string DefaultName = nameof(FilePathOptionMarkAttribute);
+
+    public FilePathOptionMarkAttribute()
+        : base(DefaultName)
+    { }
+}
+
+[ParserConfig]
+internal class CustomParserConfig
+{
+    [ValueOption<string>("input")]
+    [FilePathOptionMarkAttribute]
+    [OptionMark(OptionMarkNames.UppercaseDescription)]
+    public string? InputFilePath { get; set; }
 }
 ```
 
