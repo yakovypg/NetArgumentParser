@@ -9,6 +9,7 @@
     <Project Path="Examples/NetArgumentParser.Examples.CustomConverter/NetArgumentParser.Examples.CustomConverter.csproj" />
     <Project Path="Examples/NetArgumentParser.Examples.FurtherConfigureOption/NetArgumentParser.Examples.FurtherConfigureOption.csproj" />
     <Project Path="Examples/NetArgumentParser.Examples.OptionalArguments/NetArgumentParser.Examples.OptionalArguments.csproj" />
+    <Project Path="Examples/NetArgumentParser.Examples.OptionMarks/NetArgumentParser.Examples.OptionMarks.csproj" />
     <Project Path="Examples/NetArgumentParser.Examples.ParseArgumentsMultipleTimes/NetArgumentParser.Examples.ParseArgumentsMultipleTimes.csproj" />
     <Project Path="Examples/NetArgumentParser.Examples.ParserGenerationUsingAttributes/NetArgumentParser.Examples.ParserGenerationUsingAttributes.csproj" />
     <Project Path="Examples/NetArgumentParser.Examples.PrintingHelp/NetArgumentParser.Examples.PrintingHelp.csproj" />

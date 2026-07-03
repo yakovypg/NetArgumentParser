@@ -51,3 +51,9 @@ catch (Exception ex)
 Console.WriteLine($"Angle: {angle}");
 Console.WriteLine($"File mode: {fileMode}");
 Console.WriteLine($"Input files: {string.Join(" ", inputFiles)}");
+
+/*
+./NetArgumentParser.Examples.Simple \
+    -i 1.jpg 2.png 3.bmp \
+    -a 45
+*/
