@@ -13,6 +13,7 @@ using NetArgumentParser.Options.Collections;
 using NetArgumentParser.Subcommands;
 using NetArgumentParser.Tests.Models;
 using NetArgumentParser.Tests.Models.Configurations;
+using NetArgumentParser.Tests.Models.Configurations.Marks;
 
 namespace NetArgumentParser.Tests;
 
@@ -55,6 +56,96 @@ public class ParserGeneratorTests
         Assert.Empty(argumentParser.MutuallyExclusiveOptionGroups);
 
         VerifySubcommandsOnlyParserGeneratorConfigQuantum(argumentParser);
+    }
+
+    [Fact]
+    public void ConfigureParser_ConfigWithOptionMarks_ConfiguredCorrectly()
+    {
+        var generator = new ArgumentParserGenerator();
+        var argumentParser = new ArgumentParser();
+        var config = new ComplexOptionMarksParserGeneratorConfig();
+
+        generator.ConfigureParser(argumentParser, config, out IList<OptionMark> optionMarks);
+
+        bool enumOptionFound = argumentParser.FindFirstOptionByLongName(
+            ComplexOptionMarksParserGeneratorConfig.EnumOptionLongName,
+            false,
+            out ICommonOption? enumOption);
+
+        bool valueOptionFound = argumentParser.FindFirstOptionByLongName(
+            ComplexOptionMarksParserGeneratorConfig.ValueOptionLongName,
+            false,
+            out ICommonOption? valueOption);
+
+        Assert.True(enumOptionFound);
+        Assert.True(valueOptionFound);
+
+        Assert.NotNull(enumOption);
+        Assert.NotNull(valueOption);
+
+        Subcommand? subcommand = argumentParser.Subcommands.FirstOrDefault(
+            t => t.Name == ComplexOptionMarksParserGeneratorConfig.MarksSubcommandName);
+
+        Assert.NotNull(subcommand);
+
+        bool subcommandFlagOptionFound = subcommand.FindFirstOptionByLongName(
+            OptionMarksParserGeneratorConfig.FlagOptionLongName,
+            false,
+            out ICommonOption? subcommandFlagOption);
+
+        bool subcommandValueOptionFound = subcommand.FindFirstOptionByLongName(
+            OptionMarksParserGeneratorConfig.ValueOptionLongName,
+            false,
+            out ICommonOption? subcommandValueOption);
+
+        bool subcommandMultipleValueOptionFound = subcommand.FindFirstOptionByLongName(
+            OptionMarksParserGeneratorConfig.MultipleValueOptionLongName,
+            false,
+            out ICommonOption? subcommandMultipleValueOption);
+
+        Assert.True(subcommandFlagOptionFound);
+        Assert.True(subcommandValueOptionFound);
+        Assert.True(subcommandMultipleValueOptionFound);
+
+        Assert.NotNull(subcommandFlagOption);
+        Assert.NotNull(subcommandValueOption);
+        Assert.NotNull(subcommandMultipleValueOption);
+
+        OptionMark[] expectedOptionMarks =
+        [
+            new OptionMark(
+                OptionMarkNames.Enum,
+                enumOption,
+                argumentParser),
+
+            new OptionMark(
+                OptionMarkNames.Value,
+                valueOption,
+                argumentParser),
+
+            new OptionMark(
+                FlagOptionMarkAttribute.DefaultName,
+                subcommandFlagOption,
+                subcommand),
+
+            new OptionMark(
+                OptionMarkNames.Value,
+                subcommandValueOption,
+                subcommand),
+
+            new OptionMark(
+                OptionMarkNames.Value,
+                subcommandMultipleValueOption,
+                subcommand)
+        ];
+
+        Assert.Equal(expectedOptionMarks.Length, optionMarks.Count);
+
+        foreach (OptionMark optionMark in expectedOptionMarks)
+        {
+            bool optionMarkFound = optionMarks.Contains(optionMark);
+            Assert.True(optionMarkFound);
+        }
     }
 
     [Fact]
