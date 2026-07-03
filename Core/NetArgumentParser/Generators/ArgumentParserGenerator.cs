@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using NetArgumentParser.Attributes;
 using NetArgumentParser.Attributes.Extensions;
+using NetArgumentParser.Extensions;
 using NetArgumentParser.Options;
 using NetArgumentParser.Options.Collections;
 using NetArgumentParser.Subcommands;
@@ -17,6 +18,17 @@ public class ArgumentParserGenerator
         ExtendedArgumentNullException.ThrowIfNull(parser, nameof(parser));
         ExtendedArgumentNullException.ThrowIfNull(config, nameof(config));
 
+        ConfigureParser(parser, config, out _);
+    }
+
+    public void ConfigureParser(
+        ArgumentParser parser,
+        object config,
+        out IList<OptionMark> optionMarks)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(parser, nameof(parser));
+        ExtendedArgumentNullException.ThrowIfNull(config, nameof(config));
+
         Type configType = config.GetType();
 
         bool isSuitableConfig = configType.CustomAttributes
@@ -25,16 +37,29 @@ public class ArgumentParserGenerator
         if (!isSuitableConfig)
             throw new UnsupportedParserConfigException(null, config);
 
-        var rootQuantum = new ArgumentParserGeneratorQuantum(
-            options: ConfigureOptions(parser, config),
-            subcommands: ConfigureSubcommands(parser, config));
+        IEnumerable<KeyValuePair<PropertyInfo, ICommonOption>> options = ConfigureOptions(
+            parser,
+            config,
+            out IList<OptionMark> rootOptionMarks);
+
+        IEnumerable<ArgumentParserGeneratorQuantum> subcommands = ConfigureSubcommands(
+            parser,
+            config,
+            out IList<OptionMark> nestedOptionMarks);
+
+        optionMarks = [];
+        optionMarks.AddRange(rootOptionMarks);
+        optionMarks.AddRange(nestedOptionMarks);
+
+        var rootQuantum = new ArgumentParserGeneratorQuantum(options, subcommands);
 
         ConfigureMutuallyExclusiveOptionGroups(parser, rootQuantum);
     }
 
     protected virtual Dictionary<PropertyInfo, ICommonOption> ConfigureOptions(
         ParserQuantum parserQuantum,
-        object config)
+        object config,
+        out IList<OptionMark> optionMarks)
     {
         ExtendedArgumentNullException.ThrowIfNull(parserQuantum, nameof(parserQuantum));
         ExtendedArgumentNullException.ThrowIfNull(config, nameof(config));
@@ -49,6 +74,10 @@ public class ArgumentParserGenerator
             .CreateOptions(config);
 
         ConfigureOptionGroups(parserQuantum, optionMap);
+
+        optionMarks = [.. optionMap
+            .Where(t => t.Key.HasOptionAttribute())
+            .SelectMany(t => t.Key.CreateOptionMarks(t.Value, parserQuantum))];
 
         return optionMap;
     }
@@ -134,7 +163,8 @@ public class ArgumentParserGenerator
 
     protected virtual IList<ArgumentParserGeneratorQuantum> ConfigureSubcommands(
         ParserQuantum parserQuantum,
-        object config)
+        object config,
+        out IList<OptionMark> optionMarks)
     {
         ExtendedArgumentNullException.ThrowIfNull(parserQuantum, nameof(parserQuantum));
         ExtendedArgumentNullException.ThrowIfNull(config, nameof(config));
@@ -145,6 +175,7 @@ public class ArgumentParserGenerator
             .GetProperties()
             .Where(t => t.HasSubcommandAttribute() && t.CanRead);
 
+        optionMarks = [];
         List<ArgumentParserGeneratorQuantum> quantums = [];
 
         foreach (PropertyInfo propertyInfo in subcommandProperties)
@@ -162,11 +193,18 @@ public class ArgumentParserGenerator
             object subcommandConfig = propertyInfo.GetValue(config)
                 ?? throw new NullSubcommandConfigException(null, propertyInfo);
 
-            Dictionary<PropertyInfo, ICommonOption> optionMap =
-                ConfigureOptions(subcommand, subcommandConfig);
+            Dictionary<PropertyInfo, ICommonOption> optionMap = ConfigureOptions(
+                subcommand,
+                subcommandConfig,
+                out IList<OptionMark> rootOptionMarks);
 
-            IList<ArgumentParserGeneratorQuantum> optionMapFromSubcommands =
-                ConfigureSubcommands(subcommand, subcommandConfig);
+            IList<ArgumentParserGeneratorQuantum> optionMapFromSubcommands = ConfigureSubcommands(
+                subcommand,
+                subcommandConfig,
+                out IList<OptionMark> nestedOptionMarks);
+
+            optionMarks.AddRange(rootOptionMarks);
+            optionMarks.AddRange(nestedOptionMarks);
 
             var quantum = new ArgumentParserGeneratorQuantum(
                 optionMap,

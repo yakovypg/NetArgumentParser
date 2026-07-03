@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NetArgumentParser.Options;
+using NetArgumentParser.Subcommands;
 
 namespace NetArgumentParser.Attributes.Extensions;
 
@@ -50,6 +51,12 @@ internal static class PropertyInfoExtensions
             .Any(t => t.AttributeType == typeof(SubcommandAttribute));
     }
 
+    internal static bool HasOptionMarkAttribute(this PropertyInfo propertyInfo)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(propertyInfo, nameof(propertyInfo));
+        return propertyInfo.HasMultipleAttribute<OptionMarkAttribute>();
+    }
+
     internal static ICommonOption? CreateOption(this PropertyInfo propertyInfo, object source)
     {
         ExtendedArgumentNullException.ThrowIfNull(propertyInfo, nameof(propertyInfo));
@@ -58,5 +65,19 @@ internal static class PropertyInfoExtensions
         CommonOptionAttribute? attribute = propertyInfo.GetCustomAttribute<CommonOptionAttribute>();
 
         return attribute?.CreateOption(source, propertyInfo);
+    }
+
+    internal static IEnumerable<OptionMark> CreateOptionMarks(
+        this PropertyInfo propertyInfo,
+        ICommonOption option,
+        ParserQuantum parserQuantum)
+    {
+        ExtendedArgumentNullException.ThrowIfNull(propertyInfo, nameof(propertyInfo));
+        ExtendedArgumentNullException.ThrowIfNull(option, nameof(option));
+        ExtendedArgumentNullException.ThrowIfNull(parserQuantum, nameof(parserQuantum));
+
+        return propertyInfo
+            .GetCustomAttributes<OptionMarkAttribute>()
+            .Select(t => new OptionMark(t.Name, option, parserQuantum));
     }
 }
